@@ -1,0 +1,59 @@
+{{ if .Values.admissionControllerReplicaCount }} # If admission controller replica count is set to 0, don't create the webhook
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: virtual-node-admission-controller
+webhooks:
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    service:
+      name: virtual-node-admission-controller
+      namespace: {{ .Values.namespace }}
+      path: "/node"
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: virtual-node-admission-controller-node-mutating-webhook.azmk8s.io
+  namespaceSelector: {}
+  objectSelector: {}
+  reinvocationPolicy: Never
+  rules:
+  - apiGroups:
+    - ''
+    apiVersions:
+    - v1
+    operations:
+    - "*"
+    resources:
+    - nodes
+    - nodes/status
+    scope: "*"
+  sideEffects: NoneOnDryRun
+  timeoutSeconds: 5
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    service:
+      name: virtual-node-admission-controller
+      namespace: {{ .Values.namespace }}
+      path: "/pod"
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: virtual-node-admission-controller-pod-mutating-webhook.azmk8s.io
+  namespaceSelector: {}
+  objectSelector: {}
+  reinvocationPolicy: Never
+  rules:
+  - apiGroups:
+    - ''
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - pods
+    scope: "*"
+  sideEffects: NoneOnDryRun
+  timeoutSeconds: 5
+  {{ end }}
