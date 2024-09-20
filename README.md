@@ -1,8 +1,8 @@
 # virtual nodes on Azure Container Instances
 
-virtual nodes on Azure Container Instances is an evolution on the existing [virtual node](https://learn.microsoft.com/en-us/azure/aks/virtual-nodes) offering for Azure Kuberenetes Service (AKS). It has been reimplemented from the ground up to be closer to vanilla K8s and remove limitations of the prior impementation while also allowing deeper integration with the existing container offerings in Azure Container Instances! It should be noted, this application and installation only works when hosted on the Azure Kubernetes Service (AKS)!
+Virtual nodes on Azure Container Instances is an evolution on the existing [virtual node](https://learn.microsoft.com/en-us/azure/aks/virtual-nodes) offering for Azure Kuberenetes Service (AKS). It has been reimplemented from the ground up to be closer to vanilla K8s and remove limitations of the prior impementation while also allowing deeper integration with the existing container offerings in Azure Container Instances! It should be noted, this application and installation only works when hosted on the Azure Kubernetes Service (AKS)!
 
-virtual nodes on Azure Container Instances was featured in the Azure Kubernetes Service (AKS) Keynote at KubeCon, with a [segment detailing its numerous improvements and showing a demo](https://www.youtube.com/watch?v=yJOc3D52_Is&t=2330s).
+Virtual nodes on Azure Container Instances was featured in the Azure Kubernetes Service (AKS) Keynote at KubeCon, with a [segment detailing its numerous improvements and showing a demo](https://www.youtube.com/watch?v=yJOc3D52_Is&t=2330s).
 
 For the rest of this document "virtual nodes" will refer to this new implementation, with "prior virtual node" refering to the previous implementation. 
 
