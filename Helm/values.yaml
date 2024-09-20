@@ -1,0 +1,64 @@
+# Default values for virtual nodes on Azure Container Instances
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+admissionControllerReplicaCount: 1 # Set to 0 to also not register the admission controller webhook
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: 
+  capabilities:
+    add:
+      - NET_ADMIN
+      - NET_RAW
+
+nodeSelector: {
+}
+
+# Lack of tolerations will ensure virtual node pods are not scheduled on a virtual node itself
+tolerations: []
+
+affinity: {}
+
+## Install Default RBAC roles and bindings
+rbac:
+  install: true
+  serviceAccountName: virtual-node2-helm
+  ## RBAC api version
+  apiVersion: v1
+  ## Cluster role reference
+  roleRef: cluster-admin
+
+namespace: vn2
+aciSubnetName: cg # remember this subnet needs to be delegated to Microsoft.ContainerInstance/containerGroups
+sandboxProviderType: OnDemand  
+
+nodeLabels: '' #Labels to add when registering the node in the cluster. Labels must be key=value pairs separated by ','. Labels in the 'kubernetes.io' namespace must begin with an allowed prefix ('kubelet.kubernetes.io', 'node.kubernetes.io') or be in the specifically allowed set ('beta.kubernetes.io/arch', 'beta.kubernetes.io/instance-type', 'beta.kubernetes.io/os', 'failure-domain.beta.kubernetes.io/region', 'failure-domain.beta.kubernetes.io/zone', 'kubernetes.io/arch', 'kubernetes.io/hostname', 'kubernetes.io/os', 'node.kubernetes.io/instance-type', 'topology.kubernetes.io/region', 'topology.kubernetes.io/zone')
+
+images:
+  pullPolicy: Always
+  pullSecrets: []
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:20240708
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:20240910.0
+  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20240816.1
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:20240819
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:012809
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:azure-pipelines_20240806.2
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:2024072401
+  noddriverregistrarImage: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar:v2.8.0

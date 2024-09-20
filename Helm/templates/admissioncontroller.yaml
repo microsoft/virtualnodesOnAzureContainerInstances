@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "virtual-node-admission-controller"
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.admissionControllerReplicaCount }}
+  selector:
+    matchLabels:
+      {{- include "virtualnode2.admissionSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "virtualnode2.admissionSelectorLabels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 0
+      serviceAccountName: {{ if .Values.rbac.install }} "{{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}" {{ end }}
+      containers:
+        - name: admissioncontroller
+          image: {{ .Values.images.admissioncontrollerImage }}
+          env:
+            - name: SECRET_NAME
+              value: virtual-node-admission-controller
+            - name: SECRET_NAMESPACE
+              value: {{ .Values.namespace }}
+            - name: ADMISSION_CONTROLLER_NAME
+              value: virtual-node-admission-controller
+            - name: SERVICE_DNS_NAME
+              value: "virtual-node-admission-controller.{{ .Values.namespace }}.svc"
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
