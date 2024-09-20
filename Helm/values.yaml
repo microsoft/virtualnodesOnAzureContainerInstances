@@ -31,7 +31,7 @@ securityContext:
 nodeSelector: {
 }
 
-# Lack of tolerations will ensure Virtual Node pods are not scheduled on a Virtual Node itself
+# Lack of tolerations will ensure virtual node pods are not scheduled on a virtual node itself
 tolerations: []
 
 affinity: {}

@@ -1,14 +1,14 @@
-# Virtual Node on Azure Container Instances
+# virtual nodes on Azure Container Instances
 
-Virtual Node on Azure Container Instances is an evolution on the existing [Virtual Node](https://learn.microsoft.com/en-us/azure/aks/virtual-nodes) offering for Azure Kuberenetes Service (AKS). It has been reimplemented from the ground up to be closer to vanilla K8s and remove limitations of the prior impementation while also allowing deeper integration with the existing container offerings in Azure Container Instances! It should be noted, this application and installation only works when hosted on the Azure Kubernetes Service (AKS)!
+virtual nodes on Azure Container Instances is an evolution on the existing [virtual node](https://learn.microsoft.com/en-us/azure/aks/virtual-nodes) offering for Azure Kuberenetes Service (AKS). It has been reimplemented from the ground up to be closer to vanilla K8s and remove limitations of the prior impementation while also allowing deeper integration with the existing container offerings in Azure Container Instances! It should be noted, this application and installation only works when hosted on the Azure Kubernetes Service (AKS)!
 
-Virtual Node on Azure Container Instances was featured in the Azure Kubernetes Service (AKS) Keynote at KubeCon, with a [segment detailing its numerous improvements and showing a demo](https://www.youtube.com/watch?v=yJOc3D52_Is&t=2330s).
+virtual nodes on Azure Container Instances was featured in the Azure Kubernetes Service (AKS) Keynote at KubeCon, with a [segment detailing its numerous improvements and showing a demo](https://www.youtube.com/watch?v=yJOc3D52_Is&t=2330s).
 
-For the rest of this document "Virtual Node" will refer to this new implementation, with "Prior Virtual Node" refering to the previous implementation. 
+For the rest of this document "virtual nodes" will refer to this new implementation, with "prior virtual node" refering to the previous implementation. 
 
-## Limitations of the Prior Virtual Node vs. this Virtual Node on Azure Container Instances
+## Limitations of the Prior virtual node vs. this virtual node on Azure Container Instances
 
-The following is the documentated limitations of the Prior Virtual Node from [Use virtual nodes - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/virtual-nodes#limitations) with their status in the new Virtual Node:
+The following is the documentated limitations of the Prior virtual node from [Use virtual nodes - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/virtual-nodes#limitations) with their status in the new virtual node:
 
 No longer a limitation
 - VNet peering, outbound traffic to the internet with network security groups
@@ -29,11 +29,11 @@ Can be addressed in the future
 
 Hard limitations
 - DaemonSets
-- Virtual nodes require AKS clusters with Azure CNI networking (you can use an AKS cluster without VNET but won’t have pod-to-pod communication)
+- Virtual nodes require AKS clusters with Azure CNI networking
 - Using API server authorized IP ranges for AKS (because of the subnet delegation to ACI)
 
-# Setting up a Virtual Node Environment
-So we are sure you are excited to try it out for yourself! Here are what you will need to be successful getting your first Virtual Node environment up and running in AKS! 
+# Setting up a virtual node Environment
+So we are sure you are excited to try it out for yourself! Here are what you will need to be successful getting your first virtual node environment up and running in AKS! 
 ## Prerequisites
 ### Tools installed:
 - HELM
@@ -56,13 +56,13 @@ Can be addressed in the future
 
 Hard limitations
 - DaemonSets
-- Virtual nodes require AKS clusters with Azure CNI networking (you can use an AKS cluster without VNET but won’t have pod-to-pod communication)
+- Virtual nodes require AKS clusters with Azure CNI networking
 - Using API server authorized IP ranges for AKS (because of the subnet delegation to ACI)
 
 ### Region Deployments
-Infrastructure for Virtual Node is not widely deployed yet. 
+Infrastructure for virtual node is not widely deployed yet. 
 
-Regions enabled for Virtual Node for both Confidential and non-Confidential usage: 
+Regions enabled for virtual node for both Confidential and non-Confidential usage: 
 - Central India
 - East Asia
 - East US
@@ -78,7 +78,7 @@ Regions enabled for Virtual Node for both Confidential and non-Confidential usag
 - West US
 
 ## Configuration Considerations
-### Virtual Node Resourcing
+### virtual node Resourcing
 - Each virtual node requires 3 cores and 12 GB on one of the AKS cluster’s VMs.
 - Each virtual node supports 200 pods.
 - Ensure you have enough ACI Quota for the pods you want to run. [ACI Resource Availability & Quota documentation](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-resource-and-quota-limits)
@@ -99,7 +99,7 @@ Requirements:
 - Default subnet must contain 10.0.0.0/24. 
 - "aks" subnet must be large enough to accommodate AKS’s address space (CIDR /16)
 - “cg” subnet must be 
-  - large enough to accommodate all the customer pods you wish to deploy to Virtual Node concurrently. Recommend CIDR /16 because why not 😊
+  - large enough to accommodate all the customer pods you wish to deploy to virtual node concurrently. Recommend CIDR /16 because why not 😊
   - Add Subnet Delegation for Microsoft.ContainerInstance/containerGroups
 
 ||
@@ -117,11 +117,11 @@ Suggested configuration of subnets:
 
 ||
 |--|
-|**IMPORTANT**: If your pods running in Virtual Node need outbound networking, you **must** set up a NAT gateway and hook it up to the "cg" subnet for ACI to use. [Instructions on how to set up a NAT Gateway with ACI](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-nat-gateway)|
+|**IMPORTANT**: If your pods running in virtual node need outbound networking, you **must** set up a NAT gateway and hook it up to the "cg" subnet for ACI to use. [Instructions on how to set up a NAT Gateway with ACI](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-nat-gateway)|
 ||
 
 ### Step 3: Azure Kubernetes Service
-Create a new AKS cluster from Azure Portal, in the same RG from Step 1. Must be created using Subscription and Region from Prereqs. Must be configured to use network plugin “Azure CNI Node Subnet”, the VNET from Step 2, with the cluster to use the AKS subnet already created, and service CIDR / DNS need to be configured to be outside the existing VNET subnets. Use Kubernetes version 1.28.* and automatic upgrade to “enabled with patch”. Nodes selected for AKS must be at least 4 CPU and 16 GB RAM to accomodate Virtual Nodes being run on them, though they can be larger. 
+Create a new AKS cluster from Azure Portal, in the same RG from Step 1. Must be created using Subscription and Region from Prereqs. Must be configured to use network plugin “Azure CNI Node Subnet”, the VNET from Step 2, with the cluster to use the AKS subnet already created, and service CIDR / DNS need to be configured to be outside the existing VNET subnets. Use Kubernetes version 1.28.* and automatic upgrade to “enabled with patch”. Nodes selected for AKS must be at least 4 CPU and 16 GB RAM to accomodate virtual nodes being run on them, though they can be larger. 
 
 Arrows added to below pictures for the important fields
 
@@ -137,7 +137,7 @@ Arrows added to below pictures for the important fields
 ![AKS Nodes](/Docs/Pictures/vn_aks_nodepool.png)
 
 ^ Check the Node Pool VM type
-^ Do not select "Virtual Nodes", this is the previous implementation!
+^ Do not select "Enable virtual nodes", this is the previous implementation!
 
 ![AKS Nodes Size](/Docs/Pictures/vn_aks_nodepool_size.png)
 
@@ -165,10 +165,10 @@ Select Scope Resource Group, Use the subscription from steps 1-3 and the new MC_
 |--|
 |**NOTE**: If the cluster VNet is not in the MC_* resourcegroup, <u>as would be the case if you are following the quick-start setup instructions on this README.md</u>, we must also give the AKS Managed Identity permissions to the resource group it is in: 
 
-`You will need to repeat the above steps in this section ( Step 4: Update AKS' Managed Identity) for the VNet’s resource group (from Step 1: Azure Resource Group). This is needed to allow Virtual Node to inject container groups in the VNet.` |
+`You will need to repeat the above steps in this section ( Step 4: Update AKS' Managed Identity) for the VNet’s resource group (from Step 1: Azure Resource Group). This is needed to allow virtual node to inject container groups in the VNet.` |
 |--|
 
-## Installing the Virtual Node Application via HELM 
+## Installing the virtual node Application via HELM 
 ### Step 0: Configure Pre-reqs
 Use Azure CLI to pull down configuration and credentials for the AKS cluster you created above, which will save them to a location that kubectl. Additionallty, we will permission your subscription to allow Azure ContainerInstance usage: 
 
@@ -183,7 +183,7 @@ Use Azure CLI to pull down configuration and credentials for the AKS cluster you
 ### Step 1: Get the HELM Chart
 Clone this repo! 
 
-### Step 2: Install Virtual Node Via HELM
+### Step 2: Install virtual node Via HELM
 And then install the HELM chart, where you can pick whatever release name you want to keep track of the HELM deployment!
 
     helm install <yourReleaseName> <GitRepoRoot>\Helm
@@ -193,11 +193,11 @@ A new virtual node should be registered and be in state Ready. Might take on the
 
     kubectl get nodes
 
-![Kubectl Virtual Node Ready](/Docs/Pictures/vn_k8s_nodeready.png)
+![Kubectl virtual node Ready](/Docs/Pictures/vn_k8s_nodeready.png)
 
 **Note**: the name above will match the release name you used for your HELM install, followed by a `-0` for the first replica. 
 
-# Deploy your first pod to a Virtual Node
+# Deploy your first pod to a virtual node
 Virtual nodes are like all K8s nodes in that you can check them via K8s commands to see what their names, taints and labels are... to be used with the various K8s ways of specifying where you want your containers to be hosted!
 
 Let's start with a simple example YAML: 
@@ -245,11 +245,11 @@ EG: wanted to shell in to the pod
     kubectl exec demo-pod -it -- /bin/bash
 
 # Next Steps
-Now you have a basic grounding to be able to run K8s pods on your Virtual Node, and you can utilize most K8s capabilities and constructs on those pods out of box! But maybe you are looking for more?
+Now you have a basic grounding to be able to run K8s pods on your virtual node, and you can utilize most K8s capabilities and constructs on those pods out of box! But maybe you are looking for more?
 
-If you are looking to utilize Virtual Node specific capabilities or behaviors for your pods, [check out the Pod Customizations](Docs/PodCustomizations.md)
+If you are looking to utilize virtual node specific capabilities or behaviors for your pods, [check out the Pod Customizations](Docs/PodCustomizations.md)
 
-If you are looking to customize your Virtual Node installation, [check out the Node Customizations](Docs/NodeCustomizations.md)
+If you are looking to customize your virtual node installation, [check out the Node Customizations](Docs/NodeCustomizations.md)
 
 If you are planning to run at high scale (thousands of pods per minute), we have a [section with best practices and recommendations!](Docs/HighScaleBestPractices.md)
 

@@ -1,6 +1,6 @@
 apiVersion: v2
 name: virtualnode
-description: Helm chart to install Virtual Nodes on Azure Container Instances to an existing Azure Kubernetes Service cluster.
+description: Helm chart to install virtual nodes on Azure Container Instances to an existing Azure Kubernetes Service cluster.
 
 maintainers:
 - url: https://github.com/Gfuhrm

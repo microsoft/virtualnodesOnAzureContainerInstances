@@ -1,5 +1,5 @@
 # Pod Customizations
-This page is here to provide documentation of non-standard-K8s functionality that can be used with Virtual Node pods!
+This page is here to provide documentation of non-standard-K8s functionality that can be used with virtual node pods!
 
 ## Table of Contents
 
@@ -13,13 +13,13 @@ This page is here to provide documentation of non-standard-K8s functionality tha
 | microsoft.containerinstance.virtualnode.zones | Requesting Azure Zone Deployment | [Zones](#zones)
 
 
-| Virtual Node Downlevel API | Short Summary | Doc Link |
+| virtual node Downlevel API | Short Summary | Doc Link |
 | ------------- | ------------- | --- |
 | ===VIRTUALNODE2.CC.THIM.ENDPOINT=== | Replaced with THIM Endpoint | [THIM Downlevel APIs](#thim-downlevel-apis)
 | ===VIRTUALNODE2.CC.THIM.ADDRESS=== | Replaced with THIM Address | [THIM Downlevel APIs](#thim-downlevel-apis)
 
 # Controlling Behaviors through Pod Annotations
-The general method for controlling non-K8s behavior of Virtual Nodes at the pod level is via pod annotations. 
+The general method for controlling non-K8s behavior of virtual nodes at the pod level is via pod annotations. 
 
 **GENERAL NOTE**: Annotations below all need to be applied to the appropriate part of the K8s resource so that they will be on the pods themselves. For a pod YAML file, this would be the `metadata` for the file itself, while for a Deployment / ScaleSet / etc. YAML the annotation would be in the `template`'s `metadata`. 
 
@@ -98,7 +98,7 @@ Confidential containers are a high security offering from ACI that allows custom
 
 [Overview of Confidential Containers on ACI](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-confidential-overview)
 
-In order to have Virtual Node create your containers as Confidential, you must add a pod annotation which will contain the CCE policy the pod will run using: 
+In order to have virtual node create your containers as Confidential, you must add a pod annotation which will contain the CCE policy the pod will run using: 
 
     microsoft.containerinstance.virtualnode.ccepolicy
 
@@ -106,7 +106,7 @@ In order to generate that policy, utilize the ConfCom extension which can be add
 
     az extension add -n confcom
 
-Using that tool for Virtual Nodes is simple, just provide your YAML file with the --virtual-node-yaml parameter like so: 
+Using that tool for virtual nodes is simple, just provide your YAML file with the --virtual-node-yaml parameter like so: 
     
     az confcom acipolicygen --virtual-node-yaml <yourYamlFile>.yaml
 
@@ -151,22 +151,22 @@ In order to slightly loosen the policy for a Pod to allow certain types of debug
 
     az confcom acipolicygen -k <yourYamlFile>.yaml --debug-mode
 
-## Using Virtual Nodes with Multiple Subnets
-By default, Virtual Node pods will run in the subnet configured in the HELM chart as the default ACI subnet. However, some customers may want to run pods in their own isolated subnets (or in a subnet with only a specific set of other pods), and this can be achieved using the subnet override annotation. 
+## Using virtual nodes with Multiple Subnets
+By default, virtual node pods will run in the subnet configured in the HELM chart as the default ACI subnet. However, some customers may want to run pods in their own isolated subnets (or in a subnet with only a specific set of other pods), and this can be achieved using the subnet override annotation. 
 
     microsoft.containerinstance.virtualnode.subnets.primary
 
 Example: `microsoft.containerinstance.virtualnode.subnets.primary: /subscriptions/000000-0000-0000-053ca49ab4b5/resourceGroups/definitely_a_fake_RG/providers/Microsoft.Network/virtualNetworks/the_VNET_For_This_Subnet/subnets/your_subnet_name`
 
 ## Running pods with an Azure Managed Identity
-For some Azure interactions it can be very convienient (and a good security practice) to utilize Azure Managed Identities to make the requests, rather than having your code deal with the unpleasanties of rotating credentials. Virtual Node can hook up to [Azure Container Instances functionality for running containers with a Managed Identity](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-managed-identity) via a pod annotation: 
+For some Azure interactions it can be very convienient (and a good security practice) to utilize Azure Managed Identities to make the requests, rather than having your code deal with the unpleasanties of rotating credentials. virtual node can hook up to [Azure Container Instances functionality for running containers with a Managed Identity](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-managed-identity) via a pod annotation: 
 
     microsoft.containerinstance.virtualnode.identity
 
 Example: `microsoft.containerinstance.virtualnode.identity: /subscriptions/000000-0000-0000-053ca49ab4b5/resourceGroups/definitely_a_fake_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/my_MI_name`
 
 ## Disable Kube-Proxy
-The Kube-Proxy is a standard K8s component that provides benefits like modifying local IP route tables for K8s internal network usage. However, if you do not require this functionality (or explicitly don't want it), the kube-proxy can be disabled for the Virtual Node pods via this annotation: 
+The Kube-Proxy is a standard K8s component that provides benefits like modifying local IP route tables for K8s internal network usage. However, if you do not require this functionality (or explicitly don't want it), the kube-proxy can be disabled for the virtual node pods via this annotation: 
 
     microsoft.containerinstance.virtualnode.injectkubeproxy: "false"
 
@@ -188,8 +188,8 @@ Azure has a concept of [Availability Zones](https://learn.microsoft.com/en-us/az
 
 **NOTE**: Today, ACI only supports providing a single zone as part of the request to allocate a sandbox for your pod. If you provide multiple, you should get an informative error effectively saying you can only provide one. 
 
-# Virtual Node Downlevel APIs
-Virtual Node has a couple of downlevel APIs which don't behave quite like K8s downlevel APIs. They work such that if for a POD if the VALUE of on ENV var is exactly equal to one of the Virtual Node Downlevel APIs, it will be replaced server size with the appropriate "real" value. 
+# virtual node Downlevel APIs
+virtual node has a couple of downlevel APIs which don't behave quite like K8s downlevel APIs. They work such that if for a POD if the VALUE of on ENV var is exactly equal to one of the virtual node Downlevel APIs, it will be replaced server size with the appropriate "real" value. 
 
 ### THIM Downlevel APIs
 [THIM](https://learn.microsoft.com/en-us/azure/security/fundamentals/trusted-hardware-identity-management#how-do-i-request-collateral-in-a-confidential-virtual-machine) (Trusted Hardware Identity Management) is part of the attestation service used for Confidential ACI. In order to avoid hardcoding the address to interact with the attestation service, customers can instead set an environment variable to either of the below and then use the value of that in their container to access THIM:
