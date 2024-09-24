@@ -1,0 +1,2 @@
+To get Pod name: 
+$POD_NAME=$(kubectl get pods --namespace vn2 -l "app.kubernetes.io/name={{ include "virtualnode2.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")

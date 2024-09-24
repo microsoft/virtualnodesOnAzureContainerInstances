@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: virtual-node-admission-controller
+  namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 19865
+  selector:
+    {{- include "virtualnode2.admissionSelectorLabels" . | nindent 4 }}
+  type: ClusterIP
