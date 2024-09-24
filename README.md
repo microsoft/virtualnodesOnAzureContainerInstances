@@ -253,7 +253,7 @@ If you are looking to customize your virtual node installation, [check out the N
 
 If you are planning to run at high scale (thousands of pods per minute), we have a [section with best practices and recommendations!](Docs/HighScaleBestPractices.md)
 
-Need Support?  [File a support request via Azure Portal](https://aka.ms/azuresupport)
+Need Support?  [File a support request for Azure Container Instances via Azure Portal](https://aka.ms/azuresupport)
 
 ---
 ### Trademarks
