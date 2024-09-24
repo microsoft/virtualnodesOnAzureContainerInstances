@@ -186,7 +186,7 @@ Clone this repo!
 ### Step 2: Install virtual node Via HELM
 And then install the HELM chart, where you can pick whatever release name you want to keep track of the HELM deployment!
 
-    helm install <yourReleaseName> <GitRepoRoot>\Helm
+    helm install <yourReleaseName> <GitRepoRoot>\Helm\virtualnode
 
 ### Step 3: Validate it's ready for use
 A new virtual node should be registered and be in state Ready. Might take on the order of 45 seconds for everything it needs to be in order so K8s marks the node as ready 
