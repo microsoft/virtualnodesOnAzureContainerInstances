@@ -5,6 +5,8 @@ description: Helm chart to install virtual nodes on Azure Container Instances to
 maintainers:
 - url: https://github.com/Gfuhrm
   name: Gabriel Fuhrman
+- url: https://github.com/jussong-msft
+  name: Justin Song
 
 # A chart can be either an 'application' or a 'library' chart.
 #
