@@ -3,7 +3,7 @@ entries:
   virtualnode:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-09-24T10:22:35.653434-07:00"
+    created: "2024-09-24T10:39:04.6686012-07:00"
     description: Helm chart to install virtual nodes on Azure Container Instances
       to an existing Azure Kubernetes Service cluster.
     digest: f597fbd355f384be53aa1662549e1a316688f9a27aa8ec5efcf0566275302ca6
@@ -15,4 +15,4 @@ entries:
     urls:
     - virtualnode-0.0.1.tgz
     version: 0.0.1
-generated: "2024-09-24T10:22:35.6478911-07:00"
+generated: "2024-09-24T10:39:04.6645467-07:00"
