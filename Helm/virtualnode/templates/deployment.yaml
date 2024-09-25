@@ -199,7 +199,7 @@ spec:
             - name: SandboxProviderType
               value: {{ .Values.sandboxProviderType }}
             - name: Subnets
-              value: {{ .Values.subnets }}
+              value: {{ .Values.aciSubnetName }}
             - name: AKS_CREDENTIAL_LOCATION
               value: /etc/aks/azure.json
             - name: ListenEndpoint
