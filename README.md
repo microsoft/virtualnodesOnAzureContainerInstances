@@ -66,15 +66,14 @@ Regions enabled for virtual node for both Confidential and non-Confidential usag
 - Central India
 - East Asia
 - East US
-- East US 2 EUAP
 - Germany West Central
 - Italy North
 - Japan East
-- North EU
+- North Europe
 - Southeast Asia
-- Swiss North
+- Switzerland North
 - UAE North
-- West EU
+- West Europe
 - West US
 
 ## Configuration Considerations
@@ -98,9 +97,9 @@ Create a new VNet within the new Resource Group, using the same Subscription and
 Requirements: 
 - Default subnet must contain 10.0.0.0/24. 
 - "aks" subnet must be large enough to accommodate AKS’s address space (CIDR /16)
-- “cg” subnet must be 
-  - large enough to accommodate all the customer pods you wish to deploy to virtual node concurrently. Recommend CIDR /16 because why not 😊
-  - Add Subnet Delegation for Microsoft.ContainerInstance/containerGroups
+- “cg” subnet must:
+  - be large enough to accommodate all the customer pods you wish to deploy to virtual node concurrently. Recommend CIDR /16 because why not 😊
+  - have a Subnet Delegation for Microsoft.ContainerInstance/containerGroups
 
 ||
 |--|
@@ -163,9 +162,7 @@ Select Scope Resource Group, Use the subscription from steps 1-3 and the new MC_
 
 ||
 |--|
-|**NOTE**: If the cluster VNet is not in the MC_* resourcegroup, <u>as would be the case if you are following the quick-start setup instructions on this README.md</u>, we must also give the AKS Managed Identity permissions to the resource group it is in: 
-
-`You will need to repeat the above steps in this section ( Step 4: Update AKS' Managed Identity) for the VNet’s resource group (from Step 1: Azure Resource Group). This is needed to allow virtual node to inject container groups in the VNet.` |
+|**NOTE**: If the cluster VNet is not in the MC_* resourcegroup, <u>as would be the case if you are following the quick-start setup instructions on this README.md</u>, we must also give the AKS Managed Identity permissions to the resource group it is in. You will need to repeat the above steps in this section (Step 4: Update AKS' Managed Identity) for the VNet’s resource group (from Step 1: Azure Resource Group). This is needed to allow virtual node to inject container groups in the VNet. |
 |--|
 
 ## Installing the virtual node Application via HELM 
