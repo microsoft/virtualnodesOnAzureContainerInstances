@@ -2,13 +2,20 @@
 
 <u>This section is for 2K+ pods on virtual node, and high deployment rates in order of 1K pods/minute. If you are not at this scale, it is unlikely that you need these optimizations.
 
-Work with the ACI team to get capacity provisioned for high scale testing. [ACI Resource Availability & Quota documentation](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-resource-and-quota-limits) </u>
+Work with the ACI team to get quota and capacity provisioned for high scale testing.</u> You can see the default quota limits at [ACI Resource Availability & Quota documentation](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-resource-and-quota-limits). To get more quota and capacity, create a support request in Azure Portal with the following parameters:
 
-Given that virtual node runs the workloads remotely, here are few guidelines to work around scaling bottlenecks.
+- Issue type: Service and subscription limits (quotas)
+- Quota type: Other Requests
+- Description: provide the following information
+  - A statement that this support request is specifically for virtual nodes on Azure Container Instances
+  - The subscription you are using, and the target region for that subscription
+  - The number of pods and cores that will be simultaneously deployed in the region
+
+Given that virtual node runs the workloads remotely, here are a few guidelines to work around scaling bottlenecks.
 
 
 ## Kube-Proxy
-Kube-Proxy is a k8s component that facilitates service discovery. On node pools, it works as a daemonset, watch the api-server for service changes, and apply iptables rules. In virtual node, we inject kube-proxy as a sidecar in each pod. The problem at large scale is the number of api-server listeners, chokes the api-server.
+Kube-Proxy is a k8s component that facilitates service discovery. On node pools, it works as a daemonset, watches the api-server for service changes, and applies iptables rules. In virtual node, we inject kube-proxy as a sidecar in each pod. The problem at large scale is that the number of api-server listeners chokes the api-server.
 
 **Recommendation**: [Opt-out of kube-proxy](/Docs/PodCustomizations.md#disable-kube-proxy). As an alternative for service discovery, use internal load balancer services and external-dns.
 
