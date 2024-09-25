@@ -163,7 +163,7 @@ Select Scope Resource Group, Use the subscription from steps 1-3 and the new MC_
 ||
 |--|
 |**NOTE**: If the cluster VNet is not in the MC_* resourcegroup, <u>as would be the case if you are following the quick-start setup instructions on this README.md</u>, we must also give the AKS Managed Identity permissions to the resource group it is in. You will need to repeat the above steps in this section (Step 4: Update AKS' Managed Identity) for the VNet’s resource group (from Step 1: Azure Resource Group). This is needed to allow virtual node to inject container groups in the VNet. |
-|--|
+||
 
 ## Installing the virtual node Application via HELM 
 ### Step 0: Configure Pre-reqs

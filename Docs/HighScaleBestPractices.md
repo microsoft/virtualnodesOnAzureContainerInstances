@@ -1,8 +1,8 @@
 # High Scale Best Practices
 
-<u>This section is for 2K+ pods on virtual node, and high deployment rates in order of 1K pods/minute. If you are not at this scale, it is unlikely that you need these optimizations.
+**This section is for 2K+ pods on virtual node, and high deployment rates in order of 1K pods/minute. If you are not at this scale, it is unlikely that you need these optimizations.**
 
-Work with the ACI team to get quota and capacity provisioned for high scale testing.</u> You can see the default quota limits at [ACI Resource Availability & Quota documentation](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-resource-and-quota-limits). To get more quota and capacity, create a support request in Azure Portal with the following parameters:
+**Work with the ACI team to get quota and capacity provisioned for high scale testing.** You can see the default quota limits at [ACI Resource Availability & Quota documentation](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-resource-and-quota-limits). To get more quota and capacity, create a support request in Azure Portal with the following parameters:
 
 - Issue type: Service and subscription limits (quotas)
 - Quota type: Other Requests
