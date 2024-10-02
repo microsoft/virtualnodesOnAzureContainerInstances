@@ -1,6 +1,6 @@
 # virtual nodes on Azure Container Instances
 
-Virtual nodes on Azure Container Instances is an evolution on the existing [virtual node](https://learn.microsoft.com/en-us/azure/aks/virtual-nodes) offering for Azure Kuberenetes Service (AKS). It has been reimplemented from the ground up to be closer to vanilla K8s and remove limitations of the prior impementation while also allowing deeper integration with the existing container offerings in Azure Container Instances! It should be noted, this application and installation only works when hosted on the Azure Kubernetes Service (AKS)!
+Virtual nodes on Azure Container Instances is an evolution on the existing [virtual node](https://learn.microsoft.com/en-us/azure/aks/virtual-nodes) offering for Azure Kubernetes Service (AKS). It has been reimplemented from the ground up to be closer to vanilla K8s and remove limitations of the prior impementation while also allowing deeper integration with the existing container offerings in Azure Container Instances! It should be noted, this application and installation only works when hosted on the Azure Kubernetes Service (AKS)!
 
 Virtual nodes on Azure Container Instances was featured in the Azure Kubernetes Service (AKS) Keynote at KubeCon, with a [segment detailing its numerous improvements and showing a demo](https://www.youtube.com/watch?v=yJOc3D52_Is&t=2330s).
 
@@ -60,9 +60,9 @@ Hard limitations
 - Using API server authorized IP ranges for AKS (because of the subnet delegation to ACI)
 
 ### Region Deployments
-Infrastructure for virtual node is not widely deployed yet. 
+Virtual nodes on Azure Container Instances is available in [all Public cloud regions where ACI is available](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-resource-and-quota-limits) for non-confidential pods.
 
-Regions enabled for virtual node for both Confidential and non-Confidential usage: 
+Confidential pods may be deployed in the following regions:
 - Central India
 - East Asia
 - East US
