@@ -2,14 +2,16 @@
 
 **This section is for 2K+ pods on virtual node, and high deployment rates in order of 1K pods/minute. If you are not at this scale, it is unlikely that you need these optimizations.**
 
-**Work with the ACI team to get quota and capacity provisioned for high scale testing.** You can see the default quota limits at [ACI Resource Availability & Quota documentation](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-resource-and-quota-limits). To get more quota and capacity, create a support request in Azure Portal with the following parameters:
+**Work with the ACI team to get quota and capacity provisioned for high scale testing.** You can see the default quota limits at [ACI Resource Availability & Quota documentation](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-resource-and-quota-limits). To request more quota and capacity, create a support request in Azure Portal with the following parameters:
 
 - Issue type: Service and subscription limits (quotas)
 - Quota type: Other Requests
-- Description: provide the following information
-  - A statement that this support request is specifically for virtual nodes on Azure Container Instances
-  - The subscription you are using, and the target region for that subscription
-  - The number of pods and cores that will be simultaneously deployed in the region
+- Description: please answer the following questions
+  1. What is your team/product name?
+  2. Will you deploy confidential or non-confidential pods in virtual nodes?
+  3. For each subscription ID you will use with virtual nodes, please specify the region you plan to use, the number of pods that will be simultaneously running, and the size (CPU/memory) of each pod.
+  4. Do these values represent steady state load/peak load? Is your traffic pattern generally more consistent or bursty?
+  5. Do these values have any buffer already built into them? If so, how much?
 
 Given that virtual node runs the workloads remotely, here are a few guidelines to work around scaling bottlenecks.
 
