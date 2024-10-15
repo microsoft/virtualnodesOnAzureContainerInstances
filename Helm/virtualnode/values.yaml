@@ -28,8 +28,8 @@ securityContext:
       - NET_ADMIN
       - NET_RAW
 
-nodeSelector: {
-}
+nodeSelector: 
+  "kubernetes.io/os": linux
 
 # Lack of tolerations will ensure virtual node pods are not scheduled on a virtual node itself
 tolerations: []
