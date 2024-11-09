@@ -9,4 +9,4 @@
 - Enable VNET override at virtual node level 🛜
   - If `aciSubnetName` provided to `values.yaml` is a full resource ID, it will be used as-is as the default subnet (instead of defaulting to the AKS VNET and looking for the value as a subnet name within it). This allows overriding the default behavior for the whole node.
 - Configure Kubelet to auto-rotate certificates ♻️
-  - Today, virtual nodes have a node certificate generated for them to access the K8s control plane, which expires in 100 days. With this updated configuration, the kubelet will auto-rotate that certficiate when it is in the 10-30% lifetime remaining range. 
+  - Today, virtual nodes have a node certificate generated for them to access the K8s control plane, which expires in 100 days. With this updated configuration, the kubelet will auto-rotate that certificate when it is in the 10-30% lifetime remaining range. 
