@@ -105,6 +105,8 @@ spec:
               --container-runtime-endpoint=/tmp/vcri.sock
               --image-service-endpoint=/tmp/vcri.sock
               --v=8
+              --feature-gates=DisableKubeletCloudCredentialProviders=false
+              --rotate-certificates=true
           env:
             - name: NodeIP
               valueFrom:
