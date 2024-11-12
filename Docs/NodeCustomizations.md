@@ -2,6 +2,31 @@
 # Node Customizations
 Customizations to the virtual node Node configuration are generally done by modifying the values.yaml file for the HELM install and then running a `HELM upgrade` action. 
 
+# Node Customization in HELM Values
+A non-exhaustive list of configuration in the HELM's `values.yaml`, and how to use them
+
+| value | Short Summary |
+| -- | -- | 
+| replicaCount | Count of VN2 node pods. See [Scaling virtual nodes Up / Down](#updated-replica-count-via-helm) for more details |
+| admissionControllerReplicaCount | Count of VN2 admission controller pods. See [Scaling virtual nodes Up / Down](#updated-replica-count-via-helm) for more details |
+| aciSubnetName | a comma delimited list of subnets to potentially use as the node default. See [this section on behaviors](#default-aci-subnet-behaviors-with-a-customized-acisubnetname) |
+
+## Default ACI Subnet behaviors with a customized `aciSubnetName`
+This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
+
+What value does it have as a list, when the setting is intended what to use for the default subnet? One would reasonably assume they can only default to one setting!
+- It allows the customer to scale outward more naturally to use multiple subnets with a single VN2 configuration. The virutal node code is configured to distribute itself so each individual node replica brought up will pick the least used subnet (with a very niave implementation, but which should still get us decent spread). This "default" subnet it picks will be used for pods which do not have a [subnet override](/Docs/PodCustomizations.md#using-virtual-nodes-with-multiple-subnets).
+
+What values can be in this list? Each value can either be a subnet name OR a subnet resource ID
+- If subnet name(s) are provided, they will be used assuming that they are within the AKS VNET. 
+- If full resource IDs to the subnet are provided, they will be used as is. 
+Normal VNET restrictions apply (EG - must be in same region as resources in VNET)
+
+Can my list have both subnet names and subnet resource Ids? It can indeed!  
+EG - 
+``` yaml 
+aciSubnetName: cg,/subscriptions/mySubGuid/resourceGroups/myAksRg/providers/Microsoft.Network/virtualNetworks/aks-vnet-25784907/subnets/cg,/subscriptions/mySubGuid/resourceGroups/myAksRg/providers/Microsoft.Network/virtualNetworks/adifferentvnet/subnets/adifferentsubnet
+```
 
 # How to run more than one type of customized virtual node in the same AKS
 You may have a scenario that you want to run more than 1 virtual node HELM configuration in one AKS cluster. 
