@@ -9,7 +9,7 @@
 - Description: please answer the following questions
   1. What is your team/product name?
   2. Will you deploy confidential or non-confidential pods in virtual nodes?
-  3. For each subscription ID you will use with virtual nodes, please specify the region you plan to use, the number of pods that will be simultaneously running, and the size (CPU/memory) of each pod.
+  3. For each subscription ID you will use with virtual nodes, please specify the region (and availability zones, if applicable) you plan to use, the number of pods that will be simultaneously running, and the size (CPU/memory) of each pod.
   4. Do these values represent steady state load/peak load? Is your traffic pattern generally more consistent or bursty?
   5. Do these values have any buffer already built into them? If so, how much?
 
