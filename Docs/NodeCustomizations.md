@@ -1,5 +1,7 @@
 
 # Node Customizations
+If you would like an alternate way to install virtual nodes on ACI, the Helm chart in this repo is also published to the chart repository `https://microsoft.github.io/virtualnodesOnAzureContainerInstances/`.
+
 Customizations to the virtual node Node configuration are generally done by modifying the values.yaml file for the HELM install and then running a `HELM upgrade` action. 
 
 # Node Customization in HELM Values
