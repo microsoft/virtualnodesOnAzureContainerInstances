@@ -1,8 +1,15 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
-### 1.29.8+241108.01  
-- Updated VN2's Kubelet to upstream K8s' 1.29.8 🐣
+### 1.2912.25010701
+- Updated virtual node's upstream binaries to 1.29.12 🐣
+- Updated Chart Versioning to match (K8sMajor).(K8sMinor)(K8sPatch).(virtualnodeBuildDate)(virtualnodeBuildNumber) 📰
+  - Resolves an issue with web publishing of HELM... HELM isn't fully supportive of SEMVER standards, so removing the `+`
+  - Preserves ability for matching virtual nodes' K8s version with AKS control plane 
+- Updated build processes / dependencies for virtual node's infra containers to resolve security advisories 🔐
+
+### 1.2908.24110801
+- Updated virtual node's Kubelet to upstream K8s' 1.29.8 🐣
   - When run with AKS 1.29.*, now enables new 1.29 functionalities for K8s! EG - new K8s style sidecars, now running on virtual nodes!
 - Updated Chart Versioning to match K8sVersion+BuildDate.BuildNumber 📰
   - This should enable customers to take updates while also keeping within version compatibility of their AKS's K8s version. 
