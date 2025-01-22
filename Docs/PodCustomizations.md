@@ -139,6 +139,13 @@ spec:
     operator: Exists
 ```
 
+### Confidential Policy with HELM dynamic values
+When managing K8s deployments where multiple containers need to be aligned with dynamic setups, some customers use variables in the YAML and have HELM replace them with real values at deployment time. This is a great system for more complex deployments, but Confidential Policies are designed to reject configurations that they do not recognize!
+
+However, you can still use a very similar process to the above policy generation to continue getting the benefits from both HELM's dynamic chart capabilities and Confidential's security mechanisms!
+
+Instead of deploying directly from HELM using something like `helm install`, make use of the `helm template` command which will output a static YAML file that is no longer using dynamic values. At that point, using the [policy gen command from the above section](#confidential-containers) on that YAML will update the YAML with the appropriate Confidential Policy, and you can deploy it via `kubectl`. The static YAML generation and Confidential Policy generation steps will need to be re-run any time the HELM charts are updated to ingest those updates.
+
 ### Allow All Confid Policy
 For testing / developing containers before the functionality is locked in, often it is useful to run with a very permissive policy. The most permissive policy is below, which provides effectively NO security guarantees... allowing a container to be run with any payload and debug execution allowed, but still running inside the specialized confidential hardware and with the attestation services running. 
 
