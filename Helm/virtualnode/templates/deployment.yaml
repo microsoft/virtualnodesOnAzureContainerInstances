@@ -12,8 +12,9 @@ spec:
       {{- include "virtualnode2.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+      {{- with .Values.podAnnotations }}
+        "kubernetes.azure.com/no-http-proxy-vars": "true"
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -198,6 +199,16 @@ spec:
             - mountPath: /kubeconfig/
               name: kube-config-volume   
           env:
+            - name: VirtualNode_SandboxProvider_StandbyPools_Cpu
+              value: {{ quote .Values.standbyPool.standbyPoolsCpu }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_Memory
+              value: {{ quote .Values.standbyPool.standbyPoolsMemory }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_MaxReadyCapacity
+              value: {{ quote .Values.standbyPool.maxReadyCapacity }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_CcePolicy
+              value: {{ .Values.standbyPool.ccePolicy }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_Zones
+              value: {{ quote .Values.standbyPool.zones }}            
             - name: SandboxProviderType
               value: {{ .Values.sandboxProviderType }}
             - name: Subnets
@@ -210,6 +221,8 @@ spec:
               value: {{ .Values.aciSubnetName }}
             - name: MountHostImage
               value: {{ .Values.images.mountImage }}
+            - name: ResourceGroup
+              value: {{ .Values.aciResourceGroupName }}
             - name: NodeName
               valueFrom:
                 fieldRef:
