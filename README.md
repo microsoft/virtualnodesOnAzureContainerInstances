@@ -95,7 +95,7 @@ Not strictly required but we recommend setting up a new resource group to keep c
 Create a new VNet within the new Resource Group, using the same Subscription and Region. 
 
 Requirements: 
-- Default subnet must contain 10.0.0.0/24. 
+- Default subnet must contain 10.0.0.0/24. This is not used by virtual nodes, but is instead being reserved to prevent its usage. 
 - "aks" subnet must be large enough to accommodate AKS’s address space (CIDR /16)
 - “cg” subnet must:
   - be large enough to accommodate all the customer pods you wish to deploy to virtual node concurrently. Recommend CIDR /16 because why not 😊
@@ -103,7 +103,7 @@ Requirements:
 
 ||
 |--|
-|**IMPORTANT**: The above subnet name (`cg`) with the subnet delegation must be used exactly, as those are the default values in the HELM values.yaml file. Using any other value will require other deployment changes. |
+|**IMPORTANT**: The above subnet name (`cg`) with the subnet delegation must be used exactly, as those are the default values in the HELM values.yaml file. Using any other value will require other deployment changes. For how to make that particular change, [see instructions here](/Docs/NodeCustomizations.md#default-aci-subnet-behaviors-with-a-customized-acisubnetname)|
 ||
 
 VNet needs to have address spaces to put 3 subnets in. Suggested configuration of address spaces:
@@ -164,6 +164,8 @@ Select Scope Resource Group, Use the subscription from steps 1-3 and the new MC_
 |--|
 |**NOTE**: If the cluster VNet is not in the MC_* resourcegroup, <u>as would be the case if you are following the quick-start setup instructions on this README.md</u>, we must also give the AKS Managed Identity permissions to the resource group it is in. You will need to repeat the above steps in this section (Step 4: Update AKS' Managed Identity) for the VNet’s resource group (from Step 1: Azure Resource Group). This is needed to allow virtual node to inject container groups in the VNet. |
 ||
+
+For customers who do not wish to use Contributor permissions and instead want to create a custom role with the minimum required permissions to use virtual nodes and apply that, please see [instructions here](/Docs/SecurityCustomizations.md#creating-a-custom-azure-role-for-virtual-nodes)
 
 ## Installing the virtual node Application via HELM 
 ### Step 0: Configure Pre-reqs
@@ -249,6 +251,8 @@ If you are looking to utilize virtual node specific capabilities or behaviors fo
 If you are looking to customize your virtual node installation, [check out the Node Customizations](Docs/NodeCustomizations.md)
 
 If you are planning to run at high scale (thousands of pods per minute), we have a [section with best practices and recommendations!](Docs/HighScaleBestPractices.md)
+
+For those looking for ways to further lock down their infrastructure, we have a [section on Security customizations!](Docs/SecurityCustomizations.md)
 
 Need Support?  [File a support request for Azure Container Instances via Azure Portal](https://aka.ms/azuresupport)
 

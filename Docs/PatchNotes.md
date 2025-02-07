@@ -1,6 +1,12 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.2912.25013001
+- Bug fix for rare issue that if hit could prevent a virtual node infra pod from successfully initializing
+- Provided ability for customer to configure the usage of a different Azure Resource Group to put ACI CGs into to back virtual node pods. This will enable usage of virtual node with AKS's new NRG lockdown feature. 
+- Added annotations to virtual node infra pods to enable them to keep functioning when used with an AKS configured for its customer containers to use an http proxy. 
+- Added ability to use Standby Pool functionality, now in Public Preview! For more information, [see here](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-standby-pool-overview)
+
 ### 1.2912.25010701
 - Updated virtual node's upstream binaries to 1.29.12 🐣
 - Updated Chart Versioning to match (K8sMajor).(K8sMinor)(K8sPatch).(virtualnodeBuildDate)(virtualnodeBuildNumber) 📰
