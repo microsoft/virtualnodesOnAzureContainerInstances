@@ -12,6 +12,8 @@ spec:
     metadata:
       labels:
         {{- include "virtualnode2.admissionSelectorLabels" . | nindent 8 }}
+      annotations:
+        "kubernetes.azure.com/no-http-proxy-vars": "true"
     spec:
       terminationGracePeriodSeconds: 0
       serviceAccountName: {{ if .Values.rbac.install }} "{{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}" {{ end }}
