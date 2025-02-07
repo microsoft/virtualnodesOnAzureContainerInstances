@@ -4,7 +4,7 @@ If you would like an alternate way to install virtual nodes on ACI, the Helm cha
 
 Customizations to the virtual node Node configuration are generally done by modifying the values.yaml file for the HELM install and then running a `HELM upgrade` action. 
 
-High Level Section List for convienient jumping:
+High Level Section List for convenient jumping:
 
 - [Standby Pools](#standby-pools)
   - [Preparing](#prepare-subscription)
@@ -61,7 +61,6 @@ Modify the Helm chart value.yml to setup the standby pools using the below param
 **Some Notes**, to be explicit on how standby pools move the above settings into the node level:
 - If using standby pools, the UVM size will be predetermined by this VN2 configuration, regardless of what the requested pod size is.
 - If using standby pools, CCE policy is set at the node level. All pods scheduled to the node should have the same exact matching policy. If the pod has no policy specified it will run with the node's policy. If the pod has a policy specified, it has to match the node's policy or a client side validation will fail the pod creation. 
-- If using standby pools, FPL configuration is set a the node level, and individual pod configuration of FPL will be ignored. 
 
 ## Image Caching
 To cache an image to your standby pool, you will need to create a pod with annotation 
@@ -117,7 +116,7 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
 
 What value does it have as a list, when the setting is intended what to use for the default subnet? One would reasonably assume they can only default to one setting!
-- It allows the customer to scale outward more naturally to use multiple subnets with a single VN2 configuration. The virutal node code is configured to distribute itself so each individual node replica brought up will pick the least used subnet (with a very niave implementation, but which should still get us decent spread). This "default" subnet it picks will be used for pods which do not have a [subnet override](/Docs/PodCustomizations.md#using-virtual-nodes-with-multiple-subnets), AND like most node settings will also be used by the Node's Standby Pool for its configuration, if it is enabled.
+- It allows the customer to scale outward more naturally to use multiple subnets with a single VN2 configuration. The virutal node code is configured to distribute itself so each individual node replica brought up will pick the least used subnet (with a very naive implementation, but which should still get us decent spread). This "default" subnet it picks will be used for pods which do not have a [subnet override](/Docs/PodCustomizations.md#using-virtual-nodes-with-multiple-subnets), AND like most node settings will also be used by the Node's Standby Pool for its configuration, if it is enabled.
 
 What values can be in this list? Each value can either be a subnet name OR a subnet resource ID
 - If subnet name(s) are provided, they will be used assuming that they are within the AKS VNET. 
