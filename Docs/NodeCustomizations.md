@@ -1,4 +1,3 @@
-
 # Node Customizations
 If you would like an alternate way to install virtual nodes on ACI, the Helm chart in this repo is also published to the chart repository `https://microsoft.github.io/virtualnodesOnAzureContainerInstances/`.
 
@@ -11,7 +10,7 @@ High Level Section List for convenient jumping:
   - [Configure / Install](#install-vn2-with-standby-pools)
   - [Image Caching](#image-caching)
 - [Node Customizations](#non-standbypool-node-customizations)
-- [Running Multiple Customized virutal nodes](#how-to-run-more-than-one-type-of-customized-virtual-node-in-the-same-aks)
+- [Running Multiple Customized virtual nodes](#how-to-run-more-than-one-type-of-customized-virtual-node-in-the-same-aks)
 - [Scaling virtual nodes Up / Down](#scaling-virtual-nodes-up--down)
 
 
@@ -48,7 +47,7 @@ Register-AzProviderFeature -FeatureName StandbyContainerGroupPoolPreview -Provid
 20.	If you do not have Contributor/ Owner/ Administrator roles to the subscription you are using ACI Pools for, you will also need to setup StandbyPools RBAC roles (Standby Pool create, reads, etc.) and assign to yourself.
 
 ## Install VN2 with Standby Pools
-Modify the Helm chart value.yml to setup the standby pools using the below parameters.
+Modify the Helm chart values.yaml to set up the standby pools using the below parameters.
 | value | Short Summary |
 | -- | -- | 
 | sandboxProviderType | Indicates if virtual node is configured to use standby pools with `StandbyPool`, or `OnDemand` (the default) if not |
@@ -116,7 +115,7 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
 
 What value does it have as a list, when the setting is intended what to use for the default subnet? One would reasonably assume they can only default to one setting!
-- It allows the customer to scale outward more naturally to use multiple subnets with a single VN2 configuration. The virutal node code is configured to distribute itself so each individual node replica brought up will pick the least used subnet (with a very naive implementation, but which should still get us decent spread). This "default" subnet it picks will be used for pods which do not have a [subnet override](/Docs/PodCustomizations.md#using-virtual-nodes-with-multiple-subnets), AND like most node settings will also be used by the Node's Standby Pool for its configuration, if it is enabled.
+- It allows the customer to scale outward more naturally to use multiple subnets with a single VN2 configuration. The virtual node code is configured to distribute itself so each individual node replica brought up will pick the least used subnet (with a very naive implementation, but which should still get us decent spread). This "default" subnet it picks will be used for pods which do not have a [subnet override](/Docs/PodCustomizations.md#using-virtual-nodes-with-multiple-subnets), AND like most node settings will also be used by the Node's Standby Pool for its configuration, if it is enabled.
 
 What values can be in this list? Each value can either be a subnet name OR a subnet resource ID
 - If subnet name(s) are provided, they will be used assuming that they are within the AKS VNET. 
@@ -156,7 +155,7 @@ namespace: <Something unique for each config>
 # Scaling virtual nodes Up / Down
 As would be expected from K8s resources, virtual node can be scaled up or down by modifying the replica count, either in place or with a HELM update. 
 
-The number of virtual node pods and Admission Controller pods can each be scaled seperately. The virtual node pods are responsible for most K8s interactions with the virtualized pods, and can at most support 200 pods each. The Admission Controllers are present to ensure certain state about the virtual nodes is updated for the K8s Control Plane, as well as making modifications to the pods being sent to the virtual nodes which enables some functionalities. 
+The number of virtual node pods and Admission Controller pods can each be scaled separately. The virtual node pods are responsible for most K8s interactions with the virtualized pods, and can at most support 200 pods each. The Admission Controllers are present to ensure certain state about the virtual nodes is updated for the K8s Control Plane, as well as making modifications to the pods being sent to the virtual nodes which enables some functionalities. 
 
 For every 200 pods you wish to host in virtual node you will need to scale out an additional virtual node replica for it. 
 
@@ -180,7 +179,7 @@ Replica count for the resources can be updated in-place via Kubectl commands, li
 
 EG: `kubectl scale StatefulSet virtualnode -n vn2 --replicas=1`
 
-**Pitfall**: The danger with this method is if you do not align the HELM chart, the next time you apply a HELM update it will overwrite the replica acount and force a scale up / down to whatever is in the HELM. 
+**Pitfall**: The danger with this method is if you do not align the HELM chart, the next time you apply a HELM update it will overwrite the replica count and force a scale up / down to whatever is in the HELM. 
 
 ## Updated Replica Count via HELM
 The HELM's values.yaml file has two values for controlling replica counts: 
@@ -189,4 +188,4 @@ replicaCount: 1
 admissionControllerReplicaCount: 1 
 ```
 
-`replicaCount` controls the virtual node pod replicas, while `admissionControllerReplicaCount` controls the AdmissionController pod replicas. 
+`replicaCount` controls the virtual node pod replicas, while `admissionControllerReplicaCount` controls the AdmissionController pod replicas.
