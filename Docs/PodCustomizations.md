@@ -11,7 +11,7 @@ This page is here to provide documentation of non-standard-K8s functionality tha
 | microsoft.containerinstance.virtualnode.injectkubeproxy | Controlling Kube-Proxy Usage | [Kube-Proxy](#disable-kube-proxy)
 | microsoft.containerinstance.virtualnode.injectdns | Controlling K8s DNS Usage | [K8s DNS](#disable-k8s-dns-injection)
 | microsoft.containerinstance.virtualnode.zones | Requesting Azure Zone Deployment | [Zones](#zones)
-
+| microsoft.containerinstance.virtualnode.imagecachepod | Image caching request for Standby Pools | [Image Caching](/Docs/NodeCustomizations.md#image-caching)
 
 | virtual node Downlevel API | Short Summary | Doc Link |
 | ------------- | ------------- | --- |
