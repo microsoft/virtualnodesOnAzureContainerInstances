@@ -121,6 +121,6 @@ You can reference the information below if you want to restrict outbound traffic
 | `*.atlas.cloudapp.azure.com` | 19390 (TCP) | Required for the virtual node infrastructure to set up initial communication with the ACI clusters where container groups are deployed. It is also used to handle communication for CRI streaming APIs such as Exec and Attach. |
 | `*.atlas.cloudapp.azure.com` | 33391 (TCP) | Required for the virtual node infrastructure to communicate with the container runtime on the ACI clusters where container groups are deployed, for the purpose of performing lifecycle/management operations on containers. |
 
-The cluster FQDN will always be in the format `<clusterName>.<regionName>.atlas.cloudapp.azure.com`, where the value of `clusterName` is unique per cluster and the value of `regionName` corresponds to the region where the cluster is deployed. For instance, a FQDN for a cluster in Central India may look something like `sbzip4leutnry21.centralindia.atlas.cloudapp.azure.com`.
+The ACI cluster FQDN will always have the format `<clusterName>.<regionName>.atlas.cloudapp.azure.com`, where the value of `clusterName` is unique per cluster and the value of `regionName` corresponds to the region where the ACI cluster is deployed. For instance, a FQDN for an ACI cluster in Central India may look something like `sbzip4leutnry21.centralindia.atlas.cloudapp.azure.com`.
 
 Note that a single virtual node with multiple running pods may be communicating with multiple ACI clusters - there is no guarantee of a 1:1 mapping from virtual node to ACI cluster.
