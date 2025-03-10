@@ -8,8 +8,7 @@ This section provides instructions for optional security updates or supporting a
 2. [Prerequisites](#prerequisites)
 3. [Creating a Custom Azure Role for virtual nodes](#creating-a-custom-azure-role-for-virtual-nodes)
 4. [Locking Down virtual nodes Infra](#locking-down-virtual-nodes-infra)
-5. [Troubleshooting](#troubleshooting)
-6. [Additional Resources](#additional-resources)
+5. [Outbound FQDN Rules for virtual nodes](#outbound-fqdn-rules-for-virtual-nodes)
 
 ## Introduction
 
@@ -123,4 +122,4 @@ You can reference the information below if you want to restrict outbound traffic
 
 The ACI cluster FQDN will always have the format `<clusterName>.<regionName>.atlas.cloudapp.azure.com`, where the value of `clusterName` is unique per cluster and the value of `regionName` corresponds to the region where the ACI cluster is deployed. For instance, a FQDN for an ACI cluster in Central India may look something like `sbzip4leutnry21.centralindia.atlas.cloudapp.azure.com`.
 
-Note that a single virtual node with multiple running pods may be communicating with multiple ACI clusters - there is no guarantee of a 1:1 mapping from virtual node to ACI cluster.
+Note that a single virtual node may be communicating with multiple ACI clusters - there is no guarantee of a 1:1 mapping from virtual node to ACI cluster.
