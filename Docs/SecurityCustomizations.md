@@ -108,3 +108,19 @@ In order to keep the cleaned up built-in roles for your subscription clean going
 With AKS's NRG Lockdown applied, virtual nodes will be unable to place resources into the AKS locked resource group... so we need to update the virtual node configuration to use a different resource group for virtual nodes infra. 
 
 Create a new resource group in the same subscription as the AKS cluster running virtual nodes, and then follow the steps [here](NodeCustomizations.md#changing-the-azure-resource-group-used-for-aci-resources-via-aciresourcegroupname) to customize your HELM install to configure virtual nodes to use it. Also update the AKS MI per the [above steps](#creating-a-custom-azure-role-for-virtual-nodes) to use a custom role scoped to this RG as the "target RG" to ensure continued operation.
+
+## Outbound FQDN Rules for virtual nodes
+
+You can reference the information below if you want to restrict outbound traffic from your virtual nodes. This section describes connectivity that is uniquely required by virtual nodes infrastructure. AKS clusters and nodes have additional requirements that are documented at [Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters](https://learn.microsoft.com/en-us/azure/aks/outbound-rules-control-egress).
+
+### Required FQDN rules
+
+| Destination FQDN | Port | Use |
+| ------------- | --- | ------------- |
+| `management.azure.com`, or `Azure Resource Manager` service tag | HTTPS:443 | Required for the virtual node infrastructure to manage container groups that are deployed through the ACI ARM APIs for pods in the virtual node. |
+| `*.atlas.cloudapp.azure.com` | 19390 (TCP) | Required for the virtual node infrastructure to set up initial communication with the ACI clusters where container groups are deployed. It is also used to handle communication for CRI streaming APIs such as Exec and Attach. |
+| `*.atlas.cloudapp.azure.com` | 33391 (TCP) | Required for the virtual node infrastructure to communicate with the container runtime on the ACI clusters where container groups are deployed, for the purpose of performing lifecycle/management operations on containers. |
+
+The cluster FQDN will always be in the format `<clusterName>.<regionName>.atlas.cloudapp.azure.com`, where the value of `clusterName` is unique per cluster and the value of `regionName` corresponds to the region where the cluster is deployed. For instance, a FQDN for a cluster in Central India may look something like `sbzip4leutnry21.centralindia.atlas.cloudapp.azure.com`.
+
+Note that a single virtual node with multiple running pods may be communicating with multiple ACI clusters - there is no guarantee of a 1:1 mapping from virtual node to ACI cluster.
