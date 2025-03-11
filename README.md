@@ -38,7 +38,7 @@ So we are sure you are excited to try it out for yourself! Here are what you wil
 ### Tools installed:
 - HELM
 - Azure CLI
-- Kubectl (version 1.29+)
+- Kubectl (version 1.30+)
 - Git
 ### Misc
 - Azure subscription 
@@ -120,7 +120,7 @@ Suggested configuration of subnets:
 ||
 
 ### Step 3: Azure Kubernetes Service
-Create a new AKS cluster from Azure Portal, in the same RG from Step 1. Must be created using Subscription and Region from Prereqs. Must be configured to use network plugin “Azure CNI Node Subnet”, the VNET from Step 2, with the cluster to use the AKS subnet already created, and service CIDR / DNS need to be configured to be outside the existing VNET subnets. Use Kubernetes version 1.29.* and automatic upgrade to “enabled with patch”. Nodes selected for AKS must be at least 4 CPU and 16 GB RAM to accomodate virtual nodes being run on them, though they can be larger. 
+Create a new AKS cluster from Azure Portal, in the same RG from Step 1. Must be created using Subscription and Region from Prereqs. Must be configured to use network plugin “Azure CNI Node Subnet”, the VNET from Step 2, with the cluster to use the AKS subnet already created, and service CIDR / DNS need to be configured to be outside the existing VNET subnets. Use Kubernetes version 1.30.* and automatic upgrade to “enabled with patch”. Nodes selected for AKS must be at least 4 CPU and 16 GB RAM to accomodate virtual nodes being run on them, though they can be larger. 
 
 Arrows added to below pictures for the important fields
 
@@ -129,7 +129,7 @@ Arrows added to below pictures for the important fields
 ![AKS Basics](/Docs/Pictures/vn_aks_basics.png)
 
 ^ Must be created using Subscription from Prereqs and Region from Limitations.  
-^ Use Kubernetes version 1.29.* and automatic upgrade to “enabled with patch”
+^ Use Kubernetes version 1.30.* and automatic upgrade to “enabled with patch”
 
 #### AKS Node Pools Tab
 
