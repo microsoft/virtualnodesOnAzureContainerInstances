@@ -1,17 +1,23 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3009.25031001
+- Updated virtual node's with compatibility with 1.30, updating to use upstream binaries from 1.30.09 🐣
+  - While 1.30 has breaking changes for K8s internal implementation compared to 1.29, this virtual node update ships with both 1.29 and 1.30 binaries and will conditionally use those compatible with the AKS node version it is deployed to.
+  - Since virtual nodes is compatible on both sides of that breaking change boundary, existing customers should update their virtual nodes deployment to this 1.30.* compatible deployment FIRST, and then allow their AKS up update node images to 1.30.*
+- Added capability to specify a default Azure Zone to deploy pods to at the VN2 level. This is in addition to the existing capability for specifying the zone for particular pods... and the pod having an explicit zone specification will take presidence over the virtual node's node configuration. See further details in the pod and node configuration sections 📝
+
 ### 1.2912.25013001
-- Bug fix for rare issue that if hit could prevent a virtual node infra pod from successfully initializing
-- Provided ability for customer to configure the usage of a different Azure Resource Group to put ACI CGs into to back virtual node pods. This will enable usage of virtual node with AKS's new NRG lockdown feature. 
-- Added annotations to virtual node infra pods to enable them to keep functioning when used with an AKS configured for its customer containers to use an http proxy. 
-- Added ability to use Standby Pool functionality, now in Public Preview! For more information, [see here](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-standby-pool-overview)
+- Bug fix for rare issue that if hit could prevent a virtual node infra pod from successfully initializing 🐛
+- Provided ability for customer to configure the usage of a different Azure Resource Group to put ACI CGs into to back virtual node pods. This will enable usage of virtual node with AKS's new NRG lockdown feature. 🆕
+- Added annotations to virtual node infra pods to enable them to keep functioning when used with an AKS configured for its customer containers to use an http proxy. 🗒️
+- Added ability to use Standby Pool functionality, now in Public Preview! For more information, [see here](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-standby-pool-overview) 🎱
 
 ### 1.2912.25010701
 - Updated virtual node's upstream binaries to 1.29.12 🐣
 - Updated Chart Versioning to match (K8sMajor).(K8sMinor)(K8sPatch).(virtualnodeBuildDate)(virtualnodeBuildNumber) 📰
   - Resolves an issue with web publishing of HELM... HELM isn't fully supportive of SEMVER standards, so removing the `+`
-  - Preserves ability for matching virtual nodes' K8s version with AKS control plane 
+  - Preserves ability for matching virtual nodes' K8s version with AKS control plane
 - Updated build processes / dependencies for virtual node's infra containers to resolve security advisories 🔐
 
 ### 1.2908.24110801

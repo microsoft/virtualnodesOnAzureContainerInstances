@@ -110,6 +110,7 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | admissionControllerReplicaCount | Count of VN2 admission controller pods. See [Scaling virtual nodes Up / Down](#updated-replica-count-via-helm) for more details |
 | aciSubnetName | a comma delimited list of subnets to potentially use as the node default. See [this section on behaviors](#default-aci-subnet-behaviors-with-a-customized-acisubnetname) |
 | aciResourceGroupName | the name of the Azure Resource Group to put virtual node's ACI CGs into. See [this section on behaviors](#changing-the-azure-resource-group-used-for-aci-resources-via-aciresourcegroupname) |
+| zones | a semi-colon delimited list of Azure Zones to deploy pods to. See [this section on behaviors](#default-azure-zone-behaviors-with-a-customized-zones) |
 
 ## Default ACI Subnet behaviors with a customized `aciSubnetName`
 This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
@@ -139,10 +140,21 @@ When empty the default will be used, but if overridden it should just contain th
 aciResourceGroupName: my_great_rg_name
 ```
 
+## Default Azure Zone behaviors with a customized `zones`
+Azure has a concept of [Availability Zones](https://learn.microsoft.com/en-us/azure/reliability/availability-zones-overview?tabs=azure-cli), which are separated groups of datacenters that exist within the same region. If your scenario calls for it, you can specify a zone for your pods to be hosted on within your given region. 
+
+``` yaml 
+zones: '<semi-colon delimited string of zones>'
+```
+
+**NOTE**: Today, ACI only supports providing a single zone as part of the request to allocate a sandbox for your pod. If you provide multiple, you should get an informative error effectively saying you can only provide one. 
+
+This setting applies a node level default zone, so pods which do not have a [pod level annotation for zone](/Docs/PodCustomizations.md#zones) will have this applied. When set with an empty string, no zones will be used as this default. 
+
 # How to run more than one type of customized virtual node in the same AKS
 You may have a scenario that you want to run more than 1 virtual node HELM configuration in one AKS cluster. 
 
-To achieve this, you will need to ensure only one of those HELM releases' value.yaml files has a non-zero replica count for the the Admission Controller, which also controls implicitly registering the web hook. The default value is 1, as it is a required service to be running for virtual node to function. 
+To achieve this, you will need to ensure only one of those HELM releases' value.yaml files has a non-zero replica count for the Admission Controller, which also controls implicitly registering the web hook. The default value is 1, as it is a required service to be running for virtual node to function. 
 ```
 admissionControllerReplicaCount: 1
 ```

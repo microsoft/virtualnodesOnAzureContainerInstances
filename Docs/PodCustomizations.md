@@ -166,7 +166,7 @@ By default, virtual node pods will run in the subnet configured in the HELM char
 Example: `microsoft.containerinstance.virtualnode.subnets.primary: /subscriptions/000000-0000-0000-053ca49ab4b5/resourceGroups/definitely_a_fake_RG/providers/Microsoft.Network/virtualNetworks/the_VNET_For_This_Subnet/subnets/your_subnet_name`
 
 ## Running pods with an Azure Managed Identity
-For some Azure interactions it can be very convienient (and a good security practice) to utilize Azure Managed Identities to make the requests, rather than having your code deal with the unpleasanties of rotating credentials. virtual node can hook up to [Azure Container Instances functionality for running containers with a Managed Identity](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-managed-identity) via a pod annotation: 
+For some Azure interactions it can be very convenient (and a good security practice) to utilize Azure Managed Identities to make the requests, rather than having your code deal with the unpleasantness of rotating credentials. virtual node can hook up to [Azure Container Instances functionality for running containers with a Managed Identity](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-managed-identity) via a pod annotation: 
 
     microsoft.containerinstance.virtualnode.identity
 
@@ -189,11 +189,13 @@ By default, K8s Pods are expected to utilize the K8s cluster's DNS. If you want 
 If provided as false, ACI's default DNS will be used by this pod instead of K8s. 
 
 ## Zones
-Azure has a concept of [Availability Zones](https://learn.microsoft.com/en-us/azure/reliability/availability-zones-overview?tabs=azure-cli), which are seperated groups of datacenters that exist within the same region. If your scenario calls for it, you can specify a zone for your pod to be hosted on within your given region. 
+Azure has a concept of [Availability Zones](https://learn.microsoft.com/en-us/azure/reliability/availability-zones-overview?tabs=azure-cli), which are separated groups of datacenters that exist within the same region. If your scenario calls for it, you can specify a zone for your pod to be hosted on within your given region. 
 
     microsoft.containerinstance.virtualnode.zones: "<semi-colon delimited string of zones>"
 
 **NOTE**: Today, ACI only supports providing a single zone as part of the request to allocate a sandbox for your pod. If you provide multiple, you should get an informative error effectively saying you can only provide one. 
+
+When using the [node level configuration](/Docs/NodeCustomizations.md#default-azure-zone-behaviors-with-a-customized-zones) to specify a default zone, if this pod annotation is set it will take precedence over that. When a node level zone is set and you want a particular pod to use no zone, set the pod level annotation with an empty string value.
 
 # virtual node Downlevel APIs
 virtual node has a couple of downlevel APIs which don't behave quite like K8s downlevel APIs. They work such that if for a POD if the VALUE of on ENV var is exactly equal to one of the virtual node Downlevel APIs, it will be replaced server size with the appropriate "real" value. 
