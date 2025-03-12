@@ -122,6 +122,6 @@ You can reference the information below if you want to restrict outbound traffic
 
 The ACI cluster FQDN will always have the format `<clusterName>.<regionName>.atlas.cloudapp.azure.com`, where the value of `clusterName` is unique per cluster and the value of `regionName` corresponds to the region where the ACI cluster is deployed. For instance, a FQDN for an ACI cluster in Central India may look something like `sbzip4leutnry21.centralindia.atlas.cloudapp.azure.com`.
 
-The ACI cluster IP addresses will come out of the `AzureCloud` [service tag](https://learn.microsoft.com/en-us/azure/virtual-network/service-tags-overview). You can get the IP address prefixes corresponding to this service tag [here](https://www.microsoft.com/en-us/download/details.aspx?id=56519).
+The ACI cluster IP addresses will be assigned from the `AzureCloud` [service tag](https://learn.microsoft.com/en-us/azure/virtual-network/service-tags-overview). You can get the IP address prefixes corresponding to this service tag [here](https://www.microsoft.com/en-us/download/details.aspx?id=56519).
 
 Note that a single virtual node may be communicating with multiple ACI clusters - there is no guarantee of a 1:1 mapping from virtual node to ACI cluster.
