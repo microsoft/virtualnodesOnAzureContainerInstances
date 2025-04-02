@@ -254,6 +254,8 @@ If you are planning to run at high scale (thousands of pods per minute), we have
 
 For those looking for ways to further lock down their infrastructure, we have a [section on Security customizations!](Docs/SecurityCustomizations.md)
 
+For troubleshooting, see the [Troubleshooting doc](/Docs/Troubleshooting.md)
+
 Need Support?  [File a support request for Azure Container Instances via Azure Portal](https://aka.ms/azuresupport)
 
 ---
