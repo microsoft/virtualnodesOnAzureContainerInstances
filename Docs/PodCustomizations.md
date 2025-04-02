@@ -242,7 +242,6 @@ spec:
   - effect: NoSchedule
     key: virtual-kubelet.io/provider
     operator: Exists
-
 ```
 Which, assuming you were running a Confidential pod with an image which includes CURL, you could then run something like this to get the THIM attestation: 
 

@@ -1,6 +1,12 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3009.25031902
+- Updated Admission Controller to be built / run on more modern .NET 🥅
+- Bug fix for potential deadlock of CRI cache state when many pod deletions occur at once 🐛
+- Minor bug fix for logs from virtual node infra missing some relevant data 🐛
+- Minor HELM fix to clean up warnings ☸️
+
 ### 1.3009.25031001
 - Updated virtual node's with compatibility with 1.30, updating to use upstream binaries from 1.30.09 🐣
   - While 1.30 has breaking changes for K8s internal implementation compared to 1.29, this virtual node update ships with both 1.29 and 1.30 binaries and will conditionally use those compatible with the AKS node version it is deployed to.
