@@ -13,15 +13,19 @@ This page is here to provide documentation of non-standard-K8s functionality tha
 | microsoft.containerinstance.virtualnode.zones | Requesting Azure Zone Deployment | [Zones](#zones)
 | microsoft.containerinstance.virtualnode.imagecachepod | Image caching request for Standby Pools | [Image Caching](/Docs/NodeCustomizations.md#image-caching)
 
+| Pod Label | Short Summary | Doc Link | 
+| ------------- | ------------- | --- |
+| azure.workload.identity/use | Run using a Workload Identity | [Workload Identity](#using-workload-identity)
+
 | virtual node Downlevel API | Short Summary | Doc Link |
 | ------------- | ------------- | --- |
 | ===VIRTUALNODE2.CC.THIM.ENDPOINT=== | Replaced with THIM Endpoint | [THIM Downlevel APIs](#thim-downlevel-apis)
 | ===VIRTUALNODE2.CC.THIM.ADDRESS=== | Replaced with THIM Address | [THIM Downlevel APIs](#thim-downlevel-apis)
 
-# Controlling Behaviors through Pod Annotations
-The general method for controlling non-K8s behavior of virtual nodes at the pod level is via pod annotations. 
+# Controlling Behaviors through Pod Annotations and Labels
+The general method for controlling non-K8s behavior of virtual nodes at the pod level is via pod annotations and labels. 
 
-**GENERAL NOTE**: Annotations below all need to be applied to the appropriate part of the K8s resource so that they will be on the pods themselves. For a pod YAML file, this would be the `metadata` for the file itself, while for a Deployment / ScaleSet / etc. YAML the annotation would be in the `template`'s `metadata`. 
+**GENERAL NOTE**: Annotations/labels below all need to be applied to the appropriate part of the K8s resource so that they will be on the pods themselves. For a pod YAML file, this would be the `metadata` for the file itself, while for a Deployment / ScaleSet / etc. YAML the annotation/label would be in the `template`'s `metadata`. 
 
 Example of annotations for Pod YAML (**it's in the main metadata!**)
 ``` yaml
@@ -91,7 +95,6 @@ spec:
       - effect: NoSchedule
         key: virtual-kubelet.io/provider
         operator: Exists
-
 ```
 ## Confidential Containers
 Confidential containers are a high security offering from ACI that allows customers to have a high degree of confidence what they are running and what that image is allowed to do. 
@@ -196,6 +199,44 @@ Azure has a concept of [Availability Zones](https://learn.microsoft.com/en-us/az
 **NOTE**: Today, ACI only supports providing a single zone as part of the request to allocate a sandbox for your pod. If you provide multiple, you should get an informative error effectively saying you can only provide one. 
 
 When using the [node level configuration](/Docs/NodeCustomizations.md#default-azure-zone-behaviors-with-a-customized-zones) to specify a default zone, if this pod annotation is set it will take precedence over that. When a node level zone is set and you want a particular pod to use no zone, set the pod level annotation with an empty string value.
+
+## Using Workload Identity
+Azure has the concept of using [Azure Entra Workload Identities](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview) (or Workload Identity for short), which in AKS provides pods with an OIDC federated token from an associated Azure Managed Identity. This works particularly well with applications using the Azure Identity client libraries or Microsoft Authentication Library.
+
+This can be used with virtual nodes by following the [entirely normal setup for AKS to use Workload Identity](https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster) and applying the same required pod label from the instructions to a virtual nodes pod. It's that easy!
+
+Simple example pod using a workload identity:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: workload-virtualnode-pod
+  namespace: default
+  labels:
+    azure.workload.identity/use: "true"  # Required. Only pods with this label can use workload identity.
+spec:
+  serviceAccountName: workload-identity-sa-mine  
+  containers:
+    - name: sample
+      image: mcr.microsoft.com/azure-cli
+      command:
+      - /bin/bash
+      - -c
+      - 'counter=1; while true; do echo "Hello, World! Counter: $counter"; counter=$((counter+1)); sleep 1; done'
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+  nodeSelector:
+    virtualization: virtualnode2
+  tolerations:
+  - effect: NoSchedule
+    key: virtual-kubelet.io/provider
+    operator: Exists
+```
 
 # virtual node Downlevel APIs
 virtual node has a couple of downlevel APIs which don't behave quite like K8s downlevel APIs. They work such that if for a POD if the VALUE of on ENV var is exactly equal to one of the virtual node Downlevel APIs, it will be replaced server size with the appropriate "real" value. 
