@@ -61,7 +61,7 @@ $vnetRgName = "virtualNodesVnetResourceGroupName"
 
 az role definition create --role-definition "@role.json"
 ```
-Note the above custom role name is only a suggestion, virtual nodes don't care what the role name is... only that it has sufficient permissions to all referenced resources! ðŸ˜Š But if you do use a different name, update the next step to use the role name you decided on
+Note the above custom role name is only a suggestion, virtual nodes don't care what the role name is... only that it has sufficient permissions to all referenced resources! 😊 But if you do use a different name, update the next step to use the role name you decided on
 
 Assignable scopes must include the resource group your virtual nodes is configured to put ACI pods into (default - `MC_<aks rg name>_<aks cluster name>_<aks region>`) as well as the resource group that holds the VNET used by the AKS instance (default - <aks rg name>, if followed quick setup README).
 
@@ -116,12 +116,12 @@ You can reference the information below if you want to restrict outbound traffic
 
 | Destination FQDN | Port | Use |
 | ------------- | --- | ------------- |
-| `management.azure.com`, or `Azure Resource Manager` service tag | HTTPS:443 | Required for the virtual node infrastructure to manage container groups that are deployed through the ACI ARM APIs for pods in the virtual node. |
-| `*.atlas.cloudapp.azure.com` | 19390 (HTTP/TCP) | Required for the virtual node infrastructure to set up initial communication with the ACI clusters where container groups are deployed. It is also used to handle communication for CRI streaming APIs such as Exec and Attach. |
-| `*.atlas.cloudapp.azure.com` | 33391 (HTTP/TCP) | Required for the virtual node infrastructure to communicate with the container runtime on the ACI clusters where container groups are deployed, for the purpose of performing lifecycle/management operations on containers. |
+| `management.azure.com`, or `Azure Resource Manager` service tag | 443 (HTTPS) | Required for the virtual node infrastructure to manage container groups that are deployed through the ACI ARM APIs for pods in the virtual node. |
+| `*.atlas.cloudapp.azure.com` | 19390 (HTTPS/TCP) | Required for the virtual node infrastructure to set up initial communication with the ACI clusters where container groups are deployed. It is also used to handle communication for CRI streaming APIs such as Exec and Attach. |
+| `*.atlas.cloudapp.azure.com` | 33391 (HTTPS/TCP) | Required for the virtual node infrastructure to communicate with the container runtime on the ACI clusters where container groups are deployed, for the purpose of performing lifecycle/management operations on containers. |
 
 The ACI cluster FQDN will always have the format `<clusterName>.<regionName>.atlas.cloudapp.azure.com`, where the value of `clusterName` is unique per cluster and the value of `regionName` corresponds to the region where the ACI cluster is deployed. For instance, a FQDN for an ACI cluster in Central India may look something like `sbzip4leutnry21.centralindia.atlas.cloudapp.azure.com`.
 
-The ACI cluster IP addresses will be assigned from the `AzureCloud` [service tag](https://learn.microsoft.com/en-us/azure/virtual-network/service-tags-overview). You can get the IP address prefixes corresponding to this service tag [here](https://www.microsoft.com/en-us/download/details.aspx?id=56519).
+The ACI cluster IP addresses will be assigned from the `AzureCloud` [service tag](https://learn.microsoft.com/en-us/azure/virtual-network/service-tags-overview). For those looking for a more limited scope, one could use the service tag targeted to only the region they are looking to use with ACI, which will be of the format `AzureCloud.<Region>` (EG - AzureCloud.CentralIndia). The IP address prefixes corresponding to Azure service tags can be found [here](https://www.microsoft.com/en-us/download/details.aspx?id=56519). 
 
 Note that a single virtual node may be communicating with multiple ACI clusters - there is no guarantee of a 1:1 mapping from virtual node to ACI cluster.
