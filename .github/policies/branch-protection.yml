@@ -1,0 +1,12 @@
+name: Default branch protection policy
+description: Requires one reviewer for merges into main branch
+resource: repository
+where: 
+configuration:
+  branchProtectionRules:
+    - branchNamePattern: main
+      requiredApprovingReviewsCount: 1
+      requireLastPushApproval: true
+      allowsForcePushes: false
+      dismissStaleReviews: true
+      isAdminEnforced: false
