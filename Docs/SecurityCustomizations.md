@@ -9,6 +9,7 @@ This section provides instructions for optional security updates or supporting a
 3. [Creating a Custom Azure Role for virtual nodes](#creating-a-custom-azure-role-for-virtual-nodes)
 4. [Locking Down virtual nodes Infra](#locking-down-virtual-nodes-infra)
 5. [Outbound FQDN Rules for virtual nodes](#outbound-fqdn-rules-for-virtual-nodes)
+6. [Encrypting Deployment Data via Customer Managed Keys](#encrypt-deployment-data)
 
 ## Introduction
 
@@ -125,3 +126,6 @@ The ACI cluster FQDN will always have the format `<clusterName>.<regionName>.atl
 The ACI cluster IP addresses will be assigned from the `AzureCloud` [service tag](https://learn.microsoft.com/en-us/azure/virtual-network/service-tags-overview). For those looking for a more limited scope, one could use the service tag targeted to only the region they are looking to use with ACI, which will be of the format `AzureCloud.<Region>` (EG - AzureCloud.CentralIndia). The IP address prefixes corresponding to Azure service tags can be found [here](https://www.microsoft.com/en-us/download/details.aspx?id=56519). 
 
 Note that a single virtual node may be communicating with multiple ACI clusters - there is no guarantee of a 1:1 mapping from virtual node to ACI cluster.
+
+## Encrypt Deployment Data
+ACI's capability to use [encrypted deployment data via customer managed keys](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-encrypt-data) is now supported in virtual nodes (currently only for On-Demand usage, not yet with Standby Pools). Additional documentation can be found in the [Pod Customization section for CMK](/Docs/PodCustomizations.md#encrypting-aci-deployment-info-via-customer-managed-keys)
