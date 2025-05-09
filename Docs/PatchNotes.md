@@ -1,6 +1,12 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3012.25042501
+- Enabled the ability to encrypt deployment data in ACI via Customer Managed Keys for on-demand pods (not yet supported for standby pools) 🔑
+- Removed local logging which captured an already invalidated credential token, to avoid the false positives on logged credentials 🐛
+- Updated packaged K8s binaries to the latest upstream builds for relevant K8s minor versions ⬆️
+- Updated dependencies to address vulnerability reports 🆙
+
 ### 1.3009.25031902
 - Updated Admission Controller to be built / run on more modern .NET 🥅
 - Bug fix for potential deadlock of CRI cache state when many pod deletions occur at once 🐛

@@ -12,6 +12,10 @@ This page is here to provide documentation of non-standard-K8s functionality tha
 | microsoft.containerinstance.virtualnode.injectdns | Controlling K8s DNS Usage | [K8s DNS](#disable-k8s-dns-injection)
 | microsoft.containerinstance.virtualnode.zones | Requesting Azure Zone Deployment | [Zones](#zones)
 | microsoft.containerinstance.virtualnode.imagecachepod | Image caching request for Standby Pools | [Image Caching](/Docs/NodeCustomizations.md#image-caching)
+| microsoft.containerinstance.virtualnode.cmk.vaultbaseurl | Controlling Deployment Encryption with Customer Managed Keys | [CMK](#encrypting-aci-deployment-info-via-customer-managed-keys)
+| microsoft.containerinstance.virtualnode.cmk.keyname | Controlling Deployment Encryption with Customer Managed Keys | [CMK](#encrypting-aci-deployment-info-via-customer-managed-keys)
+| microsoft.containerinstance.virtualnode.cmk.keyversion | Controlling Deployment Encryption with Customer Managed Keys | [CMK](#encrypting-aci-deployment-info-via-customer-managed-keys)
+| microsoft.containerinstance.virtualnode.cmk.identity | Controlling Deployment Encryption with Customer Managed Keys | [CMK](#encrypting-aci-deployment-info-via-customer-managed-keys)
 
 | Pod Label | Short Summary | Doc Link | 
 | ------------- | ------------- | --- |
@@ -199,6 +203,53 @@ Azure has a concept of [Availability Zones](https://learn.microsoft.com/en-us/az
 **NOTE**: Today, ACI only supports providing a single zone as part of the request to allocate a sandbox for your pod. If you provide multiple, you should get an informative error effectively saying you can only provide one. 
 
 When using the [node level configuration](/Docs/NodeCustomizations.md#default-azure-zone-behaviors-with-a-customized-zones) to specify a default zone, if this pod annotation is set it will take precedence over that. When a node level zone is set and you want a particular pod to use no zone, set the pod level annotation with an empty string value.
+
+## Encrypting ACI Deployment Info via Customer Managed Keys
+ACI's capability to use [encrypted deployment data via customer managed keys](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-encrypt-data) is now supported in virtual nodes. 
+
+The annotations align with the general ACI documentation's parameters for `encryptionProperties`. Following that documentation, the first three must all be provided: 
+
+    microsoft.containerinstance.virtualnode.cmk.vaultbaseurl 
+    microsoft.containerinstance.virtualnode.cmk.keyname
+    microsoft.containerinstance.virtualnode.cmk.keyversion 
+
+The last should be provided if using a managed identity to grant permission to retrieve the key... and if it is, it must match the [identity used for the pod](#running-pods-with-an-azure-managed-identity) as well:
+
+    microsoft.containerinstance.virtualnode.cmk.identity
+
+Example pod YAML using an [identity to retrieve keys following this pattern](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-encrypt-data#encrypt-data-with-a-customer-managed-key-in-a-network-protected-azure-key-vault-with-trusted-services-enabled):
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    microsoft.containerinstance.virtualnode.cmk.vaultbaseurl: https://<myVaultName>.vault.azure.net/
+    microsoft.containerinstance.virtualnode.cmk.keyname: cmk-test-aci
+    microsoft.containerinstance.virtualnode.cmk.keyversion: def55212e8cd45b8b68902f048f93ced
+    microsoft.containerinstance.virtualnode.cmk.identity: '/subscriptions/<mySubId>/resourceGroups/<myRG>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/cmk-user'
+    microsoft.containerinstance.virtualnode.identity: '/subscriptions/<mySubId>/resourceGroups/<myRG>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/cmk-user'
+  name: cmk-example
+spec:
+  containers:
+  - command:
+    - /bin/sh
+    - -c
+    - "echo \"starting the loop... \"\nfor i in $(seq 1 50000); do \n  echo \"curl\
+      \ -> Loop $i\"; \n  sleep 5;\ndone;\nsleep 600000;\n"
+    image: <myAcr>.azurecr.io/curlimages/curl:8.7.1
+    name: curl
+    resources:
+      requests:
+        cpu: '2'
+        memory: 2.5G
+  nodeSelector:
+    virtualization: virtualnode2
+  tolerations:
+  - effect: NoSchedule
+    key: virtual-kubelet.io/provider
+    operator: Exists
+```
 
 ## Using Workload Identity
 Azure has the concept of using [Azure Entra Workload Identities](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview) (or Workload Identity for short), which in AKS provides pods with an OIDC federated token from an associated Azure Managed Identity. This works particularly well with applications using the Azure Identity client libraries or Microsoft Authentication Library.
