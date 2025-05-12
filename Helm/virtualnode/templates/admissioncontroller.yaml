@@ -15,6 +15,10 @@ spec:
       annotations:
         "kubernetes.azure.com/no-http-proxy-vars": "true"
     spec:
+      {{- with .Values.images.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       terminationGracePeriodSeconds: 0
       serviceAccountName: {{ if .Values.rbac.install }} "{{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}" {{ end }}
       containers:

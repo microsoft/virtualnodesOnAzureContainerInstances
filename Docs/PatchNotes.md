@@ -1,6 +1,9 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3012.25050901
+- Updating HELM to use configured images.pullSecrets when creating AdmissionController, for parity in a niche scenario 🦜
+
 ### 1.3012.25042501
 - Enabled the ability to encrypt deployment data in ACI via Customer Managed Keys for on-demand pods (not yet supported for standby pools) 🔑
 - Removed local logging which captured an already invalidated credential token, to avoid the false positives on logged credentials 🐛
