@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3012.25060201
+- Add option for configuring Pod Disruption Budget resources for the HELM deployed virtual node infra pods 🆕
+- Add option for specifying Priority Class names for the HELM deployed virtual node infra pods ☸️
+
 ### 1.3012.25050901
 - Updating HELM to use configured images.pullSecrets when creating AdmissionController, for parity in a niche scenario 🦜
 
