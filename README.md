@@ -84,7 +84,7 @@ Confidential pods may be deployed in the following regions:
 - Other AKS service limits are documented at [Limits for resources, SKUs, and regions in Azure Kubernetes Service (AKS) - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/quotas-skus-regions#service-quotas-and-limits).
 
 ## Setup Infra - AKS
-Everything in this section should only have to be done once to set up the AKS environment to deploy VirtualNode into
+Everything in this section should only have to be done once to set up the AKS environment to deploy virtual node into
 
 ### Step 1: Azure Resource Group
 
