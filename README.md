@@ -75,6 +75,7 @@ Confidential pods may be deployed in the following regions:
 - UAE North
 - West Europe
 - West US
+- South Central US
 
 ## Configuration Considerations
 ### virtual node Resourcing
