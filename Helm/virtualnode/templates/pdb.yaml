@@ -1,0 +1,14 @@
+{{- if .Values.podDisruptionBudget -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: "virtual-node-pdb"
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "virtualnode2.selectorLabels" . | nindent 6 }}
+  {{ toYaml .Values.podDisruptionBudget | nindent 2 }}
+{{- end -}}

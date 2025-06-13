@@ -22,6 +22,18 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
+# Pod Disruption Budget (https://kubernetes.io/docs/tasks/run-application/configure-pdb/)
+podDisruptionBudget: {}
+  # minAvailable: 1
+  # maxUnavailable: 1
+admissionControllerPodDisruptionBudget: {}
+  # minAvailable: 1
+  # maxUnavailable: 1
+
+# Pod Priority Class (https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+priorityClassName: ""
+admissionControllerPriorityClassName: ""
+
 securityContext: 
   capabilities:
     add:

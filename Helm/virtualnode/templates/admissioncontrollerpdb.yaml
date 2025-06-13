@@ -1,0 +1,14 @@
+{{- if .Values.admissionControllerPodDisruptionBudget -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: "virtual-node-admission-controller-pdb"
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "virtualnode2.admissionSelectorLabels" . | nindent 6 }}
+  {{ toYaml .Values.admissionControllerPodDisruptionBudget | nindent 2 }}
+{{- end -}}

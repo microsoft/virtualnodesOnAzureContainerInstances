@@ -111,6 +111,10 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | aciSubnetName | a comma delimited list of subnets to potentially use as the node default. See [this section on behaviors](#default-aci-subnet-behaviors-with-a-customized-acisubnetname) |
 | aciResourceGroupName | the name of the Azure Resource Group to put virtual node's ACI CGs into. See [this section on behaviors](#changing-the-azure-resource-group-used-for-aci-resources-via-aciresourcegroupname) |
 | zones | a semi-colon delimited list of Azure Zones to deploy pods to. See [this section on behaviors](#default-azure-zone-behaviors-with-a-customized-zones) |
+| priorityClassName | Name of the Kubernetes Priority Class to assign to the virtual node pods. See [Using Priority Classes](#using-priority-classes) for more details |
+| admissionControllerPriorityClassName | Name of the Kubernetes Priority Class to assign to the VN2 admission controller pods. See [Using Priority Classes](#using-priority-classes) for more details |
+| podDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the virtual node deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
+| admissionControllerPodDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the VN2 admission controller deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
 
 ## Default ACI Subnet behaviors with a customized `aciSubnetName`
 This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
@@ -150,6 +154,40 @@ zones: '<semi-colon delimited string of zones>'
 **NOTE**: Today, ACI only supports providing a single zone as part of the request to allocate a sandbox for your pod. If you provide multiple, you should get an informative error effectively saying you can only provide one. 
 
 This setting applies a node level default zone, so pods which do not have a [pod level annotation for zone](/Docs/PodCustomizations.md#zones) will have this applied. When set with an empty string, no zones will be used as this default. 
+
+## Using Priority Classes
+
+If you would like to use [Kubernetes Priority Classes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/) with the virtual node pods, you can specify the name of the priority class to use in the `values.yaml` file for the HELM chart using the following settings:
+
+``` yaml
+priorityClassName: <name of priority class for virtual node infra pods>
+admissionControllerPriorityClassName: <name of priority class for admission controller pods>
+```
+
+`priorityClassName` will be used for the virtual node infra pods, while `admissionControllerPriorityClassName` will be used for the Admission Controller pods.
+
+> IMPORTANT: if you specify a priority class name that does not exist in the cluster, the virtual node infra pods will fail to start. Ensure that the specified priority class exists in the cluster before deploying the virtual node infra pods. The assigned priority classes should also exist as long as the virtual nodes infra pods are running.
+
+An example of how to create a priority class in Kubernetes is as follows:
+
+``` yaml
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority-virtnode
+value: 1000000
+globalDefault: false
+description: "This priority class should be used for virtual node infra pods only."
+```
+
+You can then set the priority class names in the `values.yaml` file:
+
+``` yaml
+priorityClassName: high-priority-virtnode
+admissionControllerPriorityClassName: high-priority-virtnode
+```
+
+Setting separate priority class names for the virtual node pods and the admission controller pods is also possible. You can also specify an existing priority class name that was separately created in the cluster.
 
 # How to run more than one type of customized virtual node in the same AKS
 You may have a scenario that you want to run more than 1 virtual node HELM configuration in one AKS cluster. 
