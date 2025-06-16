@@ -9,6 +9,7 @@ jobs:
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
       contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,6 +22,17 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh -y
+
+      - name: Create gh-pages-temp branch if it doesn't exist
+        run: |
+          git fetch origin
+          if ! git ls-remote --exit-code --heads origin gh-pages-temp; then
+            git checkout -b gh-pages-temp
+            git push origin gh-pages-temp
+          fi
+
       - name: Install Helm
         uses: azure/setup-helm@v4
         env:
@@ -30,6 +42,17 @@ jobs:
         uses: helm/chart-releaser-action@v1.6.0
         with:
           charts_dir: Helm
-          pages_branch: main
+          pages_branch: gh-pages-temp
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Create Pull Request with GitHub CLI
+        run: |
+          gh auth setup-git
+          gh pr create \
+            --head gh-pages-temp \
+            --base main \
+            --title "Helm Chart Release" \
+            --body "This PR contains the latest Helm chart release artifacts."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
