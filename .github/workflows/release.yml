@@ -25,13 +25,16 @@ jobs:
       - name: Install GitHub CLI
         run: sudo apt-get install gh -y
 
-      - name: Create gh-pages-temp branch if it doesn't exist
+      - name: Update gh-pages-temp branch or create it if it doesn't exist
         run: |
           git fetch origin
-          if ! git ls-remote --exit-code --heads origin gh-pages-temp; then
-            git checkout -b gh-pages-temp
-            git push origin gh-pages-temp
+          if git ls-remote --exit-code --heads origin gh-pages-temp; then
+            git checkout gh-pages-temp
+            git merge origin/main --no-edit
+          else
+            git checkout origin/main -b gh-pages-temp
           fi
+          git push origin gh-pages-temp
 
       - name: Install Helm
         uses: azure/setup-helm@v4
