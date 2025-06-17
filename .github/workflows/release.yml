@@ -1,12 +1,12 @@
 name: Release Charts
+
 on:
   push:
     branches:
       - main
+
 jobs:
   release:
-    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
       contents: write
       pull-requests: write
@@ -25,16 +25,20 @@ jobs:
       - name: Install GitHub CLI
         run: sudo apt-get install gh -y
 
-      - name: Update gh-pages-temp branch or create it if it doesn't exist
+      - name: Generate Random Branch Name
+        id: vars
+        run: echo "BRANCH=gh-pages-temp-$(uuidgen | cut -d'-' -f1)" >> $GITHUB_ENV
+
+      - name: Update or Create Branch
         run: |
           git fetch origin
-          if git ls-remote --exit-code --heads origin gh-pages-temp; then
-            git checkout gh-pages-temp
+          if git ls-remote --exit-code --heads origin $BRANCH; then
+            git checkout $BRANCH
             git merge origin/main --no-edit
           else
-            git checkout origin/main -b gh-pages-temp
+            git checkout origin/main -b $BRANCH
           fi
-          git push origin gh-pages-temp
+          git push origin $BRANCH
 
       - name: Install Helm
         uses: azure/setup-helm@v4
@@ -45,17 +49,27 @@ jobs:
         uses: helm/chart-releaser-action@v1.6.0
         with:
           charts_dir: Helm
-          pages_branch: gh-pages-temp
+          pages_branch: ${{ env.BRANCH }}
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Create Pull Request with GitHub CLI
+      - name: Create Pull Request and Enable Delete Branch
         run: |
           gh auth setup-git
-          gh pr create \
-            --head gh-pages-temp \
+          PR_URL=$(gh pr create \
+            --head $BRANCH \
             --base main \
             --title "Helm Chart Release" \
-            --body "This PR contains the latest Helm chart release artifacts."
+            --body "This PR contains the latest Helm chart release artifacts." \
+            --json url -q .url)
+
+          PR_NUMBER=$(echo $PR_URL | awk -F'/' '{print $NF}')
+          REPO=$(echo $PR_URL | awk -F'/' '{print $(NF-2)"/"$(NF-1)}')
+
+          curl -X PATCH \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/$REPO/pulls/$PR_NUMBER \
+            -d '{"maintainer_can_modify":true}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
