@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Helm/**/Chart.yaml'
 
 jobs:
   release:
@@ -22,21 +24,18 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Install GitHub CLI
-        run: sudo apt-get install gh -y
-
       - name: Generate Random Branch Name
         id: vars
-        run: echo "BRANCH=gh-pages-temp-$(uuidgen | cut -d'-' -f1)" >> $GITHUB_ENV
+        run: echo "BRANCH=${GITHUB_ACTOR}/helm-release-temp-$(uuidgen | cut -d'-' -f1)" >> $GITHUB_ENV
 
       - name: Update or Create Branch
         run: |
           git fetch origin
           if git ls-remote --exit-code --heads origin $BRANCH; then
             git checkout $BRANCH
-            git merge origin/main --no-edit
+            git merge main --no-edit
           else
-            git checkout origin/main -b $BRANCH
+            git checkout main -b $BRANCH
           fi
           git push origin $BRANCH
 
@@ -52,24 +51,12 @@ jobs:
           pages_branch: ${{ env.BRANCH }}
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Create Pull Request and Enable Delete Branch
+      
+      - name: Delete temp branch if no diff from main
         run: |
-          gh auth setup-git
-          PR_URL=$(gh pr create \
-            --head $BRANCH \
-            --base main \
-            --title "Helm Chart Release" \
-            --body "This PR contains the latest Helm chart release artifacts." \
-            --json url -q .url)
-
-          PR_NUMBER=$(echo $PR_URL | awk -F'/' '{print $NF}')
-          REPO=$(echo $PR_URL | awk -F'/' '{print $(NF-2)"/"$(NF-1)}')
-
-          curl -X PATCH \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/$REPO/pulls/$PR_NUMBER \
-            -d '{"maintainer_can_modify":true}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if git diff --quiet origin/main...HEAD; then
+            echo "No changes from main. Deleting temp branch $BRANCH."
+            git push origin --delete $BRANCH
+          else
+            echo "Branch $BRANCH has changes from main and needs merge."
+          fi
