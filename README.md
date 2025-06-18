@@ -18,9 +18,6 @@ No longer a limitation
 - Persistent volumes and persistent volume claims
 - Container hooks
 
-Will be fixed by General Availability
-- Using service principal to pull ACR images
-
 Can be addressed in the future
 - Kubernetes network policies
 - Using IPv6
@@ -76,6 +73,9 @@ Confidential pods may be deployed in the following regions:
 - West Europe
 - West US
 - South Central US
+- Japan East
+- West US 2
+- East Us 2
 
 ## Configuration Considerations
 ### virtual node Resourcing
