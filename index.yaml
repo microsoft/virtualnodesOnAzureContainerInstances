@@ -3,7 +3,7 @@ entries:
   virtualnode:
   - apiVersion: v2
     appVersion: 1.3012.25042501
-    created: "2025-06-18T12:16:26.2841299Z"
+    created: "2025-06-13T19:42:15.2841299Z"
     description: Helm chart to install virtual nodes on Azure Container Instances
       to an existing Azure Kubernetes Service cluster.
     digest: 42942e4563b98f370900e38cc518c1b43d603b2d3aad507cc2e4e831e01e5f87
@@ -19,7 +19,7 @@ entries:
     version: 1.3012.25060201
   - apiVersion: v2
     appVersion: 1.3012.25042501
-    created: "2025-06-18T12:16:26.2820128Z"
+    created: "2025-05-12T15:50:57.2820128Z"
     description: Helm chart to install virtual nodes on Azure Container Instances
       to an existing Azure Kubernetes Service cluster.
     digest: f0a35c2f9fd0557ab5975e27c0b8fa431a4023ecec554b2bbf2aaa9f48e9610c
@@ -35,7 +35,7 @@ entries:
     version: 1.3012.25050901
   - apiVersion: v2
     appVersion: 1.3012.25042501
-    created: "2025-06-18T12:16:26.2805906Z"
+    created: "2025-05-09T03:27:55.2805906Z"
     description: Helm chart to install virtual nodes on Azure Container Instances
       to an existing Azure Kubernetes Service cluster.
     digest: d89f5a1f0a12aaa6bea10a38a35a807814ba3a259560f65b931489c410aa6d1e
@@ -51,7 +51,7 @@ entries:
     version: 1.3012.25042501
   - apiVersion: v2
     appVersion: 1.3009.25031902
-    created: "2025-06-18T12:16:26.2784049Z"
+    created: "2025-04-02T04:47:51.2784049Z"
     description: Helm chart to install virtual nodes on Azure Container Instances
       to an existing Azure Kubernetes Service cluster.
     digest: 21aca4beed4e4b7952cb442416b46a6828309b4d1fd077e9ba0c0977e1f79757
