@@ -33,7 +33,7 @@ jobs:
           version=$(yq '.version' ./Helm/virtualnode/Chart.yaml)
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Generate Random Branch Name
+      - name: Generate Branch Name
         id: vars
         run: echo "BRANCH=${GITHUB_ACTOR}/helm-release-temp-${{ steps.get_current_version.outputs.version }}" >> $GITHUB_ENV
 
