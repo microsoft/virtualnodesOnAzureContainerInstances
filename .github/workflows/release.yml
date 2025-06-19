@@ -24,9 +24,18 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Install yq
+        run: sudo apt-get update && sudo apt-get install -y yq
+      
+      - name: Read version from Chart.yaml
+        id: get_current_version
+        run: |
+          version=$(yq '.version' ./Helm/virtualnode/Chart.yaml)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
       - name: Generate Random Branch Name
         id: vars
-        run: echo "BRANCH=${GITHUB_ACTOR}/helm-release-temp-$(uuidgen | cut -d'-' -f1)" >> $GITHUB_ENV
+        run: echo "BRANCH=${GITHUB_ACTOR}/helm-release-temp-${{ steps.get_current_version.outputs.version }}" >> $GITHUB_ENV
 
       - name: Update or Create Branch
         run: |
