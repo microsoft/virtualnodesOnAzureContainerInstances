@@ -1,14 +1,18 @@
 # Kubernetes Helpers
 
 ## Table of Contents
+- [Cycling pods at a user-configured rhythm](#cycling-pods-at-a-user-configured-rhythm)
+  - [Configuring a CronJob to do the deletes](#configuring-a-cronjob-to-do-the-deletes)
+  - [Configuring the Pods to request the cleanup](#configuring-the-pods-to-request-the-cleanup)
+  - [Additional considerations](#additional-considerations)
 
-## Cycling pods at a user configured rhythm
-Users may want to have pods recycled at a configurable cadence to ensure they are always running on the latest and greatest host updates. This can be achieved with normal K8s techniques, below is an illustration of one implementation
+## Cycling pods at a user-configured rhythm
+Users may want to have pods recycled at a configurable cadence to ensure they are always running on the latest and greatest host updates. This can be achieved with normal K8s techniques, below is an illustration of one implementation.
 
 This technique will only work with templated deployments, as the deletions will cause the Deployment / StatefulSet / ReplicaSet / etc. to put in another replica to replace the deleted pod, "cycling" it to a new host.
 
 ### Configuring a CronJob to do the deletes
-Below is an example CronJob, which is scheduled to run every 1 minute. It is looking for pods annotated with the label "pod-max-age-minutes", and if the pod is annotated with it there is a comparison to see if the pod was started longer ago than the maximum allowed lifetime. If it was, a delete command is run (without --force)... which will gracefully trigger the removal of the pod, respecting settings like termination grace period, pre-stop hooks, etc.
+Below is an example CronJob, which is scheduled to run every 1 minute. It is looking for pods annotated with the label `pod-max-age-minutes`. If the pod is annotated with it, there is a comparison to see if the pod was started longer ago than the maximum allowed lifetime. If it was, a delete command is run (without --force)... which will gracefully trigger the removal of the pod, respecting settings like termination grace period, pre-stop hooks, etc.
 
 ``` yaml
 apiVersion: batch/v1
@@ -53,8 +57,8 @@ spec:
           serviceAccountName: <Your Service Account>  # Ensure it has permissions to list/delete pods
 ```
 
-### Configuring the Pods to request the cleaup
-In order to be cleaned up by the CronJob above, the workloads will need to opt-in via a pod label. The label is `pod-max-age-minutes`, and it specifies the cutoff above which the deletion is requested. 
+### Configuring the Pods to request the cleanup
+In order to be cleaned up by the CronJob above, the workloads will need to opt-in via a pod label. The label is `pod-max-age-minutes`, and it specifies the cutoff above which the deletion is requested.
 
 An example deployment configured to use this: 
 ``` yaml
@@ -102,11 +106,11 @@ spec:
 ```
 
 ### Additional considerations
-> NOTE: The CronJob is not limited to impacting pods running on virtual nodes... any pod with the `pod-max-age-minutes` label will be impacted. 
+> NOTE: The CronJob as written above is not limited to impacting pods running on virtual nodes... any pod with the `pod-max-age-minutes` label will be impacted.
 
-Merely setting up the automation to cycle pods is often not the full extent of the work. The customer's pods that are being cycled this way should be setup so that they are able to gracefully exit when requested. This can include
+Merely setting up the automation to cycle pods is often not the full extent of the work. The customer's pods that are being cycled this way should be set up so that they are able to gracefully exit when requested. This can include:
 - Configuring a Termination Grace Period that is appropriate to the workload
 - Configuring Pre-Stop hooks if actions need to be taken upon the container being prepared to be stopped
-- Updating the container business logic to respect the container STOP signalling that the process will be stopped after the configured Termination Grace Period
+- Updating the container business logic to respect the container STOP signaling that the process will be stopped after the configured Termination Grace Period
 
 A good source of relevant information here is the [public K8s documentation for Pod Lifecycle and the Termination of Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
