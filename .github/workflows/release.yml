@@ -1,14 +1,17 @@
 name: Release Charts
+
 on:
   push:
     branches:
       - main
+    paths:
+      - 'Helm/**/Chart.yaml'
+
 jobs:
   release:
-    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
       contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,6 +24,30 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Install yq
+        run: sudo apt-get update && sudo apt-get install -y yq
+      
+      - name: Read version from Chart.yaml
+        id: get_current_version
+        run: |
+          version=$(yq '.version' ./Helm/virtualnode/Chart.yaml)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Generate Branch Name
+        id: vars
+        run: echo "BRANCH=${GITHUB_ACTOR}/helm-release-temp-${{ steps.get_current_version.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Update or Create Branch
+        run: |
+          git fetch origin
+          if git ls-remote --exit-code --heads origin $BRANCH; then
+            git checkout $BRANCH
+            git merge main --no-edit
+          else
+            git checkout main -b $BRANCH
+          fi
+          git push origin $BRANCH
+
       - name: Install Helm
         uses: azure/setup-helm@v4
         env:
@@ -30,6 +57,15 @@ jobs:
         uses: helm/chart-releaser-action@v1.6.0
         with:
           charts_dir: Helm
-          pages_branch: main
+          pages_branch: ${{ env.BRANCH }}
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      
+      - name: Delete temp branch if no diff from main
+        run: |
+          if git diff --quiet origin/main...HEAD; then
+            echo "No changes from main. Deleting temp branch $BRANCH."
+            git push origin --delete $BRANCH
+          else
+            echo "Branch $BRANCH has changes from main and needs merge."
+          fi
