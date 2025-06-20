@@ -2,6 +2,7 @@
 
 ## Table of Contents
 - [Cycling pods at a user-configured rhythm](#cycling-pods-at-a-user-configured-rhythm)
+  - [Create an appropriately permissioned ServiceAccount](#create-an-appropriately-permissioned-serviceaccount)
   - [Configuring a CronJob to do the deletes](#configuring-a-cronjob-to-do-the-deletes)
   - [Configuring the Pods to request the cleanup](#configuring-the-pods-to-request-the-cleanup)
   - [Additional considerations](#additional-considerations)
@@ -11,6 +12,44 @@ Users may want to have pods recycled at a configurable cadence to ensure they ar
 
 This technique will only work with templated deployments, as the deletions will cause the Deployment / StatefulSet / ReplicaSet / etc. to put in another replica to replace the deleted pod, "cycling" it to a new host.
 
+### Create an appropriately permissioned ServiceAccount
+Create a service account to run the CronJob which has the required permissions (ability to list and delete pods).
+
+This is done by creating a ServiceAccount, creating a ClusterRole, and then binding the role to the ServiceAccount
+``` yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-manager
+  namespace: default
+```
+
+``` yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-manager-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "delete"]
+```
+
+``` yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pod-manager-binding
+subjects:
+- kind: ServiceAccount
+  name: pod-manager
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: pod-manager-role
+  apiGroup: rbac.authorization.k8s.io
+```
+
 ### Configuring a CronJob to do the deletes
 Below is an example CronJob, which is scheduled to run every 1 minute. It is looking for pods annotated with the label `pod-max-age-minutes`. If the pod is annotated with it, there is a comparison to see if the pod was started longer ago than the maximum allowed lifetime. If it was, a delete command is run (without --force)... which will gracefully trigger the removal of the pod, respecting settings like termination grace period, pre-stop hooks, etc.
 
@@ -19,6 +58,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: pod-cleanup-by-label
+  namespace: default
 spec:
   schedule: "*/1 * * * *"  # Every 1 minute... feel free to replace with whatever polling frequency is appropriate for your usage
   jobTemplate:
@@ -54,7 +94,7 @@ spec:
                     kubectl delete pod "$name" -n "$namespace"
                   done
           restartPolicy: OnFailure
-          serviceAccountName: <Your Service Account>  # Ensure it has permissions to list/delete pods
+          serviceAccountName: pod-manager  # Ensure it has permissions to list/delete pods
 ```
 
 ### Configuring the Pods to request the cleanup
@@ -106,7 +146,7 @@ spec:
 ```
 
 ### Additional considerations
-> NOTE: The CronJob as written above is not limited to impacting pods running on virtual nodes... any pod with the `pod-max-age-minutes` label will be impacted.
+> NOTE: The CronJob as written above is not limited to impacting pods running on virtual nodes... any pod with the `pod-max-age-minutes` label will be impacted, across all nodes and all namespaces.
 
 Merely setting up the automation to cycle pods is often not the full extent of the work. The customer's pods that are being cycled this way should be set up so that they are able to gracefully exit when requested. This can include:
 - Configuring a Termination Grace Period that is appropriate to the workload
