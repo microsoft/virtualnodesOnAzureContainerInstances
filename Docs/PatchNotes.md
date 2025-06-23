@@ -1,6 +1,12 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3012.25061701
+- Fix for a potential race condition when rotating log files 🐛
+- Fix for potential issue where automated recovery code for PLEG Health issues could cause bootcycling of infra pods 🦟
+- New Heath check added to ensure in rare conditions where infra pods running on AKS lose networking they are detected and restarted 🛜
+- Misc Vulnerability patches applied to infrastructure pods 🔐
+
 ### 1.3012.25060201
 - Add option for configuring Pod Disruption Budget resources for the HELM deployed virtual node infra pods 🆕
 - Add option for specifying Priority Class names for the HELM deployed virtual node infra pods ☸️
