@@ -64,6 +64,7 @@ jobs:
 
       - name: Refresh local branch state
         run: |
+          git checkout $BRANCH
           git pull
 
       - name: Delete temp branch if no diff from main
