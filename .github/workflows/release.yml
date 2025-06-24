@@ -69,7 +69,7 @@ jobs:
 
       - name: Delete temp branch if no diff from main
         run: |
-          if git diff --quiet origin/main...HEAD; then
+          if git diff --quiet origin/main...$BRANCH; then
             echo "No changes from main. Deleting temp branch $BRANCH."
             git push origin --delete $BRANCH
           else
