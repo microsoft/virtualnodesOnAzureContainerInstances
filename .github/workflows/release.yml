@@ -37,16 +37,17 @@ jobs:
         id: vars
         run: echo "BRANCH=${GITHUB_ACTOR}/helm-release-temp-${{ steps.get_current_version.outputs.version }}" >> $GITHUB_ENV
 
-      - name: Update or Create Branch
+      - name: Update or create branch and set remote
         run: |
           git fetch origin
           if git ls-remote --exit-code --heads origin $BRANCH; then
-            git checkout $BRANCH
-            git merge main --no-edit
+            git fetch origin "$BRANCH"
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+            git merge origin/main --no-edit
           else
             git checkout main -b $BRANCH
           fi
-          git push origin $BRANCH
+          git push -u origin $BRANCH
 
       - name: Install Helm
         uses: azure/setup-helm@v4
@@ -60,7 +61,11 @@ jobs:
           pages_branch: ${{ env.BRANCH }}
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      
+
+      - name: Refresh local branch state
+        run: |
+          git pull
+
       - name: Delete temp branch if no diff from main
         run: |
           if git diff --quiet origin/main...HEAD; then
