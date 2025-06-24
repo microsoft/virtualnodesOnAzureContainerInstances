@@ -41,7 +41,6 @@ jobs:
         run: |
           git fetch origin
           if git ls-remote --exit-code --heads origin $BRANCH; then
-            git fetch origin "$BRANCH"
             git checkout -B "$BRANCH" "origin/$BRANCH"
             git merge origin/main --no-edit
           else
