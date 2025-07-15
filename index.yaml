@@ -17,7 +17,6 @@ entries:
     urls:
     - virtualnode-1.3012.25061701.tgz
     version: 1.3012.25061701
-  virtualnode:
   - apiVersion: v2
     appVersion: 1.3012.25042501
     created: "2025-06-13T19:42:15.2841299Z"
