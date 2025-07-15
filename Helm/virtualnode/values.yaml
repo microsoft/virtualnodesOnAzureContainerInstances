@@ -77,12 +77,12 @@ infraPodMinRestartDelaySeconds: '120' # Minimum time between automated repair op
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20250617.2
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20250617.2
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20250617.2
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20250713.1
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20250713.1
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20250713.1
   mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20240920.2
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20250617.2
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20250617.2
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20250617.2
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20250617.2
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20250713.1
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20250713.1
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20250713.1
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20250713.1
   noddriverregistrarImage: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar:v2.8.0
