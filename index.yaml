@@ -15,7 +15,7 @@ entries:
     name: virtualnode
     type: application
     urls:
-    - virtualnode-1.3012.25071301.tgz
+    - https://github.com/microsoft/virtualnodesOnAzureContainerInstances/releases/download/virtualnode-1.3012.25071301/virtualnode-1.3012.25071301.tgz
     version: 1.3012.25071301
   - apiVersion: v2
     appVersion: 1.3012.25061701
@@ -31,7 +31,7 @@ entries:
     name: virtualnode
     type: application
     urls:
-    - virtualnode-1.3012.25061701.tgz
+    - https://github.com/microsoft/virtualnodesOnAzureContainerInstances/releases/download/virtualnode-1.3012.25061701/virtualnode-1.3012.25061701.tgz
     version: 1.3012.25061701
   - apiVersion: v2
     appVersion: 1.3012.25042501
