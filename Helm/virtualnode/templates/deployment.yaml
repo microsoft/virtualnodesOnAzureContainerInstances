@@ -249,7 +249,13 @@ spec:
         - name: kube-config-volume
           emptyDir: {}
         - name: container-logs
+          {{- if (not (empty .Values.containerLogsVolumeHostPath)) }}
+          hostPath:
+            path: {{ .Values.containerLogsVolumeHostPath }}
+            type: DirectoryOrCreate
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         - name: ca-certificates
           hostPath:
             path: /etc/ssl/certs/ca-certificates.crt
