@@ -111,6 +111,7 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | aciSubnetName | a comma delimited list of subnets to potentially use as the node default. See [this section on behaviors](#default-aci-subnet-behaviors-with-a-customized-acisubnetname) |
 | aciResourceGroupName | the name of the Azure Resource Group to put virtual node's ACI CGs into. See [this section on behaviors](#changing-the-azure-resource-group-used-for-aci-resources-via-aciresourcegroupname) |
 | zones | a semi-colon delimited list of Azure Zones to deploy pods to. See [this section on behaviors](#default-azure-zone-behaviors-with-a-customized-zones) |
+| containerLogsVolumeHostPath | overrides directory behavior for virtual nodes container logs for niche customer scenarios. See [documentation here](#override-the-virtual-node-log-directory-with-a-hostpath-mount) |
 | priorityClassName | Name of the Kubernetes Priority Class to assign to the virtual node pods. See [Using Priority Classes](#using-priority-classes) for more details |
 | admissionControllerPriorityClassName | Name of the Kubernetes Priority Class to assign to the VN2 admission controller pods. See [Using Priority Classes](#using-priority-classes) for more details |
 | podDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the virtual node deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
@@ -155,8 +156,19 @@ zones: '<semi-colon delimited string of zones>'
 
 This setting applies a node level default zone, so pods which do not have a [pod level annotation for zone](/Docs/PodCustomizations.md#zones) will have this applied. When set with an empty string, no zones will be used as this default. 
 
-## Using Priority Classes
+## Override the virtual node log directory with a hostPath mount
+For some niche customer scenarios, it can be useful for the container logs from containers running on the virtual nodes infrastructure pods to be available to the physical K8s host VMs.
 
+If the value `containerLogsVolumeHostPath` is blank or empty (the default), there will be no change in behavior—container logs will use an `emptyDir` only within the virtual node infra pod.
+
+If the value `containerLogsVolumeHostPath` is present and not an empty string, the value will be used as the directory to hostPath mount the container logs volume to for the virtual nodes infra pod's host. The directory will be created if it doesn't already exist.
+
+Example usage: 
+``` yaml 
+containerLogsVolumeHostPath: '/var/log/virtualnode'
+```
+
+## Using Priority Classes
 If you would like to use [Kubernetes Priority Classes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/) with the virtual node pods, you can specify the name of the priority class to use in the `values.yaml` file for the HELM chart using the following settings:
 
 ``` yaml
