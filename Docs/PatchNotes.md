@@ -1,6 +1,11 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3012.25072501
+- Fix for issue rotating credentials for kube-proxy 🐛
+- Customization option added to allow customers with niche requirements to hostPath mount container log directory for virtual node infrastructure pods 🛃
+- Ingesting security patches 🔐
+
 ### 1.3012.25061701
 - Fix for a potential race condition when rotating log files 🐛
 - Fix for potential issue where automated recovery code for PLEG Health issues could cause bootcycling of infra pods 🦟
