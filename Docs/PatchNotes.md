@@ -4,6 +4,8 @@
 ### 1.3012.25072501
 - Fix for issue rotating credentials for kube-proxy 🐛
 - Customization option added to allow customers with niche requirements to hostPath mount container log directory for virtual node infrastructure pods 🛃
+
+### 1.3012.25071301
 - Ingesting security patches 🔐
 
 ### 1.3012.25061701
