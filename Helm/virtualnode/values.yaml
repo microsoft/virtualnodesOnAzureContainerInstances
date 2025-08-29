@@ -82,7 +82,7 @@ images:
   crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20250725.1
   spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20250725.1
   proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20250725.1
-  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20240920.2
+  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
   initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20250725.1
   kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20250725.1
   virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20250725.1
