@@ -211,6 +211,8 @@ spec:
               value: {{ .Values.images.mountImage }}
             - name: ResourceGroup
               value: {{ .Values.aciResourceGroupName }}
+            - name: ArmEndpointBaseUrl
+              value: {{ .Values.armEndpointBaseUrl }}
             - name: NodeName
               valueFrom:
                 fieldRef:

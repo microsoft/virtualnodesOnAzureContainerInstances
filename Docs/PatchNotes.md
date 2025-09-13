@@ -1,6 +1,14 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3208.25082901
+- Update K8s Binaries to 1.32.08 🎊
+  - **IMPORTANT NOTE:** Previous 1.30.* virtual nodes releases have no regressions being used with 1.30, 1.31, and 1.32 AKS... **but** 1.32.* virtual nodes requires being run on 1.32.* AKS for full functionality. Please update your AKS cluster to 1.32.* before upgrading your virtual node helm install to this version! [More details on compatibility as well as versioning are being documented here!](/Docs/VersionCompatibility.md)
+- Scrubbing secrets that were previously being locally logged 🧼
+- Fix for /stats/summary API from Kubelet 🗽
+- Added ARM endpoint override to allow virtual nodes to be used in non-public Azure clouds 🤐
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3012.25080101
 - Update to use new file / mount propagation sidecar 🚃
 - Ingesting security patches 🔐
@@ -41,7 +49,7 @@
 - Updated virtual node's with compatibility with 1.30, updating to use upstream binaries from 1.30.09 🐣
   - While 1.30 has breaking changes for K8s internal implementation compared to 1.29, this virtual node update ships with both 1.29 and 1.30 binaries and will conditionally use those compatible with the AKS node version it is deployed to.
   - Since virtual nodes is compatible on both sides of that breaking change boundary, existing customers should update their virtual nodes deployment to this 1.30.* compatible deployment FIRST, and then allow their AKS up update node images to 1.30.*
-- Added capability to specify a default Azure Zone to deploy pods to at the VN2 level. This is in addition to the existing capability for specifying the zone for particular pods... and the pod having an explicit zone specification will take presidence over the virtual node's node configuration. See further details in the pod and node configuration sections 📝
+- Added capability to specify a default Azure Zone to deploy pods to at the VN2 level. This is in addition to the existing capability for specifying the zone for particular pods... and the pod having an explicit zone specification will take precedence over the virtual node's node configuration. See further details in the pod and node configuration sections 📝
 
 ### 1.2912.25013001
 - Bug fix for rare issue that if hit could prevent a virtual node infra pod from successfully initializing 🐛
