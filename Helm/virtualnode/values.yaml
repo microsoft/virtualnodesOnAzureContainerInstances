@@ -57,6 +57,11 @@ rbac:
   ## Cluster role reference
   roleRef: cluster-admin
 
+# You must provide a value here if deploying the virtual node outside of Azure's public cloud.
+# For example, if using Azure Government, set this value to "https://management.usgovcloudapi.net/" (reference: https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure).
+# If no value is provided, the virtual node defaults to using Public cloud.
+armEndpointBaseUrl: ''
+
 namespace: vn2
 aciSubnetName: cg # remember this subnet needs to be delegated to Microsoft.ContainerInstance/containerGroups
 aciResourceGroupName: '' # If not empty, will override the default resource group for the ACI instances. Must be within same subscription as the AKS cluster
@@ -79,12 +84,12 @@ containerLogsVolumeHostPath: '' # if set, overrides default emptyDir volume for 
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20250725.1
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20250725.1
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20250725.1
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20250829.1
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20250829.1
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20250829.1
   mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20250725.1
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20250725.1
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20250725.1
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20250725.1
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20250829.1
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20250829.1
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20250829.1
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20250829.1
   noddriverregistrarImage: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar:v2.8.0
