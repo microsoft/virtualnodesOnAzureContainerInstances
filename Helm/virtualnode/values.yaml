@@ -81,12 +81,14 @@ infraPodMinRestartDelaySeconds: '120' # Minimum time between automated repair op
 
 containerLogsVolumeHostPath: '' # if set, overrides default emptyDir volume for container logs volume to be a hostPath volume to the specified directory
 
+customTags: '' # Custom tags to add to ACI container groups, in the format key1=value1;key2=value2
+
 images:
   pullPolicy: Always
   pullSecrets: []
   crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20250829.1
   spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20250829.1
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20250829.1
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20250925.3
   mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
   initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20250829.1
   kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20250829.1
