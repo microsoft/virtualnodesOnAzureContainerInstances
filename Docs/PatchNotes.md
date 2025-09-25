@@ -1,6 +1,9 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3208.25092503
+- Update to add capability of setting custom ARM tags for generated ACI CGs 🆕
+
 ### 1.3208.25082901
 - Update K8s Binaries to 1.32.08 🎊
   - **IMPORTANT NOTE:** Previous 1.30.* virtual nodes releases have no regressions being used with 1.30, 1.31, and 1.32 AKS... **but** 1.32.* virtual nodes requires being run on 1.32.* AKS for full functionality. Please update your AKS cluster to 1.32.* before upgrading your virtual node helm install to this version! [More details on compatibility as well as versioning are being documented here!](/Docs/VersionCompatibility.md)

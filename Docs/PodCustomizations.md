@@ -16,6 +16,8 @@ This page is here to provide documentation of non-standard-K8s functionality tha
 | microsoft.containerinstance.virtualnode.cmk.keyname | Controlling Deployment Encryption with Customer Managed Keys | [CMK](#encrypting-aci-deployment-info-via-customer-managed-keys)
 | microsoft.containerinstance.virtualnode.cmk.keyversion | Controlling Deployment Encryption with Customer Managed Keys | [CMK](#encrypting-aci-deployment-info-via-customer-managed-keys)
 | microsoft.containerinstance.virtualnode.cmk.identity | Controlling Deployment Encryption with Customer Managed Keys | [CMK](#encrypting-aci-deployment-info-via-customer-managed-keys)
+| microsoft.containerinstance.virtualnode.customtags | Setting ARM Tags for created ACI CGs | [Custom Tags](#using-custom-arm-tags)
+
 
 | Pod Label | Short Summary | Doc Link | 
 | ------------- | ------------- | --- |
@@ -250,6 +252,31 @@ spec:
     key: virtual-kubelet.io/provider
     operator: Exists
 ```
+
+## Using Custom ARM Tags
+Azure has a concept of resources having Tags, and this applies to the ACI CGs created by virtual nodes.
+
+For customers who want to set these tags for ACI CGs created by virtual nodes, they can be applied as an annotation:
+```yaml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: myPodName
+  annotations:
+    microsoft.containerinstance.virtualnode.customtags: "env=Dev;project=silverSpoon"
+spec:
+<yada yada>
+```
+
+Azure ARM Tags are key-value pairs, so the annotation is a semi-colon delimited string of key=value pairs. The above example has two tags:
+- Key: env  
+  Value: Dev
+- Key: project  
+  Value: silverSpoon
+
+If custom tags are provided both at the [node](NodeCustomizations.md#using-custom-arm-tags) and [pod](PodCustomizations.md#using-custom-arm-tags) level, and a given key is defined for both, the value from the pod level will override.
+
+If custom tags are provided that are already used by virtual nodes for system-level information, only the key=values that overlap with a system-level key will be ignored.
 
 ## Using Workload Identity
 Azure has the concept of using [Azure Entra Workload Identities](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview) (or Workload Identity for short), which in AKS provides pods with an OIDC federated token from an associated Azure Managed Identity. This works particularly well with applications using the Azure Identity client libraries or Microsoft Authentication Library.

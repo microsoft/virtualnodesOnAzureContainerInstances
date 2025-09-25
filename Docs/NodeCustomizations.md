@@ -116,6 +116,7 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | admissionControllerPriorityClassName | Name of the Kubernetes Priority Class to assign to the VN2 admission controller pods. See [Using Priority Classes](#using-priority-classes) for more details |
 | podDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the virtual node deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
 | admissionControllerPodDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the VN2 admission controller deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
+| customTags | Setting ARM Tags for created ACI CGs. See [Custom Tags](#using-custom-arm-tags)|
 
 ## Default ACI Subnet behaviors with a customized `aciSubnetName`
 This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
@@ -200,6 +201,25 @@ admissionControllerPriorityClassName: high-priority-virtnode
 ```
 
 Setting separate priority class names for the virtual node pods and the admission controller pods is also possible. You can also specify an existing priority class name that was separately created in the cluster.
+
+## Using Custom ARM Tags
+Azure has a concept of resources having Tags, and this applies to the ACI CGs created by virtual nodes. 
+
+For customers who want to set these tags for ACI CGs created by virtual nodes, they can set a default setting as part of the HELM values. 
+
+```yaml
+customTags: 'env=Dev;project=silverSpoon' # Custom tags to add to ACI container groups, in the format key1=value1;key2=value2
+```
+
+Azure ARM Tags are key-value pairs, so the annotation is a semi-colon delimited string of key=value pairs. The above example has two tags: 
+- Key: env  
+  Value: Dev
+- Key: project  
+  Value: silverSpoon
+
+If custom tags are provided both at the [node](NodeCustomizations.md#using-custom-arm-tags) and [pod](PodCustomizations.md#using-custom-arm-tags) level, and a given key is defined for both, the value from the pod level will override. 
+
+If custom tags are provided that are already used by virtual nodes for system-level information, only the key=values that overlap with a system-level key will be ignored.
 
 # How to run more than one type of customized virtual node in the same AKS
 You may have a scenario that you want to run more than 1 virtual node HELM configuration in one AKS cluster. 

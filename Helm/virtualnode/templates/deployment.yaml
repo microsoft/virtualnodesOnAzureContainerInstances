@@ -199,6 +199,8 @@ spec:
               value: {{ .Values.sandboxProviderType }}
             - name: VirtualNode_Zones
               value: {{ quote .Values.zones }}
+            - name: VirtualNode_CustomTags
+              value: {{ quote .Values.customTags }}              
             - name: Subnets
               value: {{ .Values.aciSubnetName }}
             - name: AKS_CREDENTIAL_LOCATION
