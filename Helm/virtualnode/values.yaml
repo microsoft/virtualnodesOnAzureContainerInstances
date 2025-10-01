@@ -34,12 +34,6 @@ admissionControllerPodDisruptionBudget: {}
 priorityClassName: ""
 admissionControllerPriorityClassName: ""
 
-securityContext: 
-  capabilities:
-    add:
-      - NET_ADMIN
-      - NET_RAW
-
 nodeSelector: 
   "kubernetes.io/os": linux
 
