@@ -1,6 +1,13 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3208.25100802
+- Fixed potential long wait on file monitor lock 🔐
+- Updated handling of some non-impactful errors to no longer bubble to Kubelet 👌🏿
+- Removed some verbose logs that can cause performance issues under heavy load 🔃
+- Added additional local log scrubbing for some Az File mount scenarios 🧼
+- Cleaned up an unused HELM value 🪖
+
 ### 1.3208.25092503
 - Update to add capability of setting custom ARM tags for generated ACI CGs 🆕
 
