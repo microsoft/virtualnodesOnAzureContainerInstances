@@ -225,8 +225,8 @@ If custom tags are provided that are already used by virtual nodes for system-le
 ## Using a Private ACR with Trusted Access
 Some customers have use cases where they would like to use ACR's which are not accessible to the public internet. This is now supported for use with virtual nodes, though it is a node-wide configuration that replaces the original image credential retrieval with new logic able to work in this scenario. 
 
-Updating an ACR so that it cannot be publicly accessed but which has Trusted Access enabled: 
-![ACR without Public Access but Set with Trusted Access](/Docs/Pictures/acr_private.png)
+Updating an ACR so that it cannot be publicly accessed but which has Trusted Access enabled:  
+![ACR without Public Access but Set with Trusted Access](/Docs/Pictures/acr_private.png)  
 **Important**: Trusted Access is required to be enabled for this feature to work!
 
 You will then need a managed identity which has access to the ACR (can be set from the ACR's Access Control with a role like AcrPull). You will need both the MI's full resource ID as well as it's principle ID (easily retrieve in portal from MI's Overview blade).
