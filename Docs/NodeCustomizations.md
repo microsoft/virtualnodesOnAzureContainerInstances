@@ -117,6 +117,7 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | podDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the virtual node deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
 | admissionControllerPodDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the VN2 admission controller deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
 | customTags | Setting ARM Tags for created ACI CGs. See [Custom Tags](#using-custom-arm-tags)|
+| acrTrustedAccess | Setting to replace the default image credential retriever with one capable of pulling images from a private network ACR. See [ACR with Trusted Access](#using-a-private-acr-with-trusted-access)|
 
 ## Default ACI Subnet behaviors with a customized `aciSubnetName`
 This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
@@ -220,6 +221,29 @@ Azure ARM Tags are key-value pairs, so the annotation is a semi-colon delimited 
 If custom tags are provided both at the [node](NodeCustomizations.md#using-custom-arm-tags) and [pod](PodCustomizations.md#using-custom-arm-tags) level, and a given key is defined for both, the value from the pod level will override. 
 
 If custom tags are provided that are already used by virtual nodes for system-level information, only the key=values that overlap with a system-level key will be ignored.
+
+## Using a Private ACR with Trusted Access
+Some customers have use cases where they would like to use ACR's which are not accessible to the public internet. This is now supported for use with virtual nodes, though it is a node-wide configuration that replaces the original image credential retrieval with new logic able to work in this scenario. 
+
+Updating an ACR so that it cannot be publicly accessed but which has Trusted Access enabled: 
+![ACR without Public Access but Set with Trusted Access](/Docs/Pictures/acr_private.png)
+**Important**: Trusted Access is required to be enabled for this feature to work!
+
+You will then need a managed identity which has access to the ACR (can be set from the ACR's Access Control with a role like AcrPull). You will need both the MI's full resource ID as well as it's principle ID (easily retrieve in portal from MI's Overview blade).
+
+Then update these values in the values.yaml: 
+``` yaml
+acrTrustedAccess:
+  enabled: false
+  identityResourceId: '' # Resource ID of managed identity with ACR access eg -  /subscriptions/<subId>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<miName>
+  identityPrincipalId: '' # Principal ID of the managed identity with ACR access
+```
+
+`enabled` must be set to `true`  
+`identityResourceId` should be the full resource ID to the MI which has access to the private networked ACR  
+`identityPrincipalId` must be set to the principal ID for the MI in the resource ID above  
+
+Nodes created with this configuration will be able to retrieve images from private networked ACRs to which the identity they were configured with have permissions!
 
 # How to run more than one type of customized virtual node in the same AKS
 You may have a scenario that you want to run more than 1 virtual node HELM configuration in one AKS cluster. 
