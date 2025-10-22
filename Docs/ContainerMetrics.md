@@ -11,7 +11,7 @@ Once those are installed as a prerequisite, you can configure it to use the new 
 
 ```json
 {
-    "apiVersion": "azmonitoring.coreos.com/v1 ",
+    "apiVersion": "azmonitoring.coreos.com/v1",
     "kind": "PodMonitor",
     "metadata": {
         "name": "vn2-metrics",
@@ -29,7 +29,7 @@ Once those are installed as a prerequisite, you can configure it to use the new 
                 "metricRelabelings": [
                     {
                         "action": "replace",
-                        "regex": "(.)",
+                        "regex": "(.*)",
                         "replacement": "$1",
                         "sourceLabels": [
                             "exported_namespace"
@@ -38,7 +38,7 @@ Once those are installed as a prerequisite, you can configure it to use the new 
                     },
                     {
                         "action": "replace",
-                        "regex": "(.)",
+                        "regex": "(.*)",
                         "replacement": "$1",
                         "sourceLabels": [
                             "exported_pod"
@@ -73,11 +73,12 @@ Once those are installed as a prerequisite, you can configure it to use the new 
         ],
         "selector": {
             "matchLabels": {
-                "virtualization": "virtualnode2"
+                "app.kubernetes.io/name": "virtualnode"
             }
         }
     }
 }
 ```
+
 
 With that applied, you should shortly start seeing metrics flowing to Grafana for your pods running on the virtual nodes!
