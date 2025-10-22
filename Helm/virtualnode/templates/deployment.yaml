@@ -97,6 +97,10 @@ spec:
                   fieldPath: metadata.namespace
             - name: CustomNodeLabels
               value: {{ .Values.nodeLabels }}
+            - name: "ACR_TRUSTED_ACCESS_ENABLED"
+              value: {{ quote .Values.acrTrustedAccess.enabled }}
+            - name: "ACR_TRUSTED_ACCESS_PRINCIPAL_ID"
+              value: {{ quote .Values.acrTrustedAccess.identityPrincipalId }}
           resources: {}
         - name: virtualcsi
           resources:
@@ -157,6 +161,10 @@ spec:
           image: {{ .Values.images.spdycompatImage }}
           imagePullPolicy: {{ .Values.images.pullPolicy }}
         - name: proxycri
+          ports:
+          - name: http
+            containerPort: 50052 
+            protocol: TCP
           resources:
             requests:
               cpu: 2
@@ -200,7 +208,9 @@ spec:
             - name: VirtualNode_Zones
               value: {{ quote .Values.zones }}
             - name: VirtualNode_CustomTags
-              value: {{ quote .Values.customTags }}              
+              value: {{ quote .Values.customTags }}
+            - name: VirtualNode_ACR_TRUSTED_ACCESS_IDENTITY
+              value: {{ quote .Values.acrTrustedAccess.identityResourceId }}
             - name: Subnets
               value: {{ .Values.aciSubnetName }}
             - name: AKS_CREDENTIAL_LOCATION

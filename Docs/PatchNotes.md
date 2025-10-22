@@ -1,6 +1,13 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3305.25101602
+- Update K8s Binaries to 1.33.05 🎊
+  - **IMPORTANT NOTE:** This update has no regressions when used with AKS 1.32 or 1.33. Please upgrade to this HELM before updating your AKS to 1.33. [More details on compatibility as well as versioning are being documented here!](/Docs/VersionCompatibility.md)
+- Added capability to [pull images from ACR set to use private network settings](/Docs/NodeCustomizations.md#using-a-private-acr-with-trusted-access) ⛔
+- Added new metric endpoint which [can be used with Prometheus / Grafana](/Docs/ContainerMetrics.md#utilizing-new-metrics-endpoint-w-prometheus--grafana) 🔥
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3208.25100802
 - Fixed potential long wait on file monitor lock 🔐
 - Updated handling of some non-impactful errors to no longer bubble to Kubelet 👌🏿

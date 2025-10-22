@@ -1,0 +1,83 @@
+# Container Metrics
+## Utilizing new metrics endpoint w/ Prometheus & Grafana
+Prometheus is a popular open-source systems monitoring and alerting toolkit used in K8s. Enabling Managed Grafana for your cluster at the same time allows for the scraping of Prometheus metrics.
+
+By default, Prometheus uses some older metrics APIs which are on the path to deprecation, and which do not work in virtual nodes because they cause the kubelet to examine its local system usage, rather than utilizng the usage metrics flowing from containerD via the CRI as the more modern APIs do.
+
+For virtual nodes, we created a new endpoint which provides the types of data that Prometheus would not be able to retrieve from that legacy API. To utilize this new endpoint with Prometheus in AKS, first you will need your cluster to have managed Prometheus enabled. Please follow these steps to enable both Prometheus and Grafana:  
+[Setting up AKS Monitoring](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli)
+
+Once those are installed as a prerequisite, you can configure it to use the new endpoint by registering a pod monitor. The below is assuming you are using the default `vn2` namespace for your virtual node installation. 
+
+```json
+{
+    "apiVersion": "azmonitoring.coreos.com/v1 ",
+    "kind": "PodMonitor",
+    "metadata": {
+        "name": "vn2-metrics",
+        "namespace": "vn2"
+    },
+    "spec": {
+        "namespaceSelector": {
+            "matchNames": [
+                "vn2"
+            ]
+        },
+        "podMetricsEndpoints": [
+            {
+                "interval": "30s",
+                "metricRelabelings": [
+                    {
+                        "action": "replace",
+                        "regex": "(.)",
+                        "replacement": "$1",
+                        "sourceLabels": [
+                            "exported_namespace"
+                        ],
+                        "targetLabel": "namespace"
+                    },
+                    {
+                        "action": "replace",
+                        "regex": "(.)",
+                        "replacement": "$1",
+                        "sourceLabels": [
+                            "exported_pod"
+                        ],
+                        "targetLabel": "pod"
+                    },
+                    {
+                        "action": "replace",
+                        "regex": "(.*)",
+                        "replacement": "$1",
+                        "sourceLabels": [
+                            "exported_container"
+                        ],
+                        "targetLabel": "container"
+                    },
+                    {
+                        "action": "replace",
+                        "replacement": "cadvisor",
+                        "targetLabel": "job"
+                    },
+                    {
+                        "action": "replace",
+                        "replacement": "vn2",
+                        "targetLabel": "image"
+                    }
+                ],
+                "path": "/metrics",
+                "port": "http",
+                "scheme": "http",
+                "targetPort": 50052
+            }
+        ],
+        "selector": {
+            "matchLabels": {
+                "virtualization": "virtualnode2"
+            }
+        }
+    }
+}
+```
+
+With that applied, you should shortly start seeing metrics flowing to Grafana for your pods running on the virtual nodes!

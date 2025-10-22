@@ -77,15 +77,20 @@ containerLogsVolumeHostPath: '' # if set, overrides default emptyDir volume for 
 
 customTags: '' # Custom tags to add to ACI container groups, in the format key1=value1;key2=value2
 
+acrTrustedAccess:
+  enabled: false
+  identityResourceId: '' # Resource ID of managed identity with ACR access eg -  /subscriptions/<subId>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<miName>
+  identityPrincipalId: '' # Principal ID of the managed identity with ACR access
+
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20251008.2
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20251008.2
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20251008.2
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20251016.2
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20251016.2
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20251016.2
   mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20251008.2
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20251008.2
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20251008.2
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20251008.2
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20251016.2
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20251016.2
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20251016.2
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20251016.2
   noddriverregistrarImage: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar:v2.8.0
