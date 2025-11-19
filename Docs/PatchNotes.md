@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3305.25111802
+- Adding a configuration option to [disable kube-proxy at the node level](/Docs/NodeCustomizations.md#disabling-the-kube-proxy), default is no change from existing behaviors. 🚫
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3305.25102301
 - Update K8s Binaries to 1.33.05 🎊
   - **IMPORTANT NOTE:** This update has no regressions when used with AKS 1.32 or 1.33. Please upgrade to this HELM before updating your AKS to 1.33. [More details on compatibility as well as versioning are being documented here!](/Docs/VersionCompatibility.md)
@@ -39,8 +43,8 @@
 
 ### 1.3012.25061701
 - Fix for a potential race condition when rotating log files 🐛
-- Fix for potential issue where automated recovery code for PLEG Health issues could cause bootcycling of infra pods 🦟
-- New Heath check added to ensure in rare conditions where infra pods running on AKS lose networking they are detected and restarted 🛜
+- Fix for potential issue where automated recovery code for PLEG Health issues could cause boot cycling of infra pods 🦟
+- New Health check added to ensure in rare conditions where infra pods running on AKS lose networking they are detected and restarted 🛜
 - Misc Vulnerability patches applied to infrastructure pods 🔐
 
 ### 1.3012.25060201

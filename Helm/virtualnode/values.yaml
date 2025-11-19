@@ -61,6 +61,7 @@ aciSubnetName: cg # remember this subnet needs to be delegated to Microsoft.Cont
 aciResourceGroupName: '' # If not empty, will override the default resource group for the ACI instances. Must be within same subscription as the AKS cluster
 zones: '' # zone names, semi-colon separated... EG - '1;2;3'
 sandboxProviderType: OnDemand  #StandbyPool/OnDemand
+kubeProxyEnabled: true
 
 standbyPool: 
   zones: '' # zone names, semi-colon separated... EG - '1;2;3'
@@ -85,12 +86,12 @@ acrTrustedAccess:
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20251023.1
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20251023.1
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20251023.1
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20251118.2
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20251118.2
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20251118.2
   mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20251023.1
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20251023.1
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20251023.1
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20251023.1
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20251118.2
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20251118.2
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20251118.2
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20251118.2
   noddriverregistrarImage: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar:v2.8.0
