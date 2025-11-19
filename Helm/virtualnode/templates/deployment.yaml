@@ -37,6 +37,8 @@ spec:
           image: {{ .Values.images.initImage }}
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           env:
+            - name: KubeProxyEnabled
+              value: {{ if hasKey .Values "kubeProxyEnabled" -}}{{ .Values.kubeProxyEnabled | quote }}{{ else -}}"true"{{- end }}
             - name: serviceaccountname
               value: "{{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}"
             - name: NodeName
@@ -207,6 +209,8 @@ spec:
               value: {{ .Values.sandboxProviderType }}
             - name: VirtualNode_Zones
               value: {{ quote .Values.zones }}
+            - name: VirtualNode_KubeProxyEnabled
+              value: {{ if hasKey .Values "kubeProxyEnabled" -}}{{ .Values.kubeProxyEnabled | quote }}{{ else -}}"true"{{- end }}
             - name: VirtualNode_CustomTags
               value: {{ quote .Values.customTags }}
             - name: VirtualNode_ACR_TRUSTED_ACCESS_IDENTITY
