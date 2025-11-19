@@ -20,7 +20,7 @@ For fast boot latency, Standby Pools allows ACI to pre-create UVMs and cache the
 ## Prepare subscription
 ### Register the below providers to get access: 
 ``` bash
-Register-AzResourceProvider -ProviderNameSpace Microsoft.ContainerInstance
+Register-AzResourceProvider -ProviderNamespace Microsoft.ContainerInstance
 Register-AzResourceProvider -ProviderNamespace Microsoft.StandbyPool
 Register-AzProviderFeature -FeatureName StandbyContainerGroupPoolPreview -ProviderNamespace Microsoft.StandbyPool
 ```
@@ -52,7 +52,7 @@ Modify the Helm chart values.yaml to set up the standby pools using the below pa
 | -- | -- | 
 | sandboxProviderType | Indicates if virtual node is configured to use standby pools with `StandbyPool`, or `OnDemand` (the default) if not |
 | standbyPool.standbyPoolsCpu | How many cores to allocate for each standby pool UVM |
-| standbyPool.standbyPoolsMemory | Memory in GB  to allocate for each standby pool UVM |
+| standbyPool.standbyPoolsMemory | Memory in GB to allocate for each standby pool UVM |
 | standbyPool.maxReadyCapacity | Number of warm, unused UVMs the standby pool will try to keep ready at all times |
 | standbyPool.ccePolicy | Set the cce policy for pods that will be applied to pods running on this node if standby pool is used. This policy is applied to the standby pool UVMs. |
 | standbyPool.zones | Semi-colon delimited list of zone names for the standby pool to ready UVMs in. |
@@ -116,6 +116,7 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | admissionControllerPriorityClassName | Name of the Kubernetes Priority Class to assign to the VN2 admission controller pods. See [Using Priority Classes](#using-priority-classes) for more details |
 | podDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the virtual node deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
 | admissionControllerPodDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the VN2 admission controller deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
+| kubeProxyEnabled | Disables node from being able to create pods with kube-proxy. See [Disabling the Kube-Proxy](#disabling-the-kube-proxy)|
 | customTags | Setting ARM Tags for created ACI CGs. See [Custom Tags](#using-custom-arm-tags)|
 | acrTrustedAccess | Setting to replace the default image credential retriever with one capable of pulling images from a private network ACR. See [ACR with Trusted Access](#using-a-private-acr-with-trusted-access)|
 
@@ -203,6 +204,14 @@ admissionControllerPriorityClassName: high-priority-virtnode
 
 Setting separate priority class names for the virtual node pods and the admission controller pods is also possible. You can also specify an existing priority class name that was separately created in the cluster.
 
+## Disabling the Kube-Proxy
+You can disable the capability for pods created by the virtual node to have a kube-proxy sidecar added to them (by default enabled for non-confidential pods) by setting this value to false:
+``` yaml
+kubeProxyEnabled: false
+```
+
+The default is true, which is the existing behavior. Note that setting the [pod level setting](/Docs/PodCustomizations.md#disable-kube-proxy) explicitly true will not override this, as this option disables the node from having the configuration necessary for being able to create this hookup. 
+
 ## Using Custom ARM Tags
 Azure has a concept of resources having Tags, and this applies to the ACI CGs created by virtual nodes. 
 
@@ -229,7 +238,7 @@ Updating an ACR so that it cannot be publicly accessed but which has Trusted Acc
 ![ACR without Public Access but Set with Trusted Access](/Docs/Pictures/acr_private.png)  
 **Important**: Trusted Access is required to be enabled for this feature to work!
 
-You will then need a managed identity which has access to the ACR (can be set from the ACR's Access Control with a role like AcrPull). You will need both the MI's full resource ID as well as it's principle ID (easily retrieve in portal from MI's Overview blade).
+You will then need a managed identity which has access to the ACR (can be set from the ACR's Access Control with a role like AcrPull). You will need both the MI's full resource ID as well as its principal ID (easily retrieved in the portal from MI's Overview blade).
 
 Then update these values in the values.yaml: 
 ``` yaml
@@ -243,7 +252,7 @@ acrTrustedAccess:
 `identityResourceId` should be the full resource ID to the MI which has access to the private networked ACR  
 `identityPrincipalId` must be set to the principal ID for the MI in the resource ID above  
 
-Nodes created with this configuration will be able to retrieve images from private networked ACRs to which the identity they were configured with have permissions!
+Nodes created with this configuration will be able to retrieve images from private networked ACRs to which the identity they were configured with has permissions!
 
 # How to run more than one type of customized virtual node in the same AKS
 You may have a scenario that you want to run more than 1 virtual node HELM configuration in one AKS cluster. 

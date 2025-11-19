@@ -188,6 +188,8 @@ The Kube-Proxy is a standard K8s component that provides benefits like modifying
 
 The default behavior for K8s is to include the Kube-Proxy so that is the behavior if the annotation is not provided. 
 
+Note this setting is meaningless if the [node level setting](/Docs/NodeCustomizations.md#disabling-the-kube-proxy) is disabled, as that setting takes precedence. 
+
 **Confidential containers do not support Kube-Proxy usage as it breaks some security guarantees, so regardless what value is provided for this annotation a Confidential pod will ignore it and load without a Kube-Proxy.**
 
 ## Disable K8s DNS Injection
