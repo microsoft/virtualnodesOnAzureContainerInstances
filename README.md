@@ -53,7 +53,7 @@ Can be addressed in the future
 
 Hard limitations
 - DaemonSets
-- Virtual nodes require AKS clusters with Azure CNI networking
+- Virtual nodes require AKS clusters with Azure CNI networking (Nodesubnet or Podsubnet. Overlay still under discussion. No Kubnet)
 - Using API server authorized IP ranges for AKS (because of the subnet delegation to ACI)
 
 ### Region Deployments
@@ -267,3 +267,4 @@ trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
+
