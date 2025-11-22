@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3305.25112102
+- Added capability to use [Az File Mounts w/ MI auth](/Docs/StorageOptions.md#azure-file-w-mi-auth) instead of client secret auth 👑
+- Fix for resource allocation for pods using K8s Sidecars 🐿️
+
 ### 1.3305.25111802
 - Adding a configuration option to [disable kube-proxy at the node level](/Docs/NodeCustomizations.md#disabling-the-kube-proxy), default is no change from existing behaviors. 🚫
 - Ingesting security patches and dependency updates 🔐
