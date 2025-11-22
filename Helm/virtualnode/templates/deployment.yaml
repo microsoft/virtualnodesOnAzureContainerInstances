@@ -225,6 +225,8 @@ spec:
               value: {{ .Values.aciSubnetName }}
             - name: MountHostImage
               value: {{ .Values.images.mountImage }}
+            - name: MountHostImageConfid
+              value: {{ .Values.images.mountConfidImage }}
             - name: ResourceGroup
               value: {{ .Values.aciResourceGroupName }}
             - name: ArmEndpointBaseUrl
