@@ -7,6 +7,9 @@ metadata:
     {{- include "virtualnode2.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  {{- if .Values.infraPodMinReadySeconds }}
+  minReadySeconds: {{ .Values.infraPodMinReadySeconds }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "virtualnode2.selectorLabels" . | nindent 6 }}
