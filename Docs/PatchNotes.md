@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3307.26011601
+- Fix for scenario where virtual node could continue to track deleted container groups 👻
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3305.25112102
 - Added capability to use [Az File Mounts w/ MI auth](/Docs/StorageOptions.md#azure-file-w-mi-auth) instead of client secret auth 👑
 - Fix for resource allocation for pods using K8s Sidecars 🐿️
