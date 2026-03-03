@@ -65,3 +65,18 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Kube-proxy enabled value. It is backward compatible with old "kubeProxyEnabled" setting.
+Priority: kubeProxyEnabled (old) > kubeProxy.enabled (new) > "true" (default)
+*/}}
+{{- define "virtualnode2.kubeProxyEnabled" -}}
+{{- if hasKey .Values "kubeProxyEnabled" -}}
+{{- .Values.kubeProxyEnabled | quote }}
+{{- else if hasKey .Values.kubeProxy "enabled" -}}
+{{- .Values.kubeProxy.enabled | quote }}
+{{- else -}}
+"true"
+{{- end }}
+{{- end }}
+

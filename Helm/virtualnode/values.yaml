@@ -61,7 +61,6 @@ aciSubnetName: cg # remember this subnet needs to be delegated to Microsoft.Cont
 aciResourceGroupName: '' # If not empty, will override the default resource group for the ACI instances. Must be within same subscription as the AKS cluster
 zones: '' # zone names, semi-colon separated... EG - '1;2;3'
 sandboxProviderType: OnDemand  #StandbyPool/OnDemand
-kubeProxyEnabled: true
 
 standbyPool: 
   zones: '' # zone names, semi-colon separated... EG - '1;2;3'
@@ -83,16 +82,21 @@ acrTrustedAccess:
   identityResourceId: '' # Resource ID of managed identity with ACR access eg -  /subscriptions/<subId>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<miName>
   identityPrincipalId: '' # Principal ID of the managed identity with ACR access
 
+kubeProxy: 
+  enabled: true
+  reservedMemoryGB: 0.1 # Amount of memory to reserve for kube-proxy container, will be rounded to nearest 0.1 GB
+  reservedCPUCores: 0.1 # Amount of CPU cores to reserve for kube-proxy container, will be rounded to nearest 0.1 core
+
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20260116.1
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20260116.1
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20260116.1
-  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260116.1
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20260302.2
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20260302.2
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20260302.2
+  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260302.2
   mountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20260116.1
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20260116.1
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260116.1
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260116.1
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20260302.2
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20260302.2
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260302.2
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260302.2
   noddriverregistrarImage: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar:v2.8.0

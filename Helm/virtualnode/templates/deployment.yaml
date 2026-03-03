@@ -41,7 +41,7 @@ spec:
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           env:
             - name: KubeProxyEnabled
-              value: {{ if hasKey .Values "kubeProxyEnabled" -}}{{ .Values.kubeProxyEnabled | quote }}{{ else -}}"true"{{- end }}
+              value: {{ include "virtualnode2.kubeProxyEnabled" . }}
             - name: serviceaccountname
               value: "{{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}"
             - name: NodeName
@@ -213,7 +213,7 @@ spec:
             - name: VirtualNode_Zones
               value: {{ quote .Values.zones }}
             - name: VirtualNode_KubeProxyEnabled
-              value: {{ if hasKey .Values "kubeProxyEnabled" -}}{{ .Values.kubeProxyEnabled | quote }}{{ else -}}"true"{{- end }}
+              value: {{ include "virtualnode2.kubeProxyEnabled" . }}
             - name: VirtualNode_CustomTags
               value: {{ quote .Values.customTags }}
             - name: VirtualNode_ACR_TRUSTED_ACCESS_IDENTITY
@@ -234,6 +234,10 @@ spec:
               value: {{ .Values.aciResourceGroupName }}
             - name: ArmEndpointBaseUrl
               value: {{ .Values.armEndpointBaseUrl }}
+            - name: KubeProxyReservedMemoryGB
+              value: {{ quote .Values.kubeProxy.reservedMemoryGB }}
+            - name: KubeProxyReservedCPUCores
+              value: {{ quote .Values.kubeProxy.reservedCPUCores }}
             - name: NodeName
               valueFrom:
                 fieldRef:
