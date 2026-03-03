@@ -1,6 +1,11 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3307.26030202
+- Allow customers to increase resource allocation to kubeProxy if desired 🐿️
+- Reduced ImageCaching logs to only contain image names / tags of images instead of enumerating all properties 🖼️
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3307.26011601
 - Fix for scenario where virtual node could continue to track deleted container groups 👻
 - Ingesting security patches and dependency updates 🔐
