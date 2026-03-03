@@ -116,9 +116,11 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | admissionControllerPriorityClassName | Name of the Kubernetes Priority Class to assign to the VN2 admission controller pods. See [Using Priority Classes](#using-priority-classes) for more details |
 | podDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the virtual node deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
 | admissionControllerPodDisruptionBudget | Configurations for the Kubernetes Pod Disruption Budget (PDB) resource to use for the VN2 admission controller deployment. See [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for available fields. |
-| kubeProxyEnabled | Disables node from being able to create pods with kube-proxy. See [Disabling the Kube-Proxy](#disabling-the-kube-proxy)|
 | customTags | Setting ARM Tags for created ACI CGs. See [Custom Tags](#using-custom-arm-tags)|
 | acrTrustedAccess | Setting to replace the default image credential retriever with one capable of pulling images from a private network ACR. See [ACR with Trusted Access](#using-a-private-acr-with-trusted-access)|
+| kubeProxy.enabled | Disables node from being able to create pods with kube-proxy. See [Disabling the Kube-Proxy](#disabling-the-kube-proxy)|
+| kubeProxy.reservedMemoryGB | Controls memory allocation for kubeProxy. See [Kube-Proxy Resource Allocation](#kube-proxy-resource-allocation)|
+| kubeProxy.reservedCPUCores | Controls CPU allocation for kubeProxy. See [Kube-Proxy Resource Allocation](#kube-proxy-resource-allocation)|
 
 ## Default ACI Subnet behaviors with a customized `aciSubnetName`
 This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
@@ -207,10 +209,21 @@ Setting separate priority class names for the virtual node pods and the admissio
 ## Disabling the Kube-Proxy
 You can disable the capability for pods created by the virtual node to have a kube-proxy sidecar added to them (by default enabled for non-confidential pods) by setting this value to false:
 ``` yaml
-kubeProxyEnabled: false
+kubeProxy:
+  enabled: false
 ```
 
 The default is true, which is the existing behavior. Note that setting the [pod level setting](/Docs/PodCustomizations.md#disable-kube-proxy) explicitly true will not override this, as this option disables the node from having the configuration necessary for being able to create this hookup. 
+
+## Kube-Proxy Resource Allocation
+For pods that are using kubeProxy functionality, by default they allocate 0.1 CPU and 0.1 GB of memory for the kubeproxy to use. For most usage this is OK, but for customers who are running K8s clusters with large numbers of pods this can require more resources to be kept on top of. 
+
+This can be configured to different sizes by the relevant values in the kubeProxy section: 
+``` yaml
+kubeProxy:
+  reservedMemoryGB: 0.1 # Amount of memory to reserve for kube-proxy container, will be rounded to nearest 0.1 GB
+  reservedCPUCores: 0.1 # Amount of CPU cores to reserve for kube-proxy container, will be rounded to nearest 0.1 core
+```
 
 ## Using Custom ARM Tags
 Azure has a concept of resources having Tags, and this applies to the ACI CGs created by virtual nodes. 
