@@ -16,9 +16,12 @@ The ideal is for virtual nodes to be able to release versions which are fully fo
 
 Below are tested configurations which have been verified to be compatible
 
-| Virtual Node Version | AKS 1.29 | AKS 1.30 | AKS 1.31 | AKS 1.32 | AKS 1.33 |
-|-----------------------|----------|----------|----------|----------|----------|
-| 1.29                 | ✅        | ❌        | ❌        | ❌        | ❌        |
-| 1.30                 | ✅        | ✅        | ✅        | ✅        | ❓        |
-| 1.32                 | ❌        | ❌        | ❌        | ✅        | ❓        |
-| 1.33                 | ❌        | ❌        | ❌        | ✅        | ✅       |
+| Virtual Node Version | AKS 1.29 | AKS 1.30 | AKS 1.31 | AKS 1.32 | AKS 1.33 | AKS 1.34 |
+|----------------------|----------|----------|----------|----------|----------|----------|
+| 1.29                 | ✅       | ❌      | ❌       | ❌      | ❌       | ❌      |
+| 1.30                 | ✅       | ✅      | ✅       | ✅      | ❓       | ❌      |
+| 1.32                 | ❌       | ❌      | ❌       | ✅      | ❓       | ❌      |
+| 1.33                 | ❌       | ❌      | ❌       | ✅      | ✅       | ✅*     |
+
+
+\* VN2 1.3307.26033004 and higher compatible with AKS 1.34
