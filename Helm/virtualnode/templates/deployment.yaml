@@ -77,6 +77,9 @@ spec:
               name: aks-credential-provider-yaml
             - mountPath: /image-credential-provider/credential-provider
               name: aks-credential-provider-binary
+            - mountPath: /usr/bin/azure-acr-credential-provider
+              name: aks-credential-provider-binary-symlink-target
+              readOnly: true
             - mountPath: /tmp/
               name: socket-volume
             - mountPath: /kubeconfig/
@@ -218,6 +221,8 @@ spec:
               value: {{ quote .Values.customTags }}
             - name: VirtualNode_ACR_TRUSTED_ACCESS_IDENTITY
               value: {{ quote .Values.acrTrustedAccess.identityResourceId }}
+            - name: VirtualNode_SandboxRecreateDelaySeconds
+              value: "2"
             - name: Subnets
               value: {{ .Values.aciSubnetName }}
             - name: AKS_CREDENTIAL_LOCATION
@@ -298,7 +303,11 @@ spec:
         - name: aks-credential-provider-binary
           hostPath:
             path: /var/lib/kubelet/credential-provider
-            type: DirectoryOrCreate         
+            type: DirectoryOrCreate
+        - name: aks-credential-provider-binary-symlink-target
+          hostPath:
+            path: /usr/bin/azure-acr-credential-provider
+            type: FileOrCreate       
         - name: credentials
           secret:
             secretName: virtual-node-admission-controller
