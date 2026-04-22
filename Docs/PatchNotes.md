@@ -1,6 +1,11 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3307.26033004
+- Resolved compatibility issue with AKS 1.34 👩🏿‍💻
+- Fixed potential race condition that can occur while recreating pods that are running as a Managed Identity 🪪
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3307.26030202
 - Allow customers to increase resource allocation to kubeProxy if desired 🐿️
 - Reduced ImageCaching logs to only contain image names / tags of images instead of enumerating all properties 🖼️
