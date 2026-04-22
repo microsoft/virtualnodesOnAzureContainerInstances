@@ -22,6 +22,6 @@ Below are tested configurations which have been verified to be compatible
 | 1.30                 | ✅       | ✅      | ✅       | ✅      | ❓       | ❌      |
 | 1.32                 | ❌       | ❌      | ❌       | ✅      | ❓       | ❌      |
 | 1.33                 | ❌       | ❌      | ❌       | ✅      | ✅       | ✅*     |
-
+| 1.34                 | ❌       | ❌      | ❌       | ❓      | ✅       | ✅      |
 
 \* VN2 1.3307.26033004 and higher compatible with AKS 1.34
