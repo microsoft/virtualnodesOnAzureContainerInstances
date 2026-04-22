@@ -1,6 +1,11 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3406.26040703
+- Updated to 1.34.6 upstream K8s binaries ☸️
+- Fix for edge case that could cause infra pod restores to get stuck 🪤
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3307.26033004
 - Resolved compatibility issue with AKS 1.34 👩🏿‍💻
 - Fixed potential race condition that can occur while recreating pods that are running as a Managed Identity 🪪
