@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3406.26042204
+- Added support for [FIPS compliant AKS](https://learn.microsoft.com/en-us/azure/aks/enable-fips-nodes) 🤐
+- Ingested security patches and dependency updates 🔐
+
 ### 1.3406.26040703
 - Updated to 1.34.6 upstream K8s binaries ☸️
 - Fix for edge case that could cause infra pod restores to get stuck 🪤
