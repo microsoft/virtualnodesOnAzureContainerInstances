@@ -205,7 +205,7 @@ Let's start with a simple example YAML:
 apiVersion: v1
 kind: Pod
 metadata:
-  annotations:    
+  annotations: {}
   name: demo-pod
 spec:
   containers:
@@ -224,6 +224,7 @@ spec:
         memory: 128Mi
   nodeSelector:
     virtualization: virtualnode2
+    "kubernetes.io/os": linux
   tolerations:
   - effect: NoSchedule
     key: virtual-kubelet.io/provider
@@ -243,6 +244,73 @@ EG: if you wanted to view logs
 EG: wanted to shell in to the pod 
 
     kubectl exec demo-pod -it -- /bin/bash
+
+## Extending to Deployments
+
+Following base K8s principles, we can extend this example to use K8s templated types like a Deployment. Here is an example, creating 3 copies of the above demo pod, all to be scheduled on the virtual node(s):
+
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+  labels:
+    app: demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - -c
+        - 'counter=1; while true; do echo "Hello, World! Counter: $counter"; counter=$((counter+1)); sleep 1; done'
+        image: mcr.microsoft.com/azure-cli
+        name: hello-world-counter
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1G
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      nodeSelector:
+        virtualization: virtualnode2
+        "kubernetes.io/os": linux
+      tolerations:
+      - effect: NoSchedule
+        key: virtual-kubelet.io/provider
+        operator: Exists
+```
+
+### Scaling Deployments
+
+One of the key benefits of using Deployments is the ability to scale your workloads up and down trivially. Kubernetes handles the orchestration of creating or terminating pods automatically.
+
+To scale the deployment to a different number of replicas, use the `kubectl scale` command:
+
+    kubectl scale deployment demo-deployment --replicas=10
+
+This will scale the deployment to 10 replicas. You can scale down just as easily:
+
+    kubectl scale deployment demo-deployment --replicas=1
+
+You can verify the current state of your deployment with either :
+
+    kubectl get deployment demo-deployment
+    kubectl describe deployment demo-deployment
+
+To see which node each pod from the demo deployment was scheduled to, use:
+
+    kubectl get pods -o wide -l app=demo
+
+This will show all pods were scheduled to your virtual node without needing to scale out to additional nodes. 
 
 # Next Steps
 Now you have a basic grounding to be able to run K8s pods on your virtual node, and you can utilize most K8s capabilities and constructs on those pods out of box! But maybe you are looking for more?
