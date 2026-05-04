@@ -121,6 +121,9 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | kubeProxy.enabled | Disables node from being able to create pods with kube-proxy. See [Disabling the Kube-Proxy](#disabling-the-kube-proxy)|
 | kubeProxy.reservedMemoryGB | Controls memory allocation for kubeProxy. See [Kube-Proxy Resource Allocation](#kube-proxy-resource-allocation)|
 | kubeProxy.reservedCPUCores | Controls CPU allocation for kubeProxy. See [Kube-Proxy Resource Allocation](#kube-proxy-resource-allocation)|
+| IsWorkloadIdentityEnabled | Enables [Workload Identity](#workload-identity-for-infrastructure-pods) for VN2 infrastructure authentication. Set to `"Enabled"` to turn on. Cannot be used with ACR Trusted Access. |
+| IdentityClientId | The Client ID of the Managed Identity for Workload Identity. See [Workload Identity for Infrastructure Pods](#workload-identity-for-infrastructure-pods). |
+| IdentityTenantId | The Azure AD Tenant ID for Workload Identity. See [Workload Identity for Infrastructure Pods](#workload-identity-for-infrastructure-pods). |
 
 ## Default ACI Subnet behaviors with a customized `aciSubnetName`
 This suboptimally-named field is actually a comma delimited list of subnets to potentially use as the default for the node. 
@@ -266,6 +269,43 @@ acrTrustedAccess:
 `identityPrincipalId` must be set to the principal ID for the MI in the resource ID above  
 
 Nodes created with this configuration will be able to retrieve images from private networked ACRs to which the identity they were configured with has permissions!
+
+> **⚠️ ACR Trusted Access cannot be used together with [Workload Identity for VN2 infrastructure authentication](#workload-identity-for-infrastructure-pods).**
+
+## Workload Identity for Infrastructure Pods
+
+[Workload Identity](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview) allows virtual nodes infrastructure to authenticate using Azure AD federated credentials instead of a Managed Identity's client secret.
+
+**Note:** This controls Workload Identity for the VN2 infrastructure pods only. Support for Workload Identity on payload pods (pods scheduled to the virtual node) is a separate capability and is not affected by this setting.
+
+### Prerequisites
+
+1. Your AKS cluster must have [Workload Identity enabled](https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster)
+2. A User-Assigned Managed Identity with a federated credential configured for the virtual nodes service account
+3. The Managed Identity must have the same RBAC permissions as described in [Creating a Custom Azure Role](/Docs/SecurityCustomizations.md#creating-a-custom-azure-role-for-virtual-nodes)
+
+### Enabling Workload Identity
+
+Set the following values in your `values.yaml` (or pass them via `--set` during `helm install` / `helm upgrade`):
+
+| Value | Description |
+|---|---|
+| `IsWorkloadIdentityEnabled` | Set to `"Enabled"` to turn on Workload Identity for VN2 infrastructure. Default is `"Disabled"`. |
+| `IdentityClientId` | The Client ID of the User-Assigned Managed Identity with the federated credential. |
+| `IdentityTenantId` | The Azure AD Tenant ID for the identity. |
+
+Example:
+```yaml
+IsWorkloadIdentityEnabled: "Enabled"
+IdentityClientId: "your-managed-identity-client-id"
+IdentityTenantId: "your-azure-ad-tenant-id"
+```
+
+When enabled, the virtual nodes service account will be annotated with the Workload Identity client and tenant IDs, and the infrastructure pods will receive the necessary environment variables and projected token volumes to authenticate via federated credentials.
+
+### Limitations
+
+> **⚠️ Workload Identity for infrastructure pods cannot be used together with [ACR Trusted Access](#using-a-private-acr-with-trusted-access).** 
 
 # How to run more than one type of customized virtual node in the same AKS
 You may have a scenario that you want to run more than 1 virtual node HELM configuration in one AKS cluster. 
