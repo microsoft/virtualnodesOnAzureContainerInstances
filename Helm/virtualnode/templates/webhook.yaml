@@ -9,7 +9,7 @@ webhooks:
   clientConfig:
     service:
       name: virtual-node-admission-controller
-      namespace: {{ .Values.namespace }}
+      namespace: {{ include "virtualnode2.namespace" . }}
       path: "/node"
   failurePolicy: Ignore
   matchPolicy: Equivalent
@@ -35,7 +35,7 @@ webhooks:
   clientConfig:
     service:
       name: virtual-node-admission-controller
-      namespace: {{ .Values.namespace }}
+      namespace: {{ include "virtualnode2.namespace" . }}
       path: "/pod"
   failurePolicy: Ignore
   matchPolicy: Equivalent

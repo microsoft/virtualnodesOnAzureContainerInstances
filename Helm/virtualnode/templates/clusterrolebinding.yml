@@ -7,8 +7,8 @@ metadata:
     {{- include "virtualnode2.labels" . | nindent 4 }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}
-  namespace: {{ .Values.namespace }}
+  name: {{ .Values.rbac.serviceAccountName }}
+  namespace: {{ include "virtualnode2.namespace" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

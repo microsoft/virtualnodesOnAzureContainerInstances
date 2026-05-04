@@ -1,6 +1,12 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3406.26050102
+- Added support for [Workload Identity for VN2 infrastructure pods](/Docs/NodeCustomizations.md#workload-identity-for-infrastructure-pods) 🪪
+- Improved namespace handling — Helm `--namespace` flag is now respected across all resources 📛
+- All VN2 containers are now FIPS compliant 🔒
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3406.26042204
 - Added support for [FIPS compliant AKS](https://learn.microsoft.com/en-us/azure/aks/enable-fips-nodes) 🤐
 - Ingested security patches and dependency updates 🔐

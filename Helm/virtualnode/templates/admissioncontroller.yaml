@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "virtual-node-admission-controller"
-  namespace: {{ .Values.namespace }}
+  namespace: {{ include "virtualnode2.namespace" . }}
 spec:
   replicas: {{ .Values.admissionControllerReplicaCount }}
   selector:
@@ -23,7 +23,7 @@ spec:
       priorityClassName: {{ .Values.admissionControllerPriorityClassName }}
       {{- end }} 
       terminationGracePeriodSeconds: 0
-      serviceAccountName: {{ if .Values.rbac.install }} "{{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}" {{ end }}
+      serviceAccountName: {{ if .Values.rbac.install }} "{{ .Values.rbac.serviceAccountName }}" {{ end }}
       containers:
         - name: admissioncontroller
           image: {{ .Values.images.admissioncontrollerImage }}
@@ -31,11 +31,11 @@ spec:
             - name: SECRET_NAME
               value: virtual-node-admission-controller
             - name: SECRET_NAMESPACE
-              value: {{ .Values.namespace }}
+              value: {{ include "virtualnode2.namespace" . }}
             - name: ADMISSION_CONTROLLER_NAME
               value: virtual-node-admission-controller
             - name: SERVICE_DNS_NAME
-              value: "virtual-node-admission-controller.{{ .Values.namespace }}.svc"
+              value: "virtual-node-admission-controller.{{ include "virtualnode2.namespace" . }}.svc"
             - name: INFRA_POD_MIN_RESTART_DELAY_SECONDS
               value: {{ quote .Values.infraPodMinRestartDelaySeconds }}
           resources: {}
