@@ -1,5 +1,7 @@
+{{- if eq .Release.Namespace "default" }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Values.namespace }}
+  name: {{ .Values.namespace | default "vn2" }}
 ---
+{{- end -}}

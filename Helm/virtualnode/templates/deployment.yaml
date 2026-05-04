@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "virtualnode2.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ include "virtualnode2.namespace" . }}
   labels:
     {{- include "virtualnode2.labels" . | nindent 4 }}
 spec:
@@ -23,6 +23,9 @@ spec:
       labels:
         {{- include "virtualnode2.selectorLabels" . | nindent 8 }}
         virtualnodeInfraHealthCheckEligible: "true"
+        {{- if eq .Values.IsWorkloadIdentityEnabled "Enabled" }}
+        azure.workload.identity/use: "true"
+        {{- end }}
     spec:
       {{- with .Values.images.pullSecrets }}
       imagePullSecrets:
@@ -32,7 +35,7 @@ spec:
       priorityClassName: {{ .Values.priorityClassName }}
       {{- end }}
       terminationGracePeriodSeconds: 0
-      serviceAccountName: {{ if .Values.rbac.install }} "{{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}" {{ end }}
+      serviceAccountName: {{ if .Values.rbac.install }} "{{ .Values.rbac.serviceAccountName }}" {{ end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
@@ -43,7 +46,7 @@ spec:
             - name: KubeProxyEnabled
               value: {{ include "virtualnode2.kubeProxyEnabled" . }}
             - name: serviceaccountname
-              value: "{{ template "virtualnode2.fullname" . }}-{{ .Values.rbac.serviceAccountName }}"
+              value: "{{ .Values.rbac.serviceAccountName }}"
             - name: NodeName
               valueFrom:
                 fieldRef:
@@ -109,6 +112,12 @@ spec:
               value: {{ quote .Values.acrTrustedAccess.enabled }}
             - name: "ACR_TRUSTED_ACCESS_PRINCIPAL_ID"
               value: {{ quote .Values.acrTrustedAccess.identityPrincipalId }}
+            {{- if eq .Values.IsWorkloadIdentityEnabled "Enabled" }}
+            - name: AZURE_CLIENT_ID
+              value: {{ .Values.IdentityClientId | quote }}
+            - name: AZURE_TENANT_ID
+              value: {{ .Values.IdentityTenantId | quote }}
+            {{- end }}
           resources: {}
         - name: virtualcsi
           resources:
@@ -243,6 +252,12 @@ spec:
               value: {{ quote .Values.kubeProxy.reservedMemoryGB }}
             - name: KubeProxyReservedCPUCores
               value: {{ quote .Values.kubeProxy.reservedCPUCores }}
+            {{- if eq .Values.IsWorkloadIdentityEnabled "Enabled" }}
+            - name: AZURE_CLIENT_ID
+              value: {{ .Values.IdentityClientId | quote }}
+            - name: AZURE_TENANT_ID
+              value: {{ .Values.IdentityTenantId | quote }}
+            {{- end }}
             - name: NodeName
               valueFrom:
                 fieldRef:

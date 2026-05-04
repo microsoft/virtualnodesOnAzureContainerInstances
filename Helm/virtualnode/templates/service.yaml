@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: virtual-node-admission-controller
-  namespace: {{ .Values.namespace }}
+  namespace: {{ include "virtualnode2.namespace" . }}
 spec:
   ports:
   - protocol: TCP

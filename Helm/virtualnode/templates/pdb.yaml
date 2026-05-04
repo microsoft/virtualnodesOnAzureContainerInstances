@@ -3,7 +3,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: "virtual-node-pdb"
-  namespace: {{ .Values.namespace }}
+  namespace: {{ include "virtualnode2.namespace" . }}
   labels:
     {{- include "virtualnode2.labels" . | nindent 4 }}
 spec:

@@ -17,6 +17,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+IsWorkloadIdentityEnabled: "Disabled" # Set to "Enabled" to enable workload identity for the virtualnode component.
+IdentityClientId: ""
+IdentityTenantId: ""
+
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -56,7 +60,7 @@ rbac:
 # If no value is provided, the virtual node defaults to using Public cloud.
 armEndpointBaseUrl: ''
 
-namespace: vn2
+namespace: vn2 # Fallback namespace used when helm install is run without --namespace. When --namespace is provided, that value is used instead.
 aciSubnetName: cg # remember this subnet needs to be delegated to Microsoft.ContainerInstance/containerGroups
 aciResourceGroupName: '' # If not empty, will override the default resource group for the ACI instances. Must be within same subscription as the AKS cluster
 zones: '' # zone names, semi-colon separated... EG - '1;2;3'
