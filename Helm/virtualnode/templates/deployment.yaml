@@ -38,10 +38,24 @@ spec:
       serviceAccountName: {{ if .Values.rbac.install }} "{{ .Values.rbac.serviceAccountName }}" {{ end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              {{- include "virtualnode2.selectorLabels" . | nindent 14 }}
       initContainers:
         - name: init-config
           image: {{ .Values.images.initImage }}
           imagePullPolicy: {{ .Values.images.pullPolicy }}
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 1G
           env:
             - name: KubeProxyEnabled
               value: {{ include "virtualnode2.kubeProxyEnabled" . }}
@@ -118,7 +132,24 @@ spec:
             - name: AZURE_TENANT_ID
               value: {{ .Values.IdentityTenantId | quote }}
             {{- end }}
-          resources: {}
+          startupProbe:
+            exec:
+              command: ["curl", "-f", "http://127.0.0.1:10248/healthz"]
+            failureThreshold: 36
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["curl", "-f", "http://127.0.0.1:10248/healthz"]
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command: ["curl", "-f", "http://127.0.0.1:10248/healthz"]
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            timeoutSeconds: 5
         - name: virtualcsi
           resources:
             requests:
@@ -143,6 +174,21 @@ spec:
           volumeMounts:
             - name: kubelet-root-dir
               mountPath: /var/lib/kubelet
+          startupProbe:
+            exec:
+              command: ["test", "-S", "/var/lib/kubelet/plugins/file.csi.azure.com/csi.sock"]
+            failureThreshold: 36
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["test", "-S", "/var/lib/kubelet/plugins/file.csi.azure.com/csi.sock"]
+            initialDelaySeconds: 0
+            periodSeconds: 30
+          readinessProbe:
+            exec:
+              command: ["test", "-S", "/var/lib/kubelet/plugins/file.csi.azure.com/csi.sock"]
+            initialDelaySeconds: 0
+            periodSeconds: 30
         - name: crisocketotcpadapter
           resources:
             requests:
@@ -167,6 +213,21 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: {{ .Values.images.pullPolicy }}
+          startupProbe:
+            exec:
+              command: ["test", "-f", "/tmp/proxycriReady"]
+            failureThreshold: 36
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["test", "-S", "/tmp/vcri.sock"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            exec:
+              command: ["test", "-f", "/tmp/proxycriReady"]
+            initialDelaySeconds: 0
+            periodSeconds: 30
         - name: spdycompat
           resources:
             requests:
@@ -177,6 +238,21 @@ spec:
               memory: 12G
           image: {{ .Values.images.spdycompatImage }}
           imagePullPolicy: {{ .Values.images.pullPolicy }}
+          startupProbe:
+            tcpSocket:
+              port: 50052
+            failureThreshold: 36
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 50052
+            initialDelaySeconds: 0
+            periodSeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: 50052
+            initialDelaySeconds: 0
+            periodSeconds: 5
         - name: proxycri
           ports:
           - name: http
@@ -262,6 +338,27 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+          startupProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            failureThreshold: 36
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 5
         - name: node-driver-registrar
           resources:
             requests:
@@ -272,6 +369,9 @@ spec:
               memory: 12G
           image: {{ .Values.images.noddriverregistrarImage }}
           imagePullPolicy: {{ .Values.images.pullPolicy }}
+          ports:
+            - containerPort: 9809
+              name: healthz
           volumeMounts:
             - name: kubelet-root-dir
               mountPath: /var/lib/kubelet/
@@ -281,12 +381,34 @@ spec:
           args: 
             - "--csi-address=$(ADDRESS)"
             - "--kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)"
+            - "--http-endpoint=:9809"
             - "--v=2"
           env:
             - name: ADDRESS
               value: "/var/lib/kubelet/plugins/file.csi.azure.com/csi.sock"
             - name: DRIVER_REG_SOCK_PATH
-              value: "/var/lib/kubelet/plugins/file.csi.azure.com/csi.sock"              
+              value: "/var/lib/kubelet/plugins/file.csi.azure.com/csi.sock"
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+            failureThreshold: 36
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 5
       volumes:
         - name: kubelet-root-dir
           emptyDir:

@@ -1,6 +1,11 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3406.26050602
+- Increased coverage of auto-recovery, health checks, and added topology spread for virtual node infrastructure on AKS 🩺
+- Auto-recovers node on errors registering virtual CSI node driver 🔁
+- Security patches and dependency updates 🔐
+
 ### 1.3406.26050102
 - Added support for [Workload Identity for VN2 infrastructure pods](/Docs/NodeCustomizations.md#workload-identity-for-infrastructure-pods) 🪪
 - Improved namespace handling — Helm `--namespace` flag is now respected across all resources 📛
