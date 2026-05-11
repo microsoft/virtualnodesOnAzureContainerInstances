@@ -23,7 +23,9 @@ IdentityTenantId: ""
 
 podAnnotations: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault
   # fsGroup: 2000
 
 # Pod Disruption Budget (https://kubernetes.io/docs/tasks/run-application/configure-pdb/)
