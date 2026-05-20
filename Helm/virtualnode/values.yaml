@@ -96,13 +96,13 @@ kubeProxy:
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20260506.2
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20260506.2
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20260506.2
-  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260506.2
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20260514.2
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20260514.2
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20260514.2
+  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260514.2
   mountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20260506.2
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20260506.2
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260506.2
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260506.2
-  noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20260506.2
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20260514.2
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20260514.2
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260514.2
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260514.2
+  noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20260514.2
