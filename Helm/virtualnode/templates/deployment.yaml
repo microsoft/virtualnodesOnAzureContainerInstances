@@ -51,7 +51,7 @@ spec:
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           resources:
             requests:
-              cpu: 0.5
+              cpu: 500m
               memory: 512Mi
             limits:
               cpu: 1
@@ -74,10 +74,10 @@ spec:
           resources:
             requests:
               cpu: 1
-              memory: 4G
+              memory: 3G
             limits:
               cpu: 3
-              memory: 12G
+              memory: 9G
           securityContext:
             capabilities:
               add:
@@ -156,8 +156,8 @@ spec:
               cpu: 0
               memory: 0G
             limits:
-              cpu: 3
-              memory: 12G
+              cpu: 2
+              memory: 9G
           securityContext:
             capabilities:
               add:
@@ -195,8 +195,8 @@ spec:
               cpu: 0
               memory: 0G
             limits:
-              cpu: 3
-              memory: 12G
+              cpu: 2
+              memory: 9G
           image: {{ .Values.images.crisockettotcpadapterImage }}
           env:
             - name: ListenEndpoint
@@ -234,8 +234,8 @@ spec:
               cpu: 0
               memory: 0G
             limits:
-              cpu: 3
-              memory: 12G
+              cpu: 2
+              memory: 9G
           image: {{ .Values.images.spdycompatImage }}
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           startupProbe:
@@ -260,8 +260,8 @@ spec:
             protocol: TCP
           resources:
             requests:
-              cpu: 2
-              memory: 8G
+              cpu: 1800m
+              memory: 6G
             limits:
               cpu: 3
               memory: 12G
@@ -365,8 +365,8 @@ spec:
               cpu: 0
               memory: 0G
             limits:
-              cpu: 3
-              memory: 12G
+              cpu: 2
+              memory: 9G
           image: {{ .Values.images.noddriverregistrarImage }}
           imagePullPolicy: {{ .Values.images.pullPolicy }}
           ports:

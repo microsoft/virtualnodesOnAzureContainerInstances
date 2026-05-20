@@ -50,10 +50,10 @@ spec:
               value: {{ quote .Values.infraPodMinRestartDelaySeconds }}
           resources:
             requests:
-              cpu: 0.5
+              cpu: 100m
               memory: 512Mi
             limits:
-              cpu: 1
+              cpu: 500m
               memory: 1G
           startupProbe:
             httpGet:
