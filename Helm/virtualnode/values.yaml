@@ -66,13 +66,14 @@ namespace: vn2 # Fallback namespace used when helm install is run without --name
 aciSubnetName: cg # remember this subnet needs to be delegated to Microsoft.ContainerInstance/containerGroups
 aciResourceGroupName: '' # If not empty, will override the default resource group for the ACI instances. Must be within same subscription as the AKS cluster
 zones: '' # zone names, semi-colon separated... EG - '1;2;3'
-sandboxProviderType: OnDemand  #StandbyPool/OnDemand
+sandboxProviderType: OnDemand  #StandbyPool / OnDemand, default is OnDemand
+standbyPoolShareType: Node # Node / HelmInstall, default is Node
 
 standbyPool: 
   zones: '' # zone names, semi-colon separated... EG - '1;2;3'
   standbyPoolsCpu: '3.5'
   standbyPoolsMemory: '15'
-  maxReadyCapacity: '10'
+  maxReadyCapacity: '10' # initial capacity applies only at creation time of StandbyPool, after creation by virtual node the StandbyPool capacity should be managed via AZ CLI, not by this HELM value
   ccePolicy: '' 
 
 nodeLabels: '' #Labels to add when registering the node in the cluster. Labels must be key=value pairs separated by ','. Labels in the 'kubernetes.io' namespace must begin with an allowed prefix ('kubelet.kubernetes.io', 'node.kubernetes.io') or be in the specifically allowed set ('beta.kubernetes.io/arch', 'beta.kubernetes.io/instance-type', 'beta.kubernetes.io/os', 'failure-domain.beta.kubernetes.io/region', 'failure-domain.beta.kubernetes.io/zone', 'kubernetes.io/arch', 'kubernetes.io/hostname', 'kubernetes.io/os', 'node.kubernetes.io/instance-type', 'topology.kubernetes.io/region', 'topology.kubernetes.io/zone')
@@ -96,13 +97,13 @@ kubeProxy:
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20260514.2
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20260514.2
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20260514.2
-  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260514.2
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20260605.1
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20260605.1
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20260605.1
+  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260605.1
   mountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20260514.2
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20260514.2
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260514.2
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260514.2
-  noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20260514.2
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20260605.1
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20260605.1
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260605.1
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260605.1
+  noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20260605.1

@@ -42,7 +42,7 @@ webhooks:
   name: virtual-node-admission-controller-pod-mutating-webhook.azmk8s.io
   namespaceSelector: {}
   objectSelector: {}
-  reinvocationPolicy: Never
+  reinvocationPolicy: IfNeeded
   rules:
   - apiGroups:
     - ''
