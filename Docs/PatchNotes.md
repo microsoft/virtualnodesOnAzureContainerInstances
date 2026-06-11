@@ -2,7 +2,7 @@
 
 ## Chart Versions:
 ### 1.3406.26060501
-- Added support for [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/) on VN2 pods (`Off`, `Initial`, and `Recreate` modes) 📐
+- Added support for VerticalPodAutoscaler (VPA) on VN2 pods (`Off`, `Initial`, and `Recreate` modes) 📐
 - Ingesting security patches and dependency updates 🔐
 
 ### 1.3406.26051402
