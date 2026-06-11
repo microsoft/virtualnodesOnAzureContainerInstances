@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3406.26060501
+- Added support for [VerticalPodAutoscaler](https://kubernetes.io/docs/concepts/workloads/autoscaling/) on VN2 pods (`Off`, `Initial`, and `Recreate` modes) 📐
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3406.26051402
 - Reduced resource (CPU/memory) requests and limits for VN2 infrastructure containers to optimize footprint while remaining reliable at scale 📉
 - Ingesting security patches and dependency updates 🔐
