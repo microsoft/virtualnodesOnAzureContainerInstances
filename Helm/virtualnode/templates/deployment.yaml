@@ -296,8 +296,12 @@ spec:
               value: {{ .Values.standbyPool.ccePolicy }}
             - name: VirtualNode_SandboxProvider_StandbyPools_Zones
               value: {{ quote .Values.standbyPool.zones }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_LeaseNamespace
+              value: {{ include "virtualnode2.namespace" . }}
             - name: SandboxProviderType
               value: {{ .Values.sandboxProviderType }}
+            - name: StandbyPoolShareType
+              value: {{ .Values.standbyPoolShareType }}
             - name: VirtualNode_Zones
               value: {{ quote .Values.zones }}
             - name: VirtualNode_KubeProxyEnabled
