@@ -1,6 +1,9 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3406.26061201
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3406.26060501
 - Added support for VerticalPodAutoscaler (VPA) on VN2 pods (`Off`, `Initial`, and `Recreate` modes) 📐
 - Ingesting security patches and dependency updates 🔐
