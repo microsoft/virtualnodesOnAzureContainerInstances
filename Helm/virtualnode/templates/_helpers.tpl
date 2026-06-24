@@ -93,8 +93,6 @@ use that. Otherwise fall back to .Values.namespace (default "vn2") for backward 
 {{- end -}}
 {{- end }}
 
-
-
 {{/*
 AKS required affinity rules.
 These ensure pods are not scheduled on virtual-kubelet nodes,
