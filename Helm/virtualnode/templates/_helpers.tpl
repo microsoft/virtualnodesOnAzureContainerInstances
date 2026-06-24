@@ -93,3 +93,37 @@ use that. Otherwise fall back to .Values.namespace (default "vn2") for backward 
 {{- end -}}
 {{- end }}
 
+
+
+{{/*
+AKS required affinity rules.
+These ensure pods are not scheduled on virtual-kubelet nodes,
+run on Linux, and only on AKS clusters.
+*/}}
+{{- define "virtualnode2.aksRequiredAffinity" -}}
+nodeAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+    nodeSelectorTerms:
+      - matchExpressions:
+          - key: type
+            operator: NotIn
+            values:
+              - virtual-kubelet
+          - key: kubernetes.io/os
+            operator: In
+            values:
+              - linux
+          - key: kubernetes.azure.com/cluster
+            operator: Exists
+{{- end }}
+
+{{/*
+Merged affinity: AKS required rules merged on top of user-configured .Values.affinity.
+AKS rules take precedence over any conflicting user-configured values.
+*/}}
+{{- define "virtualnode2.affinity" -}}
+{{- $aksAffinity := include "virtualnode2.aksRequiredAffinity" . | fromYaml }}
+{{- $userAffinity := .Values.affinity | default dict }}
+{{- $merged := mustMergeOverwrite (deepCopy $userAffinity) $aksAffinity }}
+{{- toYaml $merged }}
+{{- end }}

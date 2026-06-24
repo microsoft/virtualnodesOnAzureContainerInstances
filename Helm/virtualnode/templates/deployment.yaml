@@ -456,11 +456,10 @@ spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
+        "kubernetes.io/os": linux
       {{- end }}
-      {{- with .Values.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- include "virtualnode2.affinity" . | nindent 8 }}
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
