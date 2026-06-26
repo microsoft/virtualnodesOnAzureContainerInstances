@@ -1,6 +1,9 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3406.26062601
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3406.26062301
 - Pods are now pinned to Linux AKS nodes and prevented from being scheduled onto other virtual-kubelet nodes via AKS-required affinity rules 📌
 - Ingesting security patches and dependency updates 🔐
