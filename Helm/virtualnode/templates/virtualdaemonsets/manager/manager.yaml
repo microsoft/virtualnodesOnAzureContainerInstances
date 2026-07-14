@@ -1,0 +1,88 @@
+{{- if .Values.virtualdaemonsetControllerManager.enable }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: virtualdaemonsets-controller-manager
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+    control-plane: controller-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "virtualnode2.selectorLabels" . | nindent 6 }}
+      control-plane: controller-manager
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        {{- include "virtualnode2.labels" . | nindent 8 }}
+        control-plane: controller-manager
+        {{- if and .Values.virtualdaemonsetControllerManager.pod .Values.virtualdaemonsetControllerManager.pod.labels }}
+        {{- range $key, $value := .Values.virtualdaemonsetControllerManager.pod.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- end }}
+    spec:
+      {{- with .Values.images.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: manager
+          args: 
+            - "--health-probe-bind-address=:8081"
+          command:
+            - /manager
+          image: {{ .Values.images.virtualDaemonSetImage }}
+          {{- if .Values.images.pullPolicy }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          {{- end }}
+          livenessProbe:
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            httpGet:
+              path: /healthz
+              port: 8081
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            httpGet:
+              path: /readyz
+              port: 8081
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - "ALL"
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsUser: 65532
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: {{ .Values.virtualdaemonsetControllerManager.serviceAccountName }}
+      terminationGracePeriodSeconds: 10
+{{- end -}}

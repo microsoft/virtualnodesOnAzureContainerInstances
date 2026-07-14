@@ -1,0 +1,48 @@
+{{- if and .Values.rbac.install .Values.virtualdaemonsetControllerManager.enable }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+  name: virtualdaemonsets-manager-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - virtualdaemonsets.aci.azure.microsoft.com
+  resources:
+  - virtualdaemonsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - virtualdaemonsets.aci.azure.microsoft.com
+  resources:
+  - virtualdaemonsets/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - virtualdaemonsets.aci.azure.microsoft.com
+  resources:
+  - virtualdaemonsets/status
+  verbs:
+  - get
+  - patch
+  - update
+{{- end -}}
