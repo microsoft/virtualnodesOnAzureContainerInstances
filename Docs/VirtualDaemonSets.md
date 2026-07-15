@@ -121,6 +121,9 @@ Companion pod names are of the form `vds-<vdsName>-<hostPodName>-<differentiator
 
 This can also be associated based on the container IDs of the pods, as both the host and companion pods will share the start of the container ID (in form `virtualcri://pods/<host pod UID>/`). The companion pod will have `/podlets/` section present which its container id portions will be within. 
 
+## Demo
+- [Demo synchronizing keyvault secret:](/Docs/Examples/keyvaultvds.yaml)
+
 ## Under the hood
 Native DaemonSets is not supported by ACI's virtual nodes nor our competitors at AWS / GCP. This is because DaemonSets as a concept (a workload tied to the shared infrastructure of the node VM, often modifying the underlying shared OS) do not map well to running in a serverless environment (where by design very little can be shared between workloads). 
 
