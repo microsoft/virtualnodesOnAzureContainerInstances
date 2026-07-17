@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   virtualnode:
   - apiVersion: v2
+    appVersion: 1.3408.26071502
+    created: "2026-07-16T16:37:18.850531715Z"
+    description: Helm chart to install virtual nodes on Azure Container Instances
+      to an existing Azure Kubernetes Service cluster.
+    digest: 9be42ca58deaf70bfa3981e990f0215a48c63081dca811707fa94741ab81ce4d
+    maintainers:
+    - name: Gabriel Fuhrman
+      url: https://github.com/Gfuhrm
+    - name: Justin Song
+      url: https://github.com/jussong-msft
+    name: virtualnode
+    type: application
+    urls:
+    - https://github.com/microsoft/virtualnodesOnAzureContainerInstances/releases/download/virtualnode-1.3408.26071502/virtualnode-1.3408.26071502.tgz
+    version: 1.3408.26071502
+  - apiVersion: v2
     appVersion: 1.3408.26070201
     created: "2026-07-06T20:23:12.251958993Z"
     description: Helm chart to install virtual nodes on Azure Container Instances
@@ -545,4 +561,4 @@ entries:
     urls:
     - https://github.com/microsoft/virtualnodesOnAzureContainerInstances/releases/download/virtualnode-0.0.1/virtualnode-0.0.1.tgz
     version: 0.0.1
-generated: "2026-07-06T20:23:12.252469309Z"
+generated: "2026-07-16T16:37:18.850749185Z"
