@@ -2,7 +2,6 @@
 
 ## Chart Versions:
 ### 1.3408.26072301
-- S360: Upgrade RPMs to latest patched builds (kubectl, kubelet, registrar)
 - Ingesting security patches and dependency updates 🔐
 
 ### 1.3408.26071502
