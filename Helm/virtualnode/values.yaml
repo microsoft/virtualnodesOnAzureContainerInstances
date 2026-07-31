@@ -84,14 +84,14 @@ containerLogsVolumeHostPath: '' # if set, overrides default emptyDir volume for 
 
 # VirtualDaemonSet controller configurations
 virtualdaemonsetControllerManager:
-  enable: true
+  enable: false
   serviceAccountName: virtualdaemonsets-controller-manager
 
 virtualdaemonsets:
   crd:
     # This option determines whether the virtual daemonset CRD is included
     # in the installation process.
-    enable: true
+    enable: false
 
     # Enabling this option adds the "helm.sh/resource-policy": keep
     # annotation to the CRD, ensuring it remains installed even when

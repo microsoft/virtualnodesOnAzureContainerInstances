@@ -317,10 +317,10 @@ To achieve this, you will need to ensure only one of those HELM releases' value.
 admissionControllerReplicaCount: 1
 ```
 
-You will also need to ensure that the virtualdaemonsets crd and controller are not reinstalled:
+You will also need to ensure that the Virtual DaemonSets crd and controller are not reinstalled, meaning that only one release has the following flags set to true:
 ```
-virtualdaemonsets.crd.enable: false
-virtualdaemonsetControllerManager.enable: false
+virtualdaemonsets.crd.enable: true
+virtualdaemonsetControllerManager.enable: true
 ```
 It is also strongly recommended to update the values.yaml namespace used for deploying each virtual node configuration so each has its own unique namespace.
 ```

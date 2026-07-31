@@ -12,13 +12,13 @@ These VDS workloads are injected into the ACI container group of targeted pods, 
 
 ## Setup
 
-There are two new components needed to utilize Virtual DaemonSets: the CRD (Custom Resource Definition) and the CRD's controller which reconciles the state of the cluster. The controller runs as a pod in the namespace of the VN2 installation. There can only be one CRD and one controller installed per cluster. Both are installed by default, i.e. when running:
+There are two new components needed to utilize Virtual DaemonSets: the CRD (Custom Resource Definition) and the CRD's controller which reconciles the state of the cluster. The controller runs as a pod in the namespace of the VN2 installation. There can only be one CRD and one controller installed per cluster. Neither is installed by default, i.e. when running:
 
 `helm install vn2release ./`
 
-In the case of multiple installs, the CRD and controller can be skipped for an install using the `virtualdaemonsets.crd.enable` flag and the `virtualdaemonsetControllerManager.enable` flag:
+The CRD and controller can be installed as part of a specific release by enabling the `virtualdaemonsets.crd.enable` flag and the `virtualdaemonsetControllerManager.enable` flag:
 
-`helm install vn2release ./ --set "virtualdaemonsets.crd.enable=false" --set "virtualdaemonsetControllerManager.enable=false"`
+`helm install vn2release ./ --set "virtualdaemonsets.crd.enable=true" --set "virtualdaemonsetControllerManager.enable=true"`
 
 The CRD also has a flag that defines whether it should be kept or not when the release is uninstalled, which is by default set to false: `virtualdaemonsets.crd.keep`
 
