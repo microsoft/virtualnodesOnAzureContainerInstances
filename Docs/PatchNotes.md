@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3409.26073001
+- Ingesting security patches and dependency updates 🔐
+- Bug fix for potential race condition for recreating init containers that was found to occur rarely during server maintenance events 🩺
+  
 ### 1.3408.26072301
 - Ingesting security patches and dependency updates 🔐
 
