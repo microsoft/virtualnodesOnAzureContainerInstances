@@ -12,5 +12,5 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ .Values.virtualdaemonsetControllerManager.serviceAccountName }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ include "virtualnode2.namespace" . }}
 {{- end -}}
