@@ -1,0 +1,143 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kv-sync-scripts
+data:
+  kv-sync.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    : "${KEYVAULT_NAME:?KEYVAULT_NAME is required}"
+    : "${SECRET_NAME:?SECRET_NAME is required}"
+
+    OUT_FILE="${OUT_FILE:-/var/log/app/secret}"
+    POLL_SECONDS="${POLL_SECONDS:-60}"
+
+    UAMI_CLIENT_ID="${UAMI_CLIENT_ID:-}"
+
+    log() { echo "[$(date -Is)] kv-sync: $*" >&2; }
+
+    login_mi() {
+      # Azure CLI managed identity sign-in:
+      if [[ -n "$UAMI_CLIENT_ID" ]]; then
+        az login --identity --client-id "$UAMI_CLIENT_ID" --allow-no-subscriptions >/dev/null
+      else
+        az login --identity >/dev/null
+      fi
+    }
+
+    umask 007
+
+    log "Starting; polling every ${POLL_SECONDS}s; writing to ${OUT_FILE}"
+    login_mi
+
+    while true; do
+      tmp="${OUT_FILE}.tmp"
+
+      # Fetch current secret value each loop (do not pin a version).
+      if value="$(az keyvault secret show \
+        --vault-name "$KEYVAULT_NAME" \
+        --name "$SECRET_NAME" \
+        --query value -o tsv 2>/dev/null)"; then
+
+        printf '%s' "$value" > "$tmp"
+        mv -f "$tmp" "$OUT_FILE"
+        chmod 0440 "$OUT_FILE" || true
+        log "Updated $(basename "$OUT_FILE") (bytes=$(wc -c < "$OUT_FILE"))"
+      else
+        log "Fetch failed; clearing account and re-logging-in via managed identity"
+        az account clear >/dev/null 2>&1 || true
+        login_mi || true
+      fi
+
+      sleep "$POLL_SECONDS"
+    done
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kv-sidecar-demo
+  annotations:
+    microsoft.containerinstance.virtualnode.identity: '/subscriptions/<azure subscription>/resourceGroups/<resource group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<user assigned identity>'
+spec:
+  nodeName: <virtual node name>
+  restartPolicy: Always
+
+  volumes:
+    - name: app-logs
+      hostPath: 
+        path: /data/host
+        type: DirectoryOrCreate
+    - name: scripts
+      configMap:
+        name: kv-sync-scripts
+        defaultMode: 0555
+
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          echo "app: waiting for /var/log/app/secret ..."
+          while [ ! -f /var/log/app/secret ]; do sleep 1; done
+          echo "app: secret file found. (printing sha256 only)"
+          while true; do
+            if [ -f /var/log/app/secret ]; then
+              sha256sum /var/log/app/secret | awk '{print "app: secret sha256=" $1}'
+            fi
+            sleep 30
+          done
+      volumeMounts:
+        - name: app-logs
+          mountPath: /var/log/app
+---
+kind: VirtualDaemonSet
+apiVersion: virtualdaemonsets.aci.azure.microsoft.com/v1alpha1
+metadata:
+  name: kv-sync
+spec:
+  selector:
+    matchExpressions:
+      - key: virtualdaemonset.kubernetes.io/virtualdaemonset
+        operator: DoesNotExist
+
+  template:
+    apiVersion: virtualdaemonsets.aci.azure.microsoft.com/v1alpha1
+    kind: VirtualDaemonSet
+    metadata:
+      labels:
+        k8s-app: fluent-bit
+    spec:
+      nodeName: <virtual node name>
+      containers:
+        - name: kv-sync
+          image: mcr.microsoft.com/azure-cli:latest
+          command: ["/bin/bash", "-c"]
+          args: ["/scripts/kv-sync.sh"]
+          env:
+            - name: KEYVAULT_NAME
+              value: "<key vault name>"
+            - name: SECRET_NAME
+              value: "<secret name>"
+            - name: POLL_SECONDS
+              value: "60"
+            - name: UAMI_CLIENT_ID
+              value: "<user assigned identity client id>"
+
+          volumeMounts:
+            - name: app-logs
+              mountPath: /var/log/app
+            - name: scripts
+              mountPath: /scripts
+
+      volumes:
+        - name: app-logs
+          hostPath: 
+            path: /data/host
+            type: DirectoryOrCreate
+        - name: scripts
+          configMap:
+            name: kv-sync-scripts
+            defaultMode: 0555

@@ -82,6 +82,24 @@ infraPodMinRestartDelaySeconds: '120' # Minimum time between automated repair op
 infraPodMinReadySeconds: 0 # Minimum number of seconds the newly created Pod should be running and ready without its containers crashing to be considered available. https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#minimum-ready-seconds
 containerLogsVolumeHostPath: '' # if set, overrides default emptyDir volume for container logs volume to be a hostPath volume to the specified directory
 
+# VirtualDaemonSet controller configurations
+virtualdaemonsetControllerManager:
+  enable: false
+  serviceAccountName: virtualdaemonsets-controller-manager
+
+virtualdaemonsets:
+  crd:
+    # This option determines whether the virtual daemonset CRD is included
+    # in the installation process.
+    enable: false
+
+    # Enabling this option adds the "helm.sh/resource-policy": keep
+    # annotation to the CRD, ensuring it remains installed even when
+    # the Helm release is uninstalled.
+    # NOTE: Removing the CRDs will also remove all virtual daemonset CR(s)
+    # (VirtualDaemonSets, ...) due to garbage collection.
+    keep: false
+
 customTags: '' # Custom tags to add to ACI container groups, in the format key1=value1;key2=value2
 
 acrTrustedAccess:
@@ -107,3 +125,4 @@ images:
   virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260730.1
   admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260730.1
   noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20260730.1
+  virtualDaemonSetImage: mcr.microsoft.com/aci/virtual-node-2-virtual-daemonsets-controller:main_20260730.1

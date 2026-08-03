@@ -108,6 +108,8 @@ A non-exhaustive list of non-standby-pool specific configuration values availabl
 | -- | -- | 
 | replicaCount | Count of VN2 node pods. See [Scaling virtual nodes Up / Down](#updated-replica-count-via-helm) for more details |
 | admissionControllerReplicaCount | Count of VN2 admission controller pods. See [Scaling virtual nodes Up / Down](#updated-replica-count-via-helm) for more details |
+| virtualdaemonsetControllerManager.enable | Whether to enable or not the Virtual DaemonSets controller. See [Virtual DaemonSets setup](/Docs/VirtualDaemonSets.md#setup) |
+| virtualdaemonsets.crd.enable | Whether or not to install the Virtual DaemonSets crd. See [Virtual DaemonSets setup](/Docs/VirtualDaemonSets.md#setup) |
 | aciSubnetName | a comma delimited list of subnets to potentially use as the node default. See [this section on behaviors](#default-aci-subnet-behaviors-with-a-customized-acisubnetname) |
 | aciResourceGroupName | the name of the Azure Resource Group to put virtual node's ACI CGs into. See [this section on behaviors](#changing-the-azure-resource-group-used-for-aci-resources-via-aciresourcegroupname) |
 | zones | a semi-colon delimited list of Azure Zones to deploy pods to. See [this section on behaviors](#default-azure-zone-behaviors-with-a-customized-zones) |
@@ -315,6 +317,11 @@ To achieve this, you will need to ensure only one of those HELM releases' value.
 admissionControllerReplicaCount: 1
 ```
 
+You will also need to ensure that the Virtual DaemonSets crd and controller are not reinstalled, meaning that only one release has the following flags set to true:
+```
+virtualdaemonsets.crd.enable: true
+virtualdaemonsetControllerManager.enable: true
+```
 It is also strongly recommended to update the values.yaml namespace used for deploying each virtual node configuration so each has its own unique namespace.
 ```
 namespace: <Something unique for each config>
