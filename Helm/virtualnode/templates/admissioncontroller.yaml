@@ -23,7 +23,7 @@ spec:
       priorityClassName: {{ .Values.admissionControllerPriorityClassName }}
       {{- end }} 
       terminationGracePeriodSeconds: 0
-      serviceAccountName: {{ if .Values.rbac.install }} "{{ .Values.rbac.serviceAccountName }}" {{ end }}
+      serviceAccountName: {{ if .Values.rbac.install }} "{{ .Values.rbac.admissionControllerServiceAccountName }}" {{ end }}
       securityContext:
         seccompProfile:
           type: RuntimeDefault

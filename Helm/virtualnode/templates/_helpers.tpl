@@ -56,17 +56,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "virtualnode2.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "virtualnode2.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
 Kube-proxy enabled value. It is backward compatible with old "kubeProxyEnabled" setting.
 Priority: kubeProxyEnabled (old) > kubeProxy.enabled (new) > "true" (default)
 */}}

@@ -9,13 +9,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
   # Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
 
 IsWorkloadIdentityEnabled: "Disabled" # Set to "Enabled" to enable workload identity for the virtualnode component.
 IdentityClientId: ""
@@ -52,6 +47,7 @@ affinity: {}
 rbac:
   install: true
   serviceAccountName: virtual-node2-helm
+  admissionControllerServiceAccountName: virtual-node-admission-controller
   ## RBAC api version
   apiVersion: v1
   ## Cluster role reference
@@ -115,14 +111,14 @@ kubeProxy:
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20260821.1
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20260821.1
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20260821.1
-  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260821.1
-  mountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20250801.1
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20260821.1
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20260821.1
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260821.1
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260821.1
-  noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20260821.1
-  virtualDaemonSetImage: mcr.microsoft.com/aci/virtual-node-2-virtual-daemonsets-controller:main_20260821.1
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20260903.1
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20260903.1
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20260903.1
+  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260903.1
+  mountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260803.2
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20260903.1
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20260903.1
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20260903.1
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20260903.1
+  noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20260903.1
+  virtualDaemonSetImage: mcr.microsoft.com/aci/virtual-node-2-virtual-daemonsets-controller:main_20260903.1

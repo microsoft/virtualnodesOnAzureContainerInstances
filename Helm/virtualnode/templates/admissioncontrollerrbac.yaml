@@ -1,0 +1,63 @@
+{{- if .Values.rbac.install }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "virtualnode2.fullname" . }}-{{ .Values.rbac.admissionControllerServiceAccountName }}
+  namespace: {{ include "virtualnode2.namespace" . }}
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["virtual-node-admission-controller"]
+    verbs: ["get", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "virtualnode2.fullname" . }}-{{ .Values.rbac.admissionControllerServiceAccountName }}
+  namespace: {{ include "virtualnode2.namespace" . }}
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.rbac.admissionControllerServiceAccountName }}
+    namespace: {{ include "virtualnode2.namespace" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "virtualnode2.fullname" . }}-{{ .Values.rbac.admissionControllerServiceAccountName }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "virtualnode2.fullname" . }}-{{ .Values.rbac.admissionControllerServiceAccountName }}
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "delete"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+  - apiGroups: ["admissionregistration.k8s.io"]
+    resources: ["mutatingwebhookconfigurations"]
+    resourceNames: ["virtual-node-admission-controller"]
+    verbs: ["get", "update"]
+---
+apiVersion: "rbac.authorization.k8s.io/{{ .Values.rbac.apiVersion }}"
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "virtualnode2.fullname" . }}-{{ .Values.rbac.admissionControllerServiceAccountName }}
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.rbac.admissionControllerServiceAccountName }}
+  namespace: {{ include "virtualnode2.namespace" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "virtualnode2.fullname" . }}-{{ .Values.rbac.admissionControllerServiceAccountName }}
+{{- end }}

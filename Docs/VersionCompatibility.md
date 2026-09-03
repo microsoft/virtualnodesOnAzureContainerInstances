@@ -23,6 +23,7 @@ Below are tested configurations which have been verified to be compatible
 | 1.32                 | ❌       | ❌      | ❌       | ✅      | ❓       | ❌      | ❌      |
 | 1.33                 | ❌       | ❌      | ❌       | ✅      | ✅       | ✅*     | ❌      |
 | 1.34                 | ❌       | ❌      | ❌       | ❓      | ✅       | ✅      | ✅**    |
+| 1.35                 | ❌       | ❌      | ❌       | ❌      | ❓       | ✅      | ✅      |
 
 \* VN2 1.3307.26033004 and higher compatible with AKS 1.34  
 \*\* VN2 1.3410.26081102 and higher compatible with AKS 1.35. Note that virtual nodes continue to run 1.34 K8s binaries on an AKS 1.35 control plane, which is within the [supported version skew](https://kubernetes.io/releases/version-skew-policy/).
