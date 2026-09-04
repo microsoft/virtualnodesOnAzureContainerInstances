@@ -1,6 +1,12 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3507.26090301
+- Updated to 1.35.7 upstream K8s binaries ☸️
+- Enabled [Azure File Share mounting with MI authentication](/Docs/StorageOptions.md#azure-file-w-mi-auth) on confidential containers 🔒
+- The admission controller now runs under its own dedicated service account with least-privilege RBAC instead of sharing the cluster-admin bound virtual node service account 🛡️
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3410.26082101
 - Improved pod provisioning times on the virtual node ⏱️
 - Ingesting security patches and dependency updates 🔐
