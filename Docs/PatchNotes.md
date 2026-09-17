@@ -3,7 +3,6 @@
 ## Chart Versions:
 ### 1.3508.26091601
 - Updated to 1.35.8 upstream K8s binaries ☸️
-- Added `nodePoolIdentityFallbackEnabled`, which can be set to `false` to enforce use of Workload Identity instead of falling back to the AKS nodepool identity 🪪
 - Ingesting security patches and dependency updates 🔐
 
 ### 1.3507.26090301
