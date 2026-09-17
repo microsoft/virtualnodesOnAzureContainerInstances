@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3508.26091601
+- Updated to 1.35.8 upstream K8s binaries ☸️
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3507.26090301
 - Updated to 1.35.7 upstream K8s binaries ☸️
 - Enabled [Azure File Share mounting with MI authentication](/Docs/StorageOptions.md#azure-file-w-mi-auth) on confidential containers 🔒
