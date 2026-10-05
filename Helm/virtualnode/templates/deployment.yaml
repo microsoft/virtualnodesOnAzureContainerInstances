@@ -336,6 +336,10 @@ spec:
               value: {{ quote .Values.kubeProxy.reservedMemoryGB }}
             - name: KubeProxyReservedCPUCores
               value: {{ quote .Values.kubeProxy.reservedCPUCores }}
+            {{- if .Values.CustomArmHeaders }}
+            - name: CustomArmHeaders
+              value: {{ .Values.CustomArmHeaders | quote }}
+            {{- end }}
             {{- if eq .Values.IsWorkloadIdentityEnabled "Enabled" }}
             - name: AZURE_CLIENT_ID
               value: {{ .Values.IdentityClientId | quote }}
