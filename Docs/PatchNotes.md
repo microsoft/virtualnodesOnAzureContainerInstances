@@ -3,6 +3,7 @@
 ## Chart Versions:
 ### 1.3508.26100201
 - Enforce same-namespace parent resolution for proxyCri podlets, preventing cross-namespace access 🛡️
+- Optimized Azure File share re-staging performance ⏱️
 - Ingesting security patches and dependency updates 🔐
 
 ### 1.3508.26092102
