@@ -1,6 +1,10 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3508.26100201
+- Enforce same-namespace parent resolution for proxyCri podlets, preventing cross-namespace access 🛡️
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3508.26092102
 - Fix for Azure File share volumes being re-staged even without changes on AKS 1.35 🗃️
 - Fix for a potential race condition when recreating pods using managed identities 🪪
