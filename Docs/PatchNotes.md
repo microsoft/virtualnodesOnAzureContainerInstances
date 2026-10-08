@@ -2,7 +2,7 @@
 
 ## Chart Versions:
 ### 1.3508.26100701
-- Kube-proxy is now supported on confidential containers 🔒
+- Kube-proxy is now supported on confidential containers, as an opt-in via the `microsoft.containerinstance.virtualnode.injectkubeproxy: "true"` annotation 🔒
 - The virtual node infrastructure service account now runs with least-privilege RBAC instead of cluster-admin 🪪
 - Ingesting security patches and dependency updates 🔐
 

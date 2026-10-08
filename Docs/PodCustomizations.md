@@ -186,11 +186,14 @@ The Kube-Proxy is a standard K8s component that provides benefits like modifying
 
     microsoft.containerinstance.virtualnode.injectkubeproxy: "false"
 
-The default behavior for K8s is to include the Kube-Proxy so that is the behavior if the annotation is not provided. 
+The default behavior if the annotation is not provided depends on whether the pod is confidential:
 
-Note this setting is meaningless if the [node level setting](/Docs/NodeCustomizations.md#disabling-the-kube-proxy) is disabled, as that setting takes precedence. 
+- **Non-confidential pods**: the Kube-Proxy is injected by default, matching standard K8s behavior. Set the annotation to `"false"` to opt out.
+- **Confidential pods**: the Kube-Proxy is *not* injected by default. Set the annotation to `"true"` to opt in.
 
-**Confidential containers do not support Kube-Proxy usage as it breaks some security guarantees, so regardless what value is provided for this annotation a Confidential pod will ignore it and load without a Kube-Proxy.**
+Note this setting is meaningless if the [node level setting](/Docs/NodeCustomizations.md#disabling-the-kube-proxy) is disabled, as that setting takes precedence.
+
+**Kube-Proxy usage on confidential containers is opt-in because injecting it relaxes some of the security guarantees of the confidential environment. Only enable it if your workload requires the K8s service networking the Kube-Proxy provides.**
 
 ## Disable K8s DNS Injection
 By default, K8s Pods are expected to utilize the K8s cluster's DNS. If you want to avoid that interaction, you can add this annotation 
