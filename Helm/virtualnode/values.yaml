@@ -51,8 +51,6 @@ rbac:
   admissionControllerServiceAccountName: virtual-node-admission-controller
   ## RBAC api version
   apiVersion: v1
-  ## Cluster role reference
-  roleRef: cluster-admin
 
 # You must provide a value here if deploying the virtual node outside of Azure's public cloud.
 # For example, if using Azure Government, set this value to "https://management.usgovcloudapi.net/" (reference: https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure).
@@ -112,14 +110,15 @@ kubeProxy:
 images:
   pullPolicy: Always
   pullSecrets: []
-  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20261002.1
-  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20261002.1
-  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20261002.1
-  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20261002.1
+  crisockettotcpadapterImage: mcr.microsoft.com/aci/virtual-node-2-cri-socket-adapter:main_20261007.1
+  spdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat:main_20261007.1
+  proxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri:main_20261007.1
+  mountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20261007.1
   mountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host:main_20260803.2
-  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20261002.1
-  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20261002.1
-  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20261002.1
-  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20261002.1
-  noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20261002.1
-  virtualDaemonSetImage: mcr.microsoft.com/aci/virtual-node-2-virtual-daemonsets-controller:main_20261002.1
+  initImage: mcr.microsoft.com/aci/virtual-node-2-init-config:main_20261007.1
+  kubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet:main_20261007.1
+  virtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi:main_20261007.1
+  admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20261007.1
+  noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20261007.1
+  virtualDaemonSetImage: mcr.microsoft.com/aci/virtual-node-2-virtual-daemonsets-controller:main_20261007.1
+  kubeProxyImage: mcr.microsoft.com/aci/sc-proxy:master-1-20261007.1

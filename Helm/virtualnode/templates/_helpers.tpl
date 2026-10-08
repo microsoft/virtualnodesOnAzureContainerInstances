@@ -56,6 +56,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Infrastructure ServiceAccount subject used by VN2 RBAC bindings.
+*/}}
+{{- define "virtualnode2.infraServiceAccountSubject" -}}
+- kind: ServiceAccount
+  name: {{ .Values.rbac.serviceAccountName }}
+  namespace: {{ include "virtualnode2.namespace" . }}
+{{- end }}
+
+{{/*
 Kube-proxy enabled value. It is backward compatible with old "kubeProxyEnabled" setting.
 Priority: kubeProxyEnabled (old) > kubeProxy.enabled (new) > "true" (default)
 */}}

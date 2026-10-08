@@ -186,11 +186,23 @@ The Kube-Proxy is a standard K8s component that provides benefits like modifying
 
     microsoft.containerinstance.virtualnode.injectkubeproxy: "false"
 
-The default behavior for K8s is to include the Kube-Proxy so that is the behavior if the annotation is not provided. 
+The default behavior if the annotation is not provided depends on whether the pod is confidential:
 
-Note this setting is meaningless if the [node level setting](/Docs/NodeCustomizations.md#disabling-the-kube-proxy) is disabled, as that setting takes precedence. 
+- **Non-confidential pods**: the Kube-Proxy is injected by default, matching standard K8s behavior. Set the annotation to `"false"` to opt out.
+- **Confidential pods**: the Kube-Proxy is *not* injected by default. Set the annotation to `"true"` to opt in.
 
-**Confidential containers do not support Kube-Proxy usage as it breaks some security guarantees, so regardless what value is provided for this annotation a Confidential pod will ignore it and load without a Kube-Proxy.**
+Note this setting is meaningless if the [node level setting](/Docs/NodeCustomizations.md#disabling-the-kube-proxy) is disabled, as that setting takes precedence.
+
+### Enabling the Kube-Proxy on confidential pods
+Enabling the Kube-Proxy on a confidential pod injects an additional container into the container group, so the pod's CCE policy must allow it. Generate the policy with the `--allow-kubeproxy` argument:
+
+    az confcom acipolicygen --virtual-node-yaml <yourYAML> --allow-kubeproxy
+
+If the policy was not generated with that argument, the injected Kube-Proxy container will be rejected by policy enforcement and the pod will remain stuck in `ContainerCreating`.
+
+The `--allow-kubeproxy` argument requires a recent version of the `confcom` Azure CLI extension. You may need to update if you are on an older version of confcom, which can be updated via:
+
+    az extension update --name confcom
 
 ## Disable K8s DNS Injection
 By default, K8s Pods are expected to utilize the K8s cluster's DNS. If you want to avoid that interaction, you can add this annotation 
