@@ -193,6 +193,17 @@ The default behavior if the annotation is not provided depends on whether the po
 
 Note this setting is meaningless if the [node level setting](/Docs/NodeCustomizations.md#disabling-the-kube-proxy) is disabled, as that setting takes precedence.
 
+### Enabling the Kube-Proxy on confidential pods
+Enabling the Kube-Proxy on a confidential pod injects an additional container into the container group, so the pod's CCE policy must allow it. Generate the policy with the `--allow-kubeproxy` argument:
+
+    az confcom acipolicygen --virtual-node-yaml <yourYAML> --allow-kubeproxy
+
+If the policy was not generated with that argument, the injected Kube-Proxy container will be rejected by policy enforcement and the pod will remain stuck in `ContainerCreating`.
+
+The `--allow-kubeproxy` argument requires a recent version of the `confcom` Azure CLI extension. It is publicly available, but you may need to upgrade if you are on an older version:
+
+    az extension update --name confcom
+
 ## Disable K8s DNS Injection
 By default, K8s Pods are expected to utilize the K8s cluster's DNS. If you want to avoid that interaction, you can add this annotation 
 
