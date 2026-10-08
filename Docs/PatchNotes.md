@@ -1,6 +1,11 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3508.26100701
+- Kube-proxy is now supported on confidential containers 🔒
+- The virtual node infrastructure service account now runs with least-privilege RBAC instead of cluster-admin 🪪
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3508.26100201
 - Enforce same-namespace parent resolution for proxyCri podlets, preventing cross-namespace access 🛡️
 - Optimized Azure File share re-staging performance ⏱️
