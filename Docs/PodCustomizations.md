@@ -193,8 +193,6 @@ The default behavior if the annotation is not provided depends on whether the po
 
 Note this setting is meaningless if the [node level setting](/Docs/NodeCustomizations.md#disabling-the-kube-proxy) is disabled, as that setting takes precedence.
 
-**Kube-Proxy usage on confidential containers is opt-in because injecting it relaxes some of the security guarantees of the confidential environment. Only enable it if your workload requires the K8s service networking the Kube-Proxy provides.**
-
 ## Disable K8s DNS Injection
 By default, K8s Pods are expected to utilize the K8s cluster's DNS. If you want to avoid that interaction, you can add this annotation 
 
