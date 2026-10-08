@@ -200,7 +200,7 @@ Enabling the Kube-Proxy on a confidential pod injects an additional container in
 
 If the policy was not generated with that argument, the injected Kube-Proxy container will be rejected by policy enforcement and the pod will remain stuck in `ContainerCreating`.
 
-The `--allow-kubeproxy` argument requires a recent version of the `confcom` Azure CLI extension. It is publicly available, but you may need to upgrade if you are on an older version:
+The `--allow-kubeproxy` argument requires a recent version of the `confcom` Azure CLI extension. You may need to update if you are on an older version of confcom, which can be updated via:
 
     az extension update --name confcom
 
