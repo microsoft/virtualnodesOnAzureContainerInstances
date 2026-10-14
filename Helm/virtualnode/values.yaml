@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
+replicaCountWindows: 0 # Set to at least 1 to enable the Windows virtual node
 admissionControllerReplicaCount: 1 # Set to 0 to also not register the admission controller webhook
 
 nameOverride: ""
@@ -28,6 +29,9 @@ podSecurityContext:
 podDisruptionBudget: {}
   # minAvailable: 1
   # maxUnavailable: 1
+podDisruptionBudgetWindows: {}
+  # minAvailable: 1
+  # maxUnavailable: 1
 admissionControllerPodDisruptionBudget: {}
   # minAvailable: 1
   # maxUnavailable: 1
@@ -38,6 +42,8 @@ admissionControllerPriorityClassName: ""
 
 nodeSelector: 
   "kubernetes.io/os": linux
+nodeSelectorWindows:
+  "kubernetes.io/os": windows
 
 # Lack of tolerations will ensure virtual node pods are not scheduled on a virtual node itself
 tolerations: []
@@ -63,6 +69,7 @@ aciResourceGroupName: '' # If not empty, will override the default resource grou
 zones: '' # zone names, semi-colon separated... EG - '1;2;3'
 sandboxProviderType: OnDemand  #StandbyPool / OnDemand, default is OnDemand
 standbyPoolShareType: Node # Node / HelmInstall, default is Node
+vnetResourceGroupName: '' # Required when replicaCountWindows is greater than 0; identifies the resource group containing the ACI VNet
 
 standbyPool: 
   zones: '' # zone names, semi-colon separated... EG - '1;2;3'
@@ -121,4 +128,12 @@ images:
   admissioncontrollerImage: mcr.microsoft.com/aci/virtual-node-2-admission-controller:main_20261007.1
   noddriverregistrarImage: mcr.microsoft.com/aci/virtual-node-2-aci:main_20261007.1
   virtualDaemonSetImage: mcr.microsoft.com/aci/virtual-node-2-virtual-daemonsets-controller:main_20261007.1
+  windowsSpdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat-windows:windows-add-confid-cwcow_20260921.4
+  windowsProxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri-windows:windows-add-confid-cwcow_20260921.4
+  windowsMountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host-windows-2025:windows-add-confid-cwcow_20260921.4
+  windowsMountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host-windows-2025:windows-add-confid-cwcow_20260921.4
+  windowsInitImage: mcr.microsoft.com/aci/virtual-node-2-init-config-windows:windows-add-confid-cwcow_20260921.4
+  windowsKubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet-windows:windows-add-confid-cwcow_20260921.4
+  windowsVirtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi-windows:windows-add-confid-cwcow_20260921.4
+  windowsNoddriverregistrarImage: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar:v2.8.0
   kubeProxyImage: mcr.microsoft.com/aci/sc-proxy:master-1-20261007.1

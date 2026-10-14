@@ -50,6 +50,11 @@ app.kubernetes.io/name: {{ include "virtualnode2.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{- define "virtualnode2.windowsSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "virtualnode2.name" . }}-windows
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
 {{- define "virtualnode2.admissionSelectorLabels" -}}
 app.kubernetes.io/name: "admissioncontroller"
 app.kubernetes.io/instance: {{ .Release.Name }}

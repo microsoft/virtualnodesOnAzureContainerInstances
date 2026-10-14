@@ -1,0 +1,320 @@
+{{- if and (gt (int .Values.replicaCountWindows) 0) (empty .Values.vnetResourceGroupName) }}
+{{- fail "vnetResourceGroupName must be set when replicaCountWindows is greater than 0" }}
+{{- end }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "virtualnode2.fullname" . }}-windows
+  namespace: {{ include "virtualnode2.namespace" . }}
+  labels:
+    {{- include "virtualnode2.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCountWindows }}
+  {{- if .Values.infraPodMinReadySeconds }}
+  minReadySeconds: {{ .Values.infraPodMinReadySeconds }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "virtualnode2.windowsSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        "kubernetes.azure.com/no-http-proxy-vars": "true"
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "virtualnode2.windowsSelectorLabels" . | nindent 8 }}
+        virtualnodeInfraHealthCheckEligible: "true"
+        {{- if eq .Values.IsWorkloadIdentityEnabled "Enabled" }}
+        azure.workload.identity/use: "true"
+        {{- end }}
+    spec:
+      {{- with .Values.images.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
+      terminationGracePeriodSeconds: 0
+      serviceAccountName: {{ if .Values.rbac.install }} "{{ .Values.rbac.serviceAccountName }}" {{ end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              {{- include "virtualnode2.windowsSelectorLabels" . | nindent 14 }}
+      initContainers:
+        - name: init-config
+          image: {{ .Values.images.windowsInitImage }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 2G
+          env:
+            - name: KubeProxyEnabled
+              value: {{ include "virtualnode2.kubeProxyEnabled" . }}
+            - name: serviceaccountname
+              value: "{{ .Values.rbac.serviceAccountName }}"
+            - name: NodeName
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - mountPath: C:\kubeconfig\
+              name: kube-config-volume
+          args: ["C:\\initcontainer\\init.ps1"]
+      containers:
+        - name: kubelet
+          resources:
+            requests:
+              cpu: 1
+              memory: 4G
+            limits:
+              cpu: 3
+              memory: 12G
+          securityContext:
+            windowsOptions:
+              runAsUserName: "ContainerAdministrator"
+          image: {{ .Values.images.windowsKubeletImage }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          volumeMounts:
+            - mountPath: C:\var\lib\kubelet\
+              name: kubelet-root-dir
+            - mountPath: C:\k\credential-provider-config.yaml
+              name: aks-credential-provider-yaml
+            - mountPath: C:\k\image-credential-provider\credential-provider
+              name: aks-credential-provider-binary
+            - mountPath: C:\tmp\
+              name: socket-volume
+            - mountPath: C:\kubeconfig\
+              name: kube-config-volume
+            - mountPath: C:\k\azure.json
+              name: aks-credential
+            - mountPath: C:\var\log\pods
+              name: container-logs
+          env:
+            - name: NodeIP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NodeName
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: PodNS
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: CustomNodeLabels
+              value: {{ .Values.nodeLabels }}
+            - name: "ACR_TRUSTED_ACCESS_ENABLED"
+              value: {{ quote .Values.acrTrustedAccess.enabled }}
+            - name: "ACR_TRUSTED_ACCESS_PRINCIPAL_ID"
+              value: {{ quote .Values.acrTrustedAccess.identityPrincipalId }}
+        - name: virtualcsi
+          resources:
+            requests:
+              cpu: 0
+              memory: 0G
+            limits:
+              cpu: 3
+              memory: 12G
+          securityContext:
+            windowsOptions:
+              runAsUserName: "ContainerAdministrator"
+          image: {{ .Values.images.windowsVirtualcsiImage }}
+          command:
+            - C:\go\bin\virtual-csi.exe
+          args: #see C:\var\lib\kubelet\plugins\file.csi.azure.com\csi.sock
+            - >-
+              -endpoint=unix:///var/lib/kubelet/plugins/file.csi.azure.com/csi.sock
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          volumeMounts:
+            - name: kubelet-root-dir
+              mountPath: C:\var\lib\kubelet
+        - name: spdycompat
+          resources:
+            requests:
+              cpu: 0
+              memory: 0G
+            limits:
+              cpu: 3
+              memory: 12G
+          image: {{ .Values.images.windowsSpdycompatImage }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+        - name: proxycri
+          ports:
+          - name: metrics
+            containerPort: 50052
+            protocol: TCP
+          resources:
+            requests:
+              cpu: 2
+              memory: 8G
+            limits:
+              cpu: 3
+              memory: 12G
+          image: {{ .Values.images.windowsProxycriImage }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          securityContext:
+            windowsOptions:
+              runAsUserName: "ContainerAdministrator"
+          volumeMounts:
+            - name: socket-volume
+              mountPath: C:\tmp\
+            - name: aks-credential
+              mountPath: C:\k\azure.json
+            - name: kubelet-root-dir
+              mountPath: C:\var\lib\kubelet\
+            - name: container-logs
+              mountPath: C:\var\log\pods
+            - mountPath: C:\kubeconfig\
+              name: kube-config-volume
+          env:
+            - name: VirtualNode_SandboxProvider_StandbyPools_Cpu
+              value: {{ quote .Values.standbyPool.standbyPoolsCpu }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_Memory
+              value: {{ quote .Values.standbyPool.standbyPoolsMemory }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_MaxReadyCapacity
+              value: {{ quote .Values.standbyPool.maxReadyCapacity }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_CcePolicy
+              value: {{ .Values.standbyPool.ccePolicy }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_Zones
+              value: {{ quote .Values.standbyPool.zones }}
+            - name: VirtualNode_SandboxProvider_StandbyPools_LeaseNamespace
+              value: {{ include "virtualnode2.namespace" . }}
+            - name: SandboxProviderType
+              value: {{ .Values.sandboxProviderType }}
+            - name: StandbyPoolShareType
+              value: {{ .Values.standbyPoolShareType }}
+            - name: VirtualNode_Zones
+              value: {{ quote .Values.zones }}
+            - name: VirtualNode_KubeProxyEnabled
+              value: {{ include "virtualnode2.kubeProxyEnabled" . }}
+            - name: VirtualNode_CustomTags
+              value: {{ quote .Values.customTags }}
+            - name: VirtualNode_ACR_TRUSTED_ACCESS_IDENTITY
+              value: {{ quote .Values.acrTrustedAccess.identityResourceId }}
+            - name: VirtualNode_SandboxRecreateDelaySeconds
+              value: "2"
+            - name: Subnets # TODO: check why there is both Subnets and Subnet a few lines down... and both are filled with a list, also not documented
+              value: {{ .Values.aciSubnetName }}
+            - name: AKS_CREDENTIAL_LOCATION
+              value: C:\k\azure.json
+            - name: ListenEndpoint
+              value: tcp://127.0.0.1:50051
+            - name: Subnet
+              value: {{ .Values.aciSubnetName }}
+            - name: MountHostImage
+              value: {{ .Values.images.windowsMountImage }}
+            - name: MountHostImageConfid
+              value: {{ .Values.images.windowsMountConfidImage }}
+            - name: ResourceGroup
+              value: {{ .Values.aciResourceGroupName }}
+            - name: ArmEndpointBaseUrl
+              value: {{ .Values.armEndpointBaseUrl }}
+            - name: NODEPOOL_IDENTITY_FALLBACK_ENABLED
+              value: {{ quote .Values.nodePoolIdentityFallbackEnabled }}
+            - name: KubeProxyReservedMemoryGB
+              value: {{ quote .Values.kubeProxy.reservedMemoryGB }}
+            - name: KubeProxyReservedCPUCores
+              value: {{ quote .Values.kubeProxy.reservedCPUCores }}
+            {{- if .Values.CustomArmHeaders }}
+            - name: CustomArmHeaders
+              value: {{ .Values.CustomArmHeaders | quote }}
+            {{- end }}
+            - name: VnetResourceGroupName
+              value: {{ .Values.vnetResourceGroupName }}
+            {{- if eq .Values.IsWorkloadIdentityEnabled "Enabled" }}
+            - name: AZURE_CLIENT_ID
+              value: {{ .Values.IdentityClientId | quote }}
+            - name: AZURE_TENANT_ID
+              value: {{ .Values.IdentityTenantId | quote }}
+            {{- end }}
+            - name: NodeName
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+        - name: node-driver-registrar
+          resources:
+            requests:
+              cpu: 0
+              memory: 0G
+            limits:
+              cpu: 3
+              memory: 12G
+          image: {{ .Values.images.windowsNoddriverregistrarImage }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          volumeMounts:
+            - name: kubelet-root-dir
+              mountPath: C:\var\lib\kubelet\
+            - name: registration-dir
+              mountPath: C:\registration
+              subPath: plugins_registry
+          args:
+            - "--csi-address=$(ADDRESS)"
+            - "--kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)"
+            - "--v=2"
+          env:
+            - name: ADDRESS
+              value: "C:\\var\\lib\\kubelet\\plugins\\file.csi.azure.com\\csi.sock"
+            - name: DRIVER_REG_SOCK_PATH
+              value: "C:\\var\\lib\\kubelet\\plugins\\file.csi.azure.com\\csi.sock"
+      volumes:
+        - name: registration-dir
+          hostPath:
+            path: c:\var\lib\kubelet\plugins_registry\
+            type: Directory
+        - name: kubelet-root-dir
+          emptyDir:
+            medium: Memory
+        - name: socket-volume
+          emptyDir: {}
+        - name: kube-config-volume
+          emptyDir: {}
+        - name: container-logs
+          {{- if (not (empty .Values.containerLogsVolumeHostPath)) }}
+          hostPath:
+            path: {{ .Values.containerLogsVolumeHostPath }}
+            type: DirectoryOrCreate
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: aks-credential
+          hostPath:
+            path: C:\k\azure.json
+            type: File
+        - name: aks-credential-provider-yaml
+          hostPath:
+            path: C:\k\credential-provider-config.yaml
+            type: FileOrCreate
+        - name: aks-credential-provider-binary
+          hostPath:
+            path: C:\var\lib\kubelet\credential-provider
+            type: DirectoryOrCreate
+        - name: credentials
+          secret:
+            secretName: virtual-node-admission-controller
+            defaultMode: 420
+      {{- with .Values.nodeSelectorWindows }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  podManagementPolicy: "Parallel"

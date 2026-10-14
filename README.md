@@ -21,7 +21,6 @@ No longer a limitation
 Can be addressed in the future
 - Kubernetes network policies
 - Using IPv6
-- Windows containers
 - Port Forwarding
 
 Hard limitations
@@ -48,7 +47,6 @@ Will be fixed by General Availability
 Can be addressed in the future
 - Kubernetes network policies
 - Using IPv6
-- Windows containers
 - Port-Forwarding
 
 Hard limitations
@@ -143,6 +141,12 @@ Arrows added to below pictures for the important fields
 
 ^ Ensure at least 4 CPU and 16 GB
 
+#### (Optional) Add Windows Node Pool
+
+If you intend to run Windows pods on virtual nodes, in addition to the mandatory Linux system Node Pool, you must also add a Windows user Node Pool. The Windows Node Pool must use Windows Server 2022 as its OS SKU and must have at least 5 CPU and 16 GB RAM.
+
+![AKS Windows Node Pool Size](/Docs/Pictures/vn_aks_nodepool_size_windows.png)
+
 #### AKS Networking Tab:
 
 ![AKS Networking](/Docs/Pictures/vn_aks_networking.png)
@@ -183,12 +187,21 @@ Use Azure CLI to pull down configuration and credentials for the AKS cluster you
 ### Step 1: Get the HELM Chart
 Clone this repo! 
 
-### Step 2: Install virtual node Via HELM
+### (Optional) Step 2: Configure Windows Pod Support
+
+To enable Windows pod support, set the following values in [Helm/virtualnode/values.yaml](/Helm/virtualnode/values.yaml):
+
+- Set `replicaCountWindows` to at least `1`. Its default value of `0` disables the Windows virtual node.
+- Set `vnetResourceGroupName` to the name of the resource group containing the VNet created in [Step 1: Azure Resource Group](#step-1-azure-resource-group).
+
+If Windows pod support is not required, leave `replicaCountWindows` at `0`. See [Windows Pods on virtual nodes](/Docs/WindowsPods.md) for supported regions, deployment examples, and current limitations.
+
+### Step 3: Install virtual node Via HELM
 And then install the HELM chart, where you can pick whatever release name you want to keep track of the HELM deployment!
 
     helm install <yourReleaseName> <GitRepoRoot>\Helm\virtualnode
 
-### Step 3: Validate it's ready for use
+### Step 4: Validate it's ready for use
 A new virtual node should be registered and be in state Ready. Might take on the order of 45 seconds for everything it needs to be in order so K8s marks the node as ready 
 
     kubectl get nodes

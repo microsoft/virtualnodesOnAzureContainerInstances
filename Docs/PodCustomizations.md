@@ -121,6 +121,10 @@ Using that tool for virtual nodes is simple, just provide your YAML file with th
 
 This will not only generate the CCE policy, but it will inject the policy annotation into the right section of the file. 
 
+For Windows pods, use the corresponding Windows platform:
+
+    az confcom acipolicygen --platform windows/amd64 --virtual-node-yaml <yourYamlFile>.yaml
+
 Example Confidential YAML
 ``` yaml
 apiVersion: v1
@@ -155,12 +159,22 @@ However, you can still use a very similar process to the above policy generation
 
 Instead of deploying directly from HELM using something like `helm install`, make use of the `helm template` command which will output a static YAML file that is no longer using dynamic values. At that point, using the [policy gen command from the above section](#confidential-containers) on that YAML will update the YAML with the appropriate Confidential Policy, and you can deploy it via `kubectl`. The static YAML generation and Confidential Policy generation steps will need to be re-run any time the HELM charts are updated to ingest those updates.
 
-### Allow All Confid Policy
+### Linux Allow All Confid Policy
 For testing / developing containers before the functionality is locked in, often it is useful to run with a very permissive policy. The most permissive policy is below, which provides effectively NO security guarantees... allowing a container to be run with any payload and debug execution allowed, but still running inside the specialized confidential hardware and with the attestation services running. 
 
 This should NOT be used for any production workloads, just as a tool for initial experimentation. 
 
     "microsoft.containerinstance.virtualnode.ccepolicy":"cGFja2FnZSBwb2xpY3kKCmFwaV9zdm4gOj0gIjAuMTAuMCIKCm1vdW50X2RldmljZSA6PSB7ImFsbG93ZWQiOiB0cnVlfQptb3VudF9vdmVybGF5IDo9IHsiYWxsb3dlZCI6IHRydWV9CmNyZWF0ZV9jb250YWluZXIgOj0geyJhbGxvd2VkIjogdHJ1ZSwgImVudl9saXN0IjogbnVsbCwgImFsbG93X3N0ZGlvX2FjY2VzcyI6IHRydWV9CnVubW91bnRfZGV2aWNlIDo9IHsiYWxsb3dlZCI6IHRydWV9IAp1bm1vdW50X292ZXJsYXkgOj0geyJhbGxvd2VkIjogdHJ1ZX0KZXhlY19pbl9jb250YWluZXIgOj0geyJhbGxvd2VkIjogdHJ1ZSwgImVudl9saXN0IjogbnVsbH0KZXhlY19leHRlcm5hbCA6PSB7ImFsbG93ZWQiOiB0cnVlLCAiZW52X2xpc3QiOiBudWxsLCAiYWxsb3dfc3RkaW9fYWNjZXNzIjogdHJ1ZX0Kc2h1dGRvd25fY29udGFpbmVyIDo9IHsiYWxsb3dlZCI6IHRydWV9CnNpZ25hbF9jb250YWluZXJfcHJvY2VzcyA6PSB7ImFsbG93ZWQiOiB0cnVlfQpwbGFuOV9tb3VudCA6PSB7ImFsbG93ZWQiOiB0cnVlfQpwbGFuOV91bm1vdW50IDo9IHsiYWxsb3dlZCI6IHRydWV9CmdldF9wcm9wZXJ0aWVzIDo9IHsiYWxsb3dlZCI6IHRydWV9CmR1bXBfc3RhY2tzIDo9IHsiYWxsb3dlZCI6IHRydWV9CnJ1bnRpbWVfbG9nZ2luZyA6PSB7ImFsbG93ZWQiOiB0cnVlfQpsb2FkX2ZyYWdtZW50IDo9IHsiYWxsb3dlZCI6IHRydWV9CnNjcmF0Y2hfbW91bnQgOj0geyJhbGxvd2VkIjogdHJ1ZX0Kc2NyYXRjaF91bm1vdW50IDo9IHsiYWxsb3dlZCI6IHRydWV9Cg=="
+
+### Windows Allow All Confid Policy
+
+The same warnings and testing-only guidance for the Linux allow-all confidential policy apply to this Windows policy:
+
+    "microsoft.containerinstance.virtualnode.ccepolicy": "cGFja2FnZSBwb2xpY3kKCmFwaV92ZXJzaW9uIDo9ICIwLjExLjAiCgpmcmFtZXdvcmtfdmVyc2lvbiA6PSAiMC40LjEiCgpmcmFnbWVudHMgOj0gWwogIHsKICAgICJmZWVkIjogIm1jci5taWNyb3NvZnQuY29tL2FjaS9hY2ktY2MtaW5mcmEtZnJhZ21lbnQiLAogICAgImluY2x1ZGVzIjogWwogICAgICAiY29udGFpbmVycyIsCiAgICAgICJmcmFnbWVudHMiCiAgICBdLAogICAgImlzc3VlciI6ICJkaWQ6eDUwOTowOnNoYTI1NjpJX19pdUwyNW9YRVZGZFRQX2FCTHhfZVQxUlBIYkNRX0VDQlFmWVpwdDlzOjpla3U6MS4zLjYuMS40LjEuMzExLjc2LjU5LjEuMyIsCiAgICAibWluaW11bV9zdm4iOiAiNCIKICB9Cl0KCmNvbnRhaW5lcnMgOj0gW10KCmFsbG93X3Byb3BlcnRpZXNfYWNjZXNzIDo9IHRydWUKYWxsb3dfZHVtcF9zdGFja3MgOj0gdHJ1ZQphbGxvd19ydW50aW1lX2xvZ2dpbmcgOj0gdHJ1ZQphbGxvd19lbnZpcm9ubWVudF92YXJpYWJsZV9kcm9wcGluZyA6PSB0cnVlCmFsbG93X3VuZW5jcnlwdGVkX3NjcmF0Y2ggOj0gdHJ1ZQphbGxvd19jYXBhYmlsaXR5X2Ryb3BwaW5nIDo9IHRydWUKCm1vdW50X2NpbXMgOj0geyJhbGxvd2VkIjogdHJ1ZX0KbW91bnRfZGV2aWNlIDo9IHsiYWxsb3dlZCI6IHRydWV9Cm1vdW50X292ZXJsYXkgOj0geyJhbGxvd2VkIjogdHJ1ZX0KY3JlYXRlX2NvbnRhaW5lciA6PSB7ImFsbG93ZWQiOiB0cnVlLCAiZW52X2xpc3QiOiBudWxsLCAiYWxsb3dfc3RkaW9fYWNjZXNzIjogdHJ1ZX0KdW5tb3VudF9kZXZpY2UgOj0geyJhbGxvd2VkIjogdHJ1ZX0KdW5tb3VudF9vdmVybGF5IDo9IHsiYWxsb3dlZCI6IHRydWV9CmV4ZWNfaW5fY29udGFpbmVyIDo9IHsiYWxsb3dlZCI6IHRydWUsICJlbnZfbGlzdCI6IG51bGx9CmV4ZWNfZXh0ZXJuYWwgOj0geyJhbGxvd2VkIjogdHJ1ZSwgImVudl9saXN0IjogbnVsbCwgImFsbG93X3N0ZGlvX2FjY2VzcyI6IHRydWV9CnNodXRkb3duX2NvbnRhaW5lciA6PSB7ImFsbG93ZWQiOiB0cnVlfQpzaWduYWxfY29udGFpbmVyX3Byb2Nlc3MgOj0geyJhbGxvd2VkIjogdHJ1ZX0KZ2V0X3Byb3BlcnRpZXMgOj0geyJhbGxvd2VkIjogdHJ1ZX0KZHVtcF9zdGFja3MgOj0geyJhbGxvd2VkIjogdHJ1ZX0KcnVudGltZV9sb2dnaW5nIDo9IHsiYWxsb3dlZCI6IHRydWV9CmxvYWRfZnJhZ21lbnQgOj0geyJhbGxvd2VkIjogdHJ1ZX0Kc2NyYXRjaF9tb3VudCA6PSB7ImFsbG93ZWQiOiB0cnVlfQpzY3JhdGNoX3VubW91bnQgOj0geyJhbGxvd2VkIjogdHJ1ZX0KCnJlYXNvbiA6PSB7ImFsbG93ZWQiOiB0cnVlfQ=="
+
+### Windows Considerations
+
+Windows confidential containers require at least 2048 MB of memory per container, configured in `spec.containers[].resources`.
 
 ### Debug Mode
 In order to slightly loosen the policy for a Pod to allow certain types of debugging activities like allowing an exec session to shell into the pod with sh or bash, you can generate a policy using the `--debug-mode` arg:
