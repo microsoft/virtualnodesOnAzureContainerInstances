@@ -2,8 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-replicaCountWindows: 0 # Set to at least 1 to enable the Windows virtual node
+replicaCount: 0
+replicaCountWindows: 1
 admissionControllerReplicaCount: 1 # Set to 0 to also not register the admission controller webhook
 
 nameOverride: ""
@@ -69,7 +69,7 @@ aciResourceGroupName: '' # If not empty, will override the default resource grou
 zones: '' # zone names, semi-colon separated... EG - '1;2;3'
 sandboxProviderType: OnDemand  #StandbyPool / OnDemand, default is OnDemand
 standbyPoolShareType: Node # Node / HelmInstall, default is Node
-vnetResourceGroupName: '' # Required when replicaCountWindows is greater than 0; identifies the resource group containing the ACI VNet
+vnetResourceGroupName: '' # Required for windows pods; used to identify the resource group of the VNet where the ACI container groups will be deployed
 
 standbyPool: 
   zones: '' # zone names, semi-colon separated... EG - '1;2;3'

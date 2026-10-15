@@ -143,7 +143,7 @@ Arrows added to below pictures for the important fields
 
 #### (Optional) Add Windows Node Pool
 
-If you intend to run Windows pods on virtual nodes, in addition to the mandatory Linux system Node Pool, you must also add a Windows user Node Pool. The Windows Node Pool must use Windows Server 2022 as its OS SKU and must have at least 5 CPU and 16 GB RAM.
+If you intend to run Windows pods on virtual nodes, in addition to the mandatory Linux system Node Pool, you must also add a Windows user Node Pool. The Windows Node Pool must use Windows Server 2022 as OS SKU and must meet the same node size requirements as above (at least 5 CPU and 16 GB RAM).
 
 ![AKS Windows Node Pool Size](/Docs/Pictures/vn_aks_nodepool_size_windows.png)
 
@@ -187,14 +187,14 @@ Use Azure CLI to pull down configuration and credentials for the AKS cluster you
 ### Step 1: Get the HELM Chart
 Clone this repo! 
 
-### (Optional) Step 2: Configure Windows Pod Support
+### (Optional) Step 2: Modify HELM Chart for Windows Pod support
 
-To enable Windows pod support, set the following values in [Helm/virtualnode/values.yaml](/Helm/virtualnode/values.yaml):
+If Windows pod support is desired, two values in [Helm/virtualnode/values.yaml](/Helm/virtualnode/values.yaml) must be edited before installing the chart:
 
-- Set `replicaCountWindows` to at least `1`. Its default value of `0` disables the Windows virtual node.
-- Set `vnetResourceGroupName` to the name of the resource group containing the VNet created in [Step 1: Azure Resource Group](#step-1-azure-resource-group).
+- `replicaCountWindows` must be manually set to at least `1` (it defaults to `0`, which disables the Windows virtual node).
+- `vnetResourceGroupName` must be populated with the name of the resource group that holds the VNet you created in [Step 1: Azure Resource Group](#step-1-azure-resource-group).
 
-If Windows pod support is not required, leave `replicaCountWindows` at `0`. See [Windows Pods on virtual nodes](/Docs/WindowsPods.md) for supported regions, deployment examples, and current limitations.
+If Windows pod support is not desired, skip this step and proceed to the next.
 
 ### Step 3: Install virtual node Via HELM
 And then install the HELM chart, where you can pick whatever release name you want to keep track of the HELM deployment!

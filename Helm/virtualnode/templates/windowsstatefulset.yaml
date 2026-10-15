@@ -1,6 +1,3 @@
-{{- if and (gt (int .Values.replicaCountWindows) 0) (empty .Values.vnetResourceGroupName) }}
-{{- fail "vnetResourceGroupName must be set when replicaCountWindows is greater than 0" }}
-{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
