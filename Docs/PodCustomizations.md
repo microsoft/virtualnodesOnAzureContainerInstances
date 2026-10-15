@@ -121,7 +121,7 @@ Using that tool for virtual nodes is simple, just provide your YAML file with th
 
 This will not only generate the CCE policy, but it will inject the policy annotation into the right section of the file. 
 
-For Windows pods, use the corresponding Windows platform:
+For Windows pods, corresponding syntax is
 
     az confcom acipolicygen --platform windows/amd64 --virtual-node-yaml <yourYamlFile>.yaml
 
@@ -168,13 +168,12 @@ This should NOT be used for any production workloads, just as a tool for initial
 
 ### Windows Allow All Confid Policy
 
-The same warnings and testing-only guidance for the Linux allow-all confidential policy apply to this Windows policy:
+Same instructions for Linux Allow All Confid Policy apply in here, for Windows this is
 
     "microsoft.containerinstance.virtualnode.ccepolicy": "cGFja2FnZSBwb2xpY3kKCmFwaV92ZXJzaW9uIDo9ICIwLjExLjAiCgpmcmFtZXdvcmtfdmVyc2lvbiA6PSAiMC40LjEiCgpmcmFnbWVudHMgOj0gWwogIHsKICAgICJmZWVkIjogIm1jci5taWNyb3NvZnQuY29tL2FjaS9hY2ktY2MtaW5mcmEtZnJhZ21lbnQiLAogICAgImluY2x1ZGVzIjogWwogICAgICAiY29udGFpbmVycyIsCiAgICAgICJmcmFnbWVudHMiCiAgICBdLAogICAgImlzc3VlciI6ICJkaWQ6eDUwOTowOnNoYTI1NjpJX19pdUwyNW9YRVZGZFRQX2FCTHhfZVQxUlBIYkNRX0VDQlFmWVpwdDlzOjpla3U6MS4zLjYuMS40LjEuMzExLjc2LjU5LjEuMyIsCiAgICAibWluaW11bV9zdm4iOiAiNCIKICB9Cl0KCmNvbnRhaW5lcnMgOj0gW10KCmFsbG93X3Byb3BlcnRpZXNfYWNjZXNzIDo9IHRydWUKYWxsb3dfZHVtcF9zdGFja3MgOj0gdHJ1ZQphbGxvd19ydW50aW1lX2xvZ2dpbmcgOj0gdHJ1ZQphbGxvd19lbnZpcm9ubWVudF92YXJpYWJsZV9kcm9wcGluZyA6PSB0cnVlCmFsbG93X3VuZW5jcnlwdGVkX3NjcmF0Y2ggOj0gdHJ1ZQphbGxvd19jYXBhYmlsaXR5X2Ryb3BwaW5nIDo9IHRydWUKCm1vdW50X2NpbXMgOj0geyJhbGxvd2VkIjogdHJ1ZX0KbW91bnRfZGV2aWNlIDo9IHsiYWxsb3dlZCI6IHRydWV9Cm1vdW50X292ZXJsYXkgOj0geyJhbGxvd2VkIjogdHJ1ZX0KY3JlYXRlX2NvbnRhaW5lciA6PSB7ImFsbG93ZWQiOiB0cnVlLCAiZW52X2xpc3QiOiBudWxsLCAiYWxsb3dfc3RkaW9fYWNjZXNzIjogdHJ1ZX0KdW5tb3VudF9kZXZpY2UgOj0geyJhbGxvd2VkIjogdHJ1ZX0KdW5tb3VudF9vdmVybGF5IDo9IHsiYWxsb3dlZCI6IHRydWV9CmV4ZWNfaW5fY29udGFpbmVyIDo9IHsiYWxsb3dlZCI6IHRydWUsICJlbnZfbGlzdCI6IG51bGx9CmV4ZWNfZXh0ZXJuYWwgOj0geyJhbGxvd2VkIjogdHJ1ZSwgImVudl9saXN0IjogbnVsbCwgImFsbG93X3N0ZGlvX2FjY2VzcyI6IHRydWV9CnNodXRkb3duX2NvbnRhaW5lciA6PSB7ImFsbG93ZWQiOiB0cnVlfQpzaWduYWxfY29udGFpbmVyX3Byb2Nlc3MgOj0geyJhbGxvd2VkIjogdHJ1ZX0KZ2V0X3Byb3BlcnRpZXMgOj0geyJhbGxvd2VkIjogdHJ1ZX0KZHVtcF9zdGFja3MgOj0geyJhbGxvd2VkIjogdHJ1ZX0KcnVudGltZV9sb2dnaW5nIDo9IHsiYWxsb3dlZCI6IHRydWV9CmxvYWRfZnJhZ21lbnQgOj0geyJhbGxvd2VkIjogdHJ1ZX0Kc2NyYXRjaF9tb3VudCA6PSB7ImFsbG93ZWQiOiB0cnVlfQpzY3JhdGNoX3VubW91bnQgOj0geyJhbGxvd2VkIjogdHJ1ZX0KCnJlYXNvbiA6PSB7ImFsbG93ZWQiOiB0cnVlfQ=="
 
 ### Windows Considerations
-
-Windows confidential containers require at least 2048 MB of memory per container, configured in `spec.containers[].resources`.
+Windows confidential containers require a minimum of 2048MB memory (as set in the spec.containers[].resources section of the pod spec).
 
 ### Debug Mode
 In order to slightly loosen the policy for a Pod to allow certain types of debugging activities like allowing an exec session to shell into the pod with sh or bash, you can generate a policy using the `--debug-mode` arg:
