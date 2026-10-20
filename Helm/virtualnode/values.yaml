@@ -130,8 +130,8 @@ images:
   virtualDaemonSetImage: mcr.microsoft.com/aci/virtual-node-2-virtual-daemonsets-controller:main_20261007.1
   windowsSpdycompatImage: mcr.microsoft.com/aci/virtual-node-2-spdy-compat-windows:windows-add-confid-cwcow_20260921.4
   windowsProxycriImage: mcr.microsoft.com/aci/virtual-node-2-proxy-cri-windows:windows-add-confid-cwcow_20260921.4
-  windowsMountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host-windows-2025:windows-add-confid-cwcow_20260921.4
-  windowsMountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host-windows-2025:windows-add-confid-cwcow_20260921.4
+  windowsMountImage: mcr.microsoft.com/aci/virtual-node-2-mount-host-windows-2022:windows_20260506.2
+  windowsMountConfidImage: mcr.microsoft.com/aci/virtual-node-2-mount-host-windows-2025:master-1-20261019.2
   windowsInitImage: mcr.microsoft.com/aci/virtual-node-2-init-config-windows:windows-add-confid-cwcow_20260921.4
   windowsKubeletImage: mcr.microsoft.com/aci/virtual-node-2-kubelet-windows:windows-add-confid-cwcow_20260921.4
   windowsVirtualcsiImage: mcr.microsoft.com/aci/virtual-node-2-virtual-csi-windows:windows-add-confid-cwcow_20260921.4
