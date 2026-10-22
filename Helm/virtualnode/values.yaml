@@ -48,6 +48,8 @@ affinity: {}
 rbac:
   install: true
   serviceAccountName: virtual-node2-helm
+  # Dedicated identity for the kube-proxy container running in ACI container groups.
+  kubeProxyServiceAccountName: virtual-node-kube-proxy
   admissionControllerServiceAccountName: virtual-node-admission-controller
   ## RBAC api version
   apiVersion: v1

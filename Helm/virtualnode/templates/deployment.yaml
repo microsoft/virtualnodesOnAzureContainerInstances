@@ -332,6 +332,12 @@ spec:
               value: {{ .Values.armEndpointBaseUrl }}
             - name: KubeProxyImage
               value: {{ .Values.images.kubeProxyImage }}
+            - name: KubeProxyServiceAccountName
+              value: {{ .Values.rbac.kubeProxyServiceAccountName | quote }}
+            - name: PodNS
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: NODEPOOL_IDENTITY_FALLBACK_ENABLED
               value: {{ quote .Values.nodePoolIdentityFallbackEnabled }}
             - name: KubeProxyReservedMemoryGB

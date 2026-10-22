@@ -3,10 +3,10 @@ entries:
   virtualnode:
   - apiVersion: v2
     appVersion: 1.3509.26102203
-    created: "2026-10-22T15:32:34.3850913-05:00"
+    created: "2026-10-22T15:50:23.8691866-05:00"
     description: Helm chart to install virtual nodes on Azure Container Instances
       to an existing Azure Kubernetes Service cluster.
-    digest: d322824752d3bef73738b8d73cf0ec92bdc819429ddfaafa2e3b2d67f7ac6c8e
+    digest: 913bd3d7ca98adb278d642ccbfb3367af3611f06ae0125a28ade4c7a6d80d7b2
     maintainers:
     - name: Gabriel Fuhrman
       url: https://github.com/Gfuhrm
