@@ -3,6 +3,7 @@
 ## Chart Versions:
 ### 1.3509.26102203
 - Updated to 1.35.9 upstream K8s binaries ☸️
+- Fixed a potential kubelet crash-loop and repeated resize retries after virtual node infrastructure pod restarts on Kubernetes 1.35 🐛
 - Kube-proxy now uses a dedicated service account instead of the virtual node infrastructure identity 🪪
 - Ingesting security patches and dependency updates 🔐
 
