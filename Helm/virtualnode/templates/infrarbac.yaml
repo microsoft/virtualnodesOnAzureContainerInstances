@@ -30,19 +30,6 @@ roleRef:
   name: {{ include "virtualnode2.fullname" . }}-infra
 ---
 apiVersion: "rbac.authorization.k8s.io/{{ .Values.rbac.apiVersion }}"
-kind: ClusterRoleBinding
-metadata:
-  name: {{ include "virtualnode2.fullname" . }}-node-proxier
-  labels:
-    {{- include "virtualnode2.labels" . | nindent 4 }}
-subjects:
-  {{- include "virtualnode2.infraServiceAccountSubject" . | nindent 2 }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:node-proxier
----
-apiVersion: "rbac.authorization.k8s.io/{{ .Values.rbac.apiVersion }}"
 kind: Role
 metadata:
   name: {{ include "virtualnode2.fullname" . }}-bootstrap

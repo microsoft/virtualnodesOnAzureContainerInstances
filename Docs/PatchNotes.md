@@ -1,6 +1,12 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3509.26102203
+- Updated to 1.35.9 upstream K8s binaries ☸️
+- Fixed a potential kubelet crash-loop and repeated resize retries after virtual node infrastructure pod restarts on Kubernetes 1.35 🐛
+- Kube-proxy now uses a dedicated service account instead of the virtual node infrastructure identity 🪪
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3508.26100701
 - Kube-proxy is now supported on confidential containers, as an opt-in via the `microsoft.containerinstance.virtualnode.injectkubeproxy: "true"` annotation 🔒
 - The virtual node infrastructure service account now runs with least-privilege RBAC instead of cluster-admin 🪪
