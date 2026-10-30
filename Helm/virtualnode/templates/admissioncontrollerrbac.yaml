@@ -41,9 +41,16 @@ rules:
   - apiGroups: [""]
     resources: ["pods/log"]
     verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get"]
   - apiGroups: ["admissionregistration.k8s.io"]
     resources: ["mutatingwebhookconfigurations"]
     resourceNames: ["virtual-node-admission-controller"]
+    verbs: ["get", "update"]
+  - apiGroups: ["admissionregistration.k8s.io"]
+    resources: ["validatingwebhookconfigurations"]
+    resourceNames: ["virtual-node-admission-controller-validating"]
     verbs: ["get", "update"]
 ---
 apiVersion: "rbac.authorization.k8s.io/{{ .Values.rbac.apiVersion }}"

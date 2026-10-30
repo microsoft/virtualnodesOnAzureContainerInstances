@@ -15,7 +15,9 @@ webhooks:
   matchPolicy: Equivalent
   name: virtual-node-admission-controller-node-mutating-webhook.azmk8s.io
   namespaceSelector: {}
-  objectSelector: {}
+  objectSelector:
+    matchLabels:
+      microsoft.containerinstance.virtualnode: "true"
   reinvocationPolicy: Never
   rules:
   - apiGroups:
@@ -40,8 +42,18 @@ webhooks:
   failurePolicy: Ignore
   matchPolicy: Equivalent
   name: virtual-node-admission-controller-pod-mutating-webhook.azmk8s.io
-  namespaceSelector: {}
-  objectSelector: {}
+  namespaceSelector:
+    matchExpressions:
+    - key: kubernetes.azure.com/managedby
+      operator: NotIn
+      values:
+      - aks
+  objectSelector:
+    matchExpressions:
+    - key: kubernetes.azure.com/managedby
+      operator: NotIn
+      values:
+      - aks
   reinvocationPolicy: IfNeeded
   rules:
   - apiGroups:
@@ -55,5 +67,40 @@ webhooks:
     - pods
     scope: "*"
   sideEffects: NoneOnDryRun
+  timeoutSeconds: 5
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: virtual-node-admission-controller-validating
+webhooks:
+# Blocks in-place pod resize on virtual nodes. ACI container groups cannot be resized in place,
+# so a resize can never be actuated. ProxyCri acknowledges UpdateContainerResources as a no-op to
+# stop kubelet retrying forever; denying genuine resizes here keeps that no-op from silently
+# reporting success for a resize that never happened.
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: virtual-node-admission-controller
+      namespace: {{ include "virtualnode2.namespace" . }}
+      path: "/podresize"
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: virtual-node-admission-controller-podresize-validating-webhook.azmk8s.io
+  namespaceSelector: {}
+  objectSelector: {}
+  rules:
+  - apiGroups:
+    - ''
+    apiVersions:
+    - v1
+    operations:
+    - UPDATE
+    resources:
+    - pods/resize
+    scope: "*"
+  sideEffects: None
   timeoutSeconds: 5
   {{ end }}
