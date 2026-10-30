@@ -181,6 +181,10 @@ For some Azure interactions it can be very convenient (and a good security pract
 
 Example: `microsoft.containerinstance.virtualnode.identity: /subscriptions/000000-0000-0000-053ca49ab4b5/resourceGroups/definitely_a_fake_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/my_MI_name`
 
+To assign multiple managed identities to a pod, separate the resource IDs with a semicolon (`;`). Whitespace around each ID is ignored; an empty or malformed entry fails pod creation.
+
+Example: `microsoft.containerinstance.virtualnode.identity: /subscriptions/000000-0000-0000-053ca49ab4b5/resourceGroups/definitely_a_fake_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/my_MI_name;/subscriptions/000000-0000-0000-053ca49ab4b5/resourceGroups/definitely_a_fake_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/my_other_MI_name`
+
 ## Disable Kube-Proxy
 The Kube-Proxy is a standard K8s component that provides benefits like modifying local IP route tables for K8s internal network usage. However, if you do not require this functionality (or explicitly don't want it), the kube-proxy can be disabled for the virtual node pods via this annotation: 
 

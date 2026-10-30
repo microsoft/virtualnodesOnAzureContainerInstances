@@ -1,6 +1,13 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3509.26103003
+- Pods can now be assigned multiple managed identities by separating resource IDs with a semicolon in the `microsoft.containerinstance.virtualnode.identity` annotation 🪪
+- Improved workload restarts 🐛
+- Improved handling of in-place pod resize requests, which are not yet supported on virtual nodes 📏
+- Refined our admission webhooks so they apply only where needed, reducing unintended impact on other pods in the cluster 🎯
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3509.26102203
 - Updated to 1.35.9 upstream K8s binaries ☸️
 - Fixed a potential kubelet crash-loop and repeated resize retries after virtual node infrastructure pod restarts on Kubernetes 1.35 🐛
