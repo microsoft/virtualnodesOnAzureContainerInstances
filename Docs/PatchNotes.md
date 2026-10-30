@@ -3,7 +3,7 @@
 ## Chart Versions:
 ### 1.3509.26103003
 - Pods can now be assigned multiple managed identities by separating resource IDs with a semicolon in the `microsoft.containerinstance.virtualnode.identity` annotation 🪪
-- Improved workload restarts 🐛
+- Addressed an issue we introduced in 1.3509.26102203 where some virtual node workloads could be unexpectedly restarted after certain node maintenance events.🐛
 - Improved handling of in-place pod resize requests, which are not yet supported on virtual nodes 📏
 - Refined our admission webhooks so they apply only where needed, reducing unintended impact on other pods in the cluster 🎯
 - Ingesting security patches and dependency updates 🔐
