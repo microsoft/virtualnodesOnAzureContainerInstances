@@ -1,6 +1,9 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3509.26111001
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3509.26103003
 - Pods can now be assigned multiple managed identities by separating resource IDs with a semicolon in the `microsoft.containerinstance.virtualnode.identity` annotation 🪪
 - Addressed an issue we introduced in 1.3509.26102203 where some virtual node workloads could be unexpectedly restarted after certain node maintenance events.🐛
