@@ -1,6 +1,9 @@
 # Summary of what was changed in each new release
 
 ## Chart Versions:
+### 1.3509.26111901
+- Ingesting security patches and dependency updates 🔐
+
 ### 1.3509.26111001
 - Ingesting security patches and dependency updates 🔐
 
